@@ -1,8 +1,7 @@
 <template>
   <div>
-    <div class="imgLogo">
-    <img src="/logo.svg"/>
-    </div>
+    <HeroCard/>
+    <HeroCreationOne/>
     <HeroNav/>
   </div>
 </template>
@@ -10,14 +9,10 @@
 <script>
 import "./assets/main.css"
 import "./components/HeroNav.vue"
+import "./components/HeroCard.vue"
+import "./components/HeroCreationOne.vue"
 </script>
 
 <style lang="css" scoped>
-.imgLogo{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding-top: 20%;
-  margin: 1rem;
-}
+
 </style>
