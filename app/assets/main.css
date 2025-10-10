@@ -1,0 +1,17 @@
+:root {
+  --bone-white: #f1eee0;
+  --warm-black: #25241f;
+  --purple: #eb39f5;
+  --dark-purple: #9c5aa0;
+  --turqoise: #38f5cf;
+  --dark-green: #56756f;
+  --yellow: #f5c938;
+  --brown: #756e56;
+}
+
+body {
+  margin: 0;
+  font-family: monospace;
+  background-color: var(--bone-white);
+  color: var(--warm-black);
+}
