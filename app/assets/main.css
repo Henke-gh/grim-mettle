@@ -12,6 +12,6 @@
 body {
   margin: 0;
   font-family: monospace;
-  background-color: var(--bone-white);
+  background-color: var(--turqoise);
   color: var(--warm-black);
 }
