@@ -1,29 +1,40 @@
 <template>
     <section class="heroCreation">
+        <h2>Select your avatar</h2>
         <div class="portraitSelection">
-<!--             <img src="/avatars/avatarOne.png" class="portraitImg" alt="Hero in red hood"/>
-            <img src="/avatars/avatarTwo.png" class="portraitImg" alt="Hero with long brown hair"/>
-            <img src="/avatars/avatarThree.png" class="portraitImg" alt="Hero with red hair"/>
-            <img src="/avatars/avatarFour.png" class="portraitImg" alt="Bald hero with red beard"/> -->
+            <div class="portrait" v-for="avatar in avatars" v-bind="avatar.id">
+                <img :src="avatar.src" :alt="avatar.alt" class="portraitImg"/>
+            </div>
         </div>
+        <div class="labelInput">
         <label for="heroName">Name your champion:</label>
         <input type="text" id="heroName"></input>
+        </div>
     </section>
 </template>
 
 <script setup>
 import {heroAvatars} from "../utils/avatars.js"
+
 const avatars = heroAvatars;
-console.log(avatars)
 </script>
 
 <style lang="css" scoped>
 .portraitSelection {
-    display: grid;
+    display: flex;
+    flex-direction: row;
 }
 
 .portraitImg{
     border-radius: 50%;
+    width: 8rem;
+    height: 8rem;
+}
+
+.labelInput {
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
 }
 
 </style>
