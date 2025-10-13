@@ -6,6 +6,10 @@
         <input type="text" id="usernameInput" v-model="username"/>
         </div>
         <div class="segment">
+        <label for="emailInput">Enter e-mail: </label>
+        <input type="text" id="emailInput" v-model="email"/>
+        </div>
+        <div class="segment">
         <label for="passwordInput">Choose a password: </label>
         <input type="text" id="passwordInput" v-model="password"/>
         </div>
