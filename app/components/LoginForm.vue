@@ -2,12 +2,12 @@
     <section class="loginContainer">
         <h2>Login</h2>
         <div class="segment">
-        <label for="usernameInput">Username: </label>
-        <input type="text" id="usernameInput" v-model="username"/>
+            <label for="usernameInput">Username: </label>
+            <input type="text" id="usernameInput" v-model="username" />
         </div>
         <div class="segment">
-        <label for="passwordInput">Password: </label>
-        <input type="text" id="passwordInput" v-model="password"/>
+            <label for="passwordInput">Password: </label>
+            <input type="password" id="passwordInput" v-model="password" />
         </div>
         <button class="loginBtn">Login</button>
         <p>Register new user</p>
@@ -23,11 +23,13 @@
     display: flex;
     flex-direction: column;
 }
+
 .segment {
     display: flex;
     flex-direction: row;
 }
-.loginBtn{
+
+.loginBtn {
     width: fit-content;
 }
 </style>

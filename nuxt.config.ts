@@ -12,6 +12,10 @@ export default defineNuxtConfig({
     ],
   ],
 
+  supabase: {
+    types: false,
+  },
+
   app: {
     head: {
       title: "Grim Mettle",
