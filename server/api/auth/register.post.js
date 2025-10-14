@@ -2,12 +2,12 @@ import { z } from "zod";
 import { serverSupabaseClient } from "#supabase/server";
 import { supabaseAdmin } from "~~/server/utils/supabaseAdmin";
 
-// Validation schema
+// Validation schema (uses Zod)
 const registerSchema = z.object({
   username: z
     .string()
     .min(3, "Username must be at least 3 characters")
-    .max(20, "Username must be at most 20 characters")
+    .max(20, "Username must be at most 16 characters")
     .regex(/^[a-zA-Z0-9_]+$/, "Only letters, numbers, and underscores allowed"),
   email: z.email("Invalid email address"),
   password: z.string().min(8, "Password must be at least 8 characters long"),
@@ -28,7 +28,7 @@ export default defineEventHandler(async (event) => {
   const { username, email, password } = result.data;
   const supabase = await serverSupabaseClient(event);
 
-  // 1️⃣ Check if username already exists
+  // Check if username already exists
   const { data: existingUsers, error: fetchError } = await supabase
     .from("profiles")
     .select("id")
@@ -43,7 +43,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, message: "Username already taken" });
   }
 
-  // 2️⃣ Sign up user in auth
+  // Sign up user in auth
   const { data: authData, error: authError } = await supabase.auth.signUp({
     email,
     password,
@@ -55,13 +55,13 @@ export default defineEventHandler(async (event) => {
 
   const userId = authData.user.id;
 
-  // 3️⃣ Insert user profile
+  // Insert user profile
   const { error: profileError } = await supabaseAdmin
     .from("profiles")
     .insert({ id: userId, username });
 
   if (profileError) {
-    // Optional: rollback auth user if profile insert fails
+    // Rrollback auth user if profile insert fails
     await supabaseAdmin.auth.admin.deleteUser(userId);
     throw createError({ statusCode: 400, message: profileError.message });
   }

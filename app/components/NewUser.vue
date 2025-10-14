@@ -4,7 +4,8 @@
         <form @submit.prevent="submitForm">
             <div class="segment">
                 <label for="usernameInput">Username: </label>
-                <input type="text" id="usernameInput" v-model="username" placeholder="Enter username" />
+                <input type="text" id="usernameInput" v-model="username" placeholder="Enter username" min="3"
+                    max="16" />
             </div>
             <div class="segment">
                 <label for="emailInput">Enter e-mail: </label>
@@ -12,12 +13,12 @@
             </div>
             <div class="segment">
                 <label for="passwordInput">Choose a password: </label>
-                <input type="password" id="passwordInput" v-model="password" placeholder="Choose password" />
+                <input type="password" id="passwordInput" v-model="password" placeholder="Choose password" min="8" />
             </div>
             <div class="segment">
                 <label for="repeatPasswordInput">Repeat password: </label>
-                <input type="password" id="repeatPasswordInput" v-model="repeatPassword"
-                    placeholder="Repeat password" />
+                <input type="password" id="repeatPasswordInput" v-model="repeatPassword" placeholder="Repeat password"
+                    min="8" />
             </div>
             <button class="loginBtn" :disabled="loading">{{ loading ? 'Registering...' : 'Register' }}</button>
             <p v-if="error" class="text-red-400 mt-3 text-sm">{{ error }}</p>
