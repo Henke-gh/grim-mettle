@@ -1,18 +1,7 @@
 <script setup>
-import { ref } from 'vue';
+import { useHeroCreateStore } from '../stores/heroCreate';
 
-const strength = ref(5)
-const speed = ref(5)
-const vitality = ref(5)
-const swords = ref(0)
-const axes = ref(0)
-const hammers = ref(0)
-const spears = ref(0)
-const daggers = ref(0)
-const block = ref(0)
-const evasion = ref(0)
-const initiative = ref(0)
-const statPoints = ref(75)
+const hero = useHeroCreateStore();
 
 </script>
 
@@ -20,27 +9,30 @@ const statPoints = ref(75)
     <section class="wrapper">
         <h2>Create your Hero - step 2/2</h2>
         <p>Distribute your starting stat-points:</p>
-        <p>{{ statPoints }} points remaining.</p>
+        <p>{{ hero.statPointsRemaining }} points remaining.</p>
         <form>
             <h3>Main Attributes</h3>
             <div class="container">
                 <div class="group">
                     <div class="stat">
                         <label for="strength">Strength:</label>
-                        <input id="strength" type="number" v-model="strength" min="5" class="statInput" />
+                        <input id="strength" type="number" :value="hero.stats.strength" min="5" class="statInput"
+                            v-on:input="event => hero.allocateStatPoints('strength', event.target.value)" />
                     </div>
                     <div class="stat">
                         <label for="speed">Speed:</label>
-                        <input id="speed" type="number" v-model="speed" min="5" class="statInput" />
+                        <input id="speed" type="number" :value="hero.stats.speed" min="5" class="statInput"
+                            v-on:input="event => hero.allocateStatPoints('speed', event.target.value)" />
                     </div>
                     <div class="stat">
                         <label for="vitality">Vitality:</label>
-                        <input id="vitality" type="number" v-model="vitality" min="5" class="statInput" />
+                        <input id="vitality" type="number" :value="hero.stats.vitality" min="5" class="statInput"
+                            v-on:input="event => hero.allocateStatPoints('vitality', event.target.value)" />
                     </div>
                 </div>
                 <div class="group">
                     <img src="/avatars/avatarOne.png" class="avatarPreview" />
-                    <p>Hero Name</p>
+                    <p>{{ hero.heroName }}</p>
                 </div>
             </div>
             <h3>Skills</h3>
@@ -49,38 +41,46 @@ const statPoints = ref(75)
                     <h4>[Weapon Skills]</h4>
                     <div class="stat">
                         <label for="swords">Swords:</label>
-                        <input id="swords" type="number" v-model="swords" min="0" class="statInput" />
+                        <input id="swords" type="number" :value="hero.stats.swords" min="0" class="statInput"
+                            v-on:input="event => hero.allocateStatPoints('swords', event.target.value)" />
                     </div>
                     <div class="stat">
                         <label for="axes">Axes:</label>
-                        <input id="axes" type="number" v-model="axes" min="0" class="statInput" />
+                        <input id="axes" type="number" :value="hero.stats.axes" min="0" class="statInput"
+                            v-on:input="event => hero.allocateStatPoints('axes', event.target.value)" />
                     </div>
                     <div class="stat">
                         <label for="hammers">Hammers:</label>
-                        <input id="hammers" type="number" v-model="hammers" min="0" class="statInput" />
+                        <input id="hammers" type="number" :value="hero.stats.hammers" min="0" class="statInput"
+                            v-on:input="event => hero.allocateStatPoints('hammers', event.target.value)" />
                     </div>
                     <div class="stat">
                         <label for="spears">Spears:</label>
-                        <input id="spears" type="number" v-model="spears" min="0" class="statInput" />
+                        <input id="spears" type="number" :value="hero.stats.spears" min="0" class="statInput"
+                            v-on:input="event => hero.allocateStatPoints('spears', event.target.value)" />
                     </div>
                     <div class="stat">
                         <label for="daggers">Daggers:</label>
-                        <input id="daggers" type="number" v-model="daggers" min="0" class="statInput" />
+                        <input id="daggers" type="number" :value="hero.stats.daggers" min="0" class="statInput"
+                            v-on:input="event => hero.allocateStatPoints('daggers', event.target.value)" />
                     </div>
                 </div>
                 <div class="group">
                     <h4>[Other Skills]</h4>
                     <div class="stat">
                         <label for="block">Block:</label>
-                        <input id="block" type="number" v-model="block" class="statInput" />
+                        <input id="block" type="number" :value="hero.stats.block" class="statInput"
+                            v-on:input="event => hero.allocateStatPoints('block', event.target.value)" />
                     </div>
                     <div class="stat">
                         <label for="evasion">Evasion:</label>
-                        <input id="evasion" type="number" v-model="evasion" class="statInput" />
+                        <input id="evasion" type="number" :value="hero.stats.evasion" class="statInput"
+                            v-on:input="event => hero.allocateStatPoints('evasion', event.target.value)" />
                     </div>
                     <div class="stat">
                         <label for="initiative">Initiative:</label>
-                        <input id="initiative" type="number" v-model="initiative" class="statInput" />
+                        <input id="initiative" type="number" :value="hero.stats.initiative" class="statInput"
+                            v-on:input="event => hero.allocateStatPoints('initiative', event.target.value)" />
                     </div>
                 </div>
             </div>
