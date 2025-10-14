@@ -1,9 +1,9 @@
 <template>
   <div>
-    <!--  <HeroCard/> -->
-    <!-- <HeroCreationOne/>
+    <!--  <HeroCard/>
     <NewUser />
     <LoginForm/> -->
+    <HeroCreationOne />
     <HeroCreationTwo />
     <HeroNav />
   </div>

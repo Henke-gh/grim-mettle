@@ -18,7 +18,7 @@ const statPoints = ref(75)
 
 <template>
     <section class="wrapper">
-        <h2>Build your Hero</h2>
+        <h2>Create your Hero - step 2/2</h2>
         <p>Distribute your starting stat-points:</p>
         <p>{{ statPoints }} points remaining.</p>
         <form>
@@ -100,7 +100,7 @@ const statPoints = ref(75)
 .container {
     display: flex;
     flex-direction: row;
-    gap: 0.5rem
+    justify-content: space-between;
 }
 
 .group {
