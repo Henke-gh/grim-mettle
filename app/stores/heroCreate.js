@@ -1,9 +1,12 @@
 import { defineStore } from "pinia";
+import { heroAvatars } from "../utils/avatars";
 
 export const useHeroCreateStore = defineStore("heroCreate", {
   state: () => ({
+    currentStep: 1,
+    totalSteps: 2,
     heroName: "",
-    avatar: null,
+    avatar: 0, //Set default avatar
     level: 1,
     hitpoints: 0,
     maxHP: 0, //computed value based on strength + vitality calculation.
@@ -28,7 +31,19 @@ export const useHeroCreateStore = defineStore("heroCreate", {
     statPointsRemaining: 75, // Points pool used on stats during hero creation
   }),
 
+  getters: {
+    selectedAvatar: (state) => {
+      return heroAvatars.find((match) => match.id === state.avatar);
+    },
+  },
+
   actions: {
+    nextStep() {
+      if (this.currentStep < this.totalSteps) this.currentStep++;
+    },
+    previousStep() {
+      if (this.currentStep > 1) this.currentStep--;
+    },
     setAvatar(avatar) {
       this.avatar = avatar;
     },

@@ -31,7 +31,8 @@ const hero = useHeroCreateStore();
                     </div>
                 </div>
                 <div class="group">
-                    <img src="/avatars/avatarOne.png" class="avatarPreview" />
+                    <img class="avatarPreview" v-if="hero.selectedAvatar" :src="hero.selectedAvatar.src"
+                        :alt="hero.selectedAvatar.alt" />
                     <p>{{ hero.heroName }}</p>
                 </div>
             </div>

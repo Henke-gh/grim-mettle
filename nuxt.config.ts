@@ -2,6 +2,7 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
   compatibilityDate: "2025-07-15",
+  pages: true,
 
   modules: [
     "@pinia/nuxt",
@@ -12,7 +13,6 @@ export default defineNuxtConfig({
       },
     ],
   ],
-
   supabase: {
     types: false,
   },

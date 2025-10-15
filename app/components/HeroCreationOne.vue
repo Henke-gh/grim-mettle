@@ -1,46 +1,62 @@
-<template>
-    <section class="heroCreation">
-        <form>
-            <h2>Create your Hero - step 1/2</h2>
-            <div class="portraitSelection">
-                <label for="heroAvatar">
-                    <h3>Select avatar:</h3>
-                </label>
-                <div class="portrait" v-for="avatar in avatars" v-bind="avatar.id">
-                    <input type="hidden" id="heroAvatar" v-model="avatar.id" />
-                    <img :src="avatar.src" :alt="avatar.alt" class="portraitImg" />
-                </div>
-            </div>
-            <div class="labelInput">
-                <label for="heroName">
-                    <h3>Name your champion:</h3>
-                </label>
-                <input type="text" id="heroName" min="3" max="16" placeholder="Give your hero a name"
-                    v-model="heroName"></input>
-            </div>
-            <button class="continueBtn">Continue</button>
-        </form>
-    </section>
-</template>
-
 <script setup>
-import { ref } from 'vue'
 import { heroAvatars } from "../utils/avatars.js"
+import { useHeroCreateStore } from "#imports";
 
 const avatars = heroAvatars;
-const heroName = ref('')
+const hero = useHeroCreateStore();
 </script>
+
+<template>
+    <section class="heroCreation">
+        <h2>Create your Hero - step 1/2</h2>
+        <div class="portraitSelection">
+            <h3>Select avatar:</h3>
+            <div class="portraitCollection">
+                <div class="portrait" v-for="avatar in avatars" :key="avatar.id" v-on:click="hero.setAvatar(avatar.id)">
+                    <img :src="avatar.src" :alt="avatar.alt" class="portraitImg"
+                        :class="{ selected: hero.avatar === avatar.id }" />
+                </div>
+            </div>
+        </div>
+        <div div class=" labelInput">
+            <label for="heroName">
+                <h3>Name your champion:</h3>
+            </label>
+            <input type="text" id="heroName" min="3" max="16" placeholder="Give your hero a name" :value="hero.heroName"
+                v-on:input="event => hero.setHeroName(event.target.value)"></input>
+        </div>
+        <button class="continueBtn" v-on:click="hero.nextStep()">Continue</button>
+    </section>
+</template>
 
 <style lang="css" scoped>
 .portraitSelection {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+}
+
+.portraitCollection {
+    display: grid;
+    grid-template-columns: 50% 50%;
+    justify-items: center;
+    align-items: center;
+}
+
+.portrait {
+    height: fit-content;
+    width: fit-content;
 }
 
 .portraitImg {
     border-radius: 50%;
     width: 8rem;
     height: 8rem;
+    border: 4px dotted transparent;
+    cursor: pointer;
+}
+
+.selected {
+    border: 4px dotted var(--purple);
 }
 
 .labelInput {
