@@ -37,12 +37,14 @@
   z-index: 900;
   background-color: var(--yellow);
 }
+
 .linkWrap {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-bottom: 0.5rem;
 }
+
 .linkWrap p {
   margin-bottom: 0.3rem;
 }

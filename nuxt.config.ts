@@ -1,17 +1,29 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
+  compatibilityDate: "2025-07-15",
+  pages: true,
+
+  modules: [
+    "@pinia/nuxt",
+    [
+      "@nuxtjs/supabase",
+      {
+        redirect: false,
+      },
+    ],
+  ],
+  supabase: {
+    types: false,
+  },
 
   app: {
     head: {
-      title: 'Grim Mettle',
+      title: "Grim Mettle",
       htmlAttrs: {
-        lang: 'en',
+        lang: "en",
       },
-      link: [
-        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-      ],
+      link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
     },
   },
-})
+});
