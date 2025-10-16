@@ -5,7 +5,7 @@ export const useHeroCreateStore = defineStore("heroCreate", {
   state: () => ({
     currentStep: 1,
     totalSteps: 2,
-    heroName: "Unknown Hero",
+    heroName: "",
     avatar: 0, //Set default avatar
     level: 1,
     hitpoints: 0,
