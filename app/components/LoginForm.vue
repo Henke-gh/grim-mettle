@@ -14,7 +14,6 @@
             <p v-if="error" class="text-red-400 mt-3 text-sm">{{ error }}</p>
             <p v-if="success" class="text-green-400 mt-3 text-sm">{{ success }}</p>
         </form>
-        <p>Register new user</p>
     </section>
 </template>
 
@@ -61,9 +60,17 @@ const submitLogin = async () => {
     flex-direction: column;
 }
 
+.loginForm {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
 .segment {
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
+    gap: 0.2rem
 }
 
 .loginBtn {
