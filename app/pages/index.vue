@@ -5,6 +5,7 @@
 <template>
     <section>
         Start Page
+        <LoginForm />
         <NuxtLink to="/create-hero">test</NuxtLink>
     </section>
 </template>
