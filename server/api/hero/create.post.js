@@ -1,10 +1,14 @@
 import { z } from "zod";
 import { serverSupabaseClient, serverSupabaseUser } from "#supabase/server";
-import { supabaseAdmin } from "~~/server/utils/supabaseAdmin";
+//import { supabaseAdmin } from "~~/server/utils/supabaseAdmin";
 import {
+  applyBaseAttributeScores,
   calculateAssignedStartingPoints,
   computeHeroHP,
 } from "~~/server/utils/heroUtils";
+
+const startingPoints = 75;
+const xpToLevelTwo = 200;
 
 const heroSchema = z.object({
   name: z
@@ -22,22 +26,19 @@ const heroSchema = z.object({
   grit_current: z.number(125), //Assign Grit
   grit_max: z.number(125),
   stats: z.object({
-    strength: z.number().min(5),
-    speed: z.number().min(5),
-    vitality: z.number().min(5),
-    swords: z.number(),
-    axes: z.number(),
-    hammers: z.number(),
-    spears: z.number(),
-    daggers: z.number(),
-    block: z.number(),
-    evasion: z.number(),
-    initiative: z.number(),
+    strength: z.number().min(0),
+    speed: z.number().min(0),
+    vitality: z.number().min(0),
+    swords: z.number().min(0),
+    axes: z.number().min(0),
+    hammers: z.number().min(0),
+    spears: z.number().min(0),
+    daggers: z.number().min(0),
+    block: z.number().min(0),
+    evasion: z.number().min(0),
+    initiative: z.number().min(0),
   }),
 });
-
-const startingPoints = 90;
-const xpToLevelTwo = 200;
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
@@ -61,6 +62,17 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, message: "Too many points spent." });
   if (pointsSpent < startingPoints)
     ({ statusCode: 400, message: "Only " + pointsSpent + " points spent." });
+
+  //Apply a base value of 5 and set updated attribute values
+  const trueBaseAttributes = applyBaseAttributeScores(
+    hero.stats.strength,
+    hero.stats.speed,
+    hero.stats.vitality
+  );
+
+  hero.stats.strength = trueBaseAttributes.finalStrength;
+  hero.stats.speed = trueBaseAttributes.finalSpeed;
+  hero.stats.vitality = trueBaseAttributes.finalVitality;
 
   //Get Hero hitpoints calculation
   const getMaxHP = computeHeroHP(hero.stats.strength, hero.stats.vitality);

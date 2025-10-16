@@ -15,18 +15,18 @@ const hero = useHeroCreateStore();
             <div class="container">
                 <div class="group">
                     <div class="stat">
-                        <label for="strength">Strength:</label>
-                        <input id="strength" type="number" :value="hero.stats.strength" min="5" class="statInput"
+                        <label for="strength">Strength: 5 +</label>
+                        <input id="strength" type="number" :value="hero.stats.strength" min="0" class="statInput"
                             v-on:input="event => hero.allocateStatPoints('strength', event.target.value)" />
                     </div>
                     <div class="stat">
-                        <label for="speed">Speed:</label>
-                        <input id="speed" type="number" :value="hero.stats.speed" min="5" class="statInput"
+                        <label for="speed">Speed: 5 +</label>
+                        <input id="speed" type="number" :value="hero.stats.speed" min="0" class="statInput"
                             v-on:input="event => hero.allocateStatPoints('speed', event.target.value)" />
                     </div>
                     <div class="stat">
-                        <label for="vitality">Vitality:</label>
-                        <input id="vitality" type="number" :value="hero.stats.vitality" min="5" class="statInput"
+                        <label for="vitality">Vitality: 5 +</label>
+                        <input id="vitality" type="number" :value="hero.stats.vitality" min="0" class="statInput"
                             v-on:input="event => hero.allocateStatPoints('vitality', event.target.value)" />
                     </div>
                 </div>
@@ -85,7 +85,7 @@ const hero = useHeroCreateStore();
                     </div>
                 </div>
             </div>
-            <button class="submitBtn">Create Hero</button>
+            <button class="submitBtn" :disabled="hero.statPointsRemaining !== 0">Create Hero</button>
         </form>
     </section>
 </template>

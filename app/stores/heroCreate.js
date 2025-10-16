@@ -16,9 +16,9 @@ export const useHeroCreateStore = defineStore("heroCreate", {
     xpToLvlUp: 200, //Placeholder - not sure how this will be handled.
     gold: 150, //Also needs to be set properly and given a default starting amount.
     stats: {
-      strength: 5, //default main attribute values at 5.
-      speed: 5,
-      vitality: 5,
+      strength: 0,
+      speed: 0,
+      vitality: 0,
       swords: 0, //skills start at zero
       axes: 0,
       hammers: 0,

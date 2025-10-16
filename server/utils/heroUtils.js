@@ -31,3 +31,11 @@ export function calculateAssignedStartingPoints(baseStats) {
 
   return totalPointsSpent;
 }
+
+export function applyBaseAttributeScores(strength, speed, vitality) {
+  const finalStrength = strength + 5;
+  const finalSpeed = speed + 5;
+  const finalVitality = vitality + 5;
+
+  return { finalStrength, finalSpeed, finalVitality };
+}
