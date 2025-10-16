@@ -1,4 +1,8 @@
 <script setup>
+definePageMeta({
+    middleware: 'auth',
+});
+
 import { useHeroCreateStore } from "#imports";
 import "../components/HeroCreationOne.vue"
 import "../components/HeroCreationTwo.vue"
