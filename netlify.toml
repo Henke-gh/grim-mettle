@@ -15,3 +15,8 @@
   for = "/_nuxt/builds/*"
   [headers.values]
     cache-control = "public, max-age=31536000, immutable"
+
+    [[redirects]]
+  from = "/*"
+  to = "/"
+  status = 200
