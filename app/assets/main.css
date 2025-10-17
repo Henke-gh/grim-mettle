@@ -4,6 +4,7 @@
   --purple: #eb39f5;
   --dark-purple: #9c5aa0;
   --turqoise: #38f5cf;
+  --light-green: #7de3cf;
   --dark-green: #56756f;
   --yellow: #f5c938;
   --brown: #756e56;
@@ -14,4 +15,8 @@ body {
   font-family: monospace;
   color: var(--warm-black);
   background-color: var(--bone-white);
+}
+
+main {
+  padding-bottom: 5rem;
 }

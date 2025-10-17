@@ -3,6 +3,14 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   compatibilityDate: "2025-07-15",
   pages: true,
+  nitro: {
+    preset: "netlify",
+    output: {
+      dir: ".output",
+      serverDir: ".output/server",
+      publicDir: ".output/public",
+    },
+  },
 
   modules: [
     "@pinia/nuxt",

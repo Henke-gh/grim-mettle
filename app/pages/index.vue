@@ -1,16 +1,13 @@
 <script setup>
-import grimLogo from "../assets/images/logo.svg"
 import swords from "../assets/images/crossedSwords.png"
 import swordLine from "../assets/images/swordLine.svg"
 import guard from "../assets/images/scout_sharp.png"
+import CustomHeader from "~/components/CustomHeader.vue"
+import CustomFooter from "~/components/CustomFooter.vue"
 </script>
 
 <template>
-    <header>
-        <img :src="grimLogo" alt="Grim Mettle" class="logo" />
-        <p class="tagline">- Where heroes live forever -</p>
-        <p class="tagline">Until they die.</p>
-    </header>
+    <CustomHeader />
     <section class="welcome">
         <h1>Welcome to Grim Mettle</h1>
         <article>
@@ -32,46 +29,17 @@ import guard from "../assets/images/scout_sharp.png"
         </div>
     </section>
     <div class="ctaRegister">
-        <p>[Register new user]</p>
+        <NuxtLink to="/register" style="text-decoration: none; color: var(--bone-white); cursor: pointer;">
+            <p>[Register new user]</p>
+        </NuxtLink>
     </div>
     <div class="guardContainer">
         <img :src="guard" alt="A hooded guard watching the gates of an arena" class="guardImg" />
     </div>
-    <footer>
-        <p>Henrik Andersen 2025 - Grim Mettle</p>
-    </footer>
+    <CustomFooter />
 </template>
 
 <style scoped>
-header {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background-color: var(--yellow);
-    padding: 0.5rem;
-    margin-bottom: 0.5rem;
-    border-bottom: 1px solid var(--purple);
-}
-
-footer {
-    position: relative;
-    bottom: 0;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-    width: 100%;
-    background-color: var(--dark-purple);
-    color: var(--yellow);
-    text-align: center;
-}
-
-.tagline {
-    margin: 0;
-    margin-top: 0.2rem;
-    font-size: 0.9rem;
-    font-weight: 600;
-}
-
 section {
     padding: 0.5rem;
 }
@@ -87,7 +55,7 @@ section {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    background-color: var(--turqoise);
+    background-color: var(--light-green);
 }
 
 .swordsContainer {
@@ -105,7 +73,7 @@ section {
 .ctaRegister {
     background-color: var(--dark-green);
     text-align: center;
-    padding: 0.3rem;
+    padding: 0.4rem;
     font-size: 1rem;
     font-weight: 600;
     color: var(--bone-white);

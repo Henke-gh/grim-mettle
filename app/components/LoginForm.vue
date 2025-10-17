@@ -19,7 +19,8 @@
 
 <script setup>
 import { ref } from 'vue'
-const router = useRouter();
+import { useSupabaseUser } from '#imports';
+const user = useSupabaseUser();
 const email = ref('');
 const password = ref('');
 const error = ref('');
@@ -46,7 +47,10 @@ const submitLogin = async () => {
         email.value = '';
         password.value = '';
 
-        router.push('/game');
+        console.log("Logged in!")
+        console.log(user);
+
+        navigateTo('/game');
     } catch (error) {
         error.value = error?.data?.message || 'Something went wrong';
     }
