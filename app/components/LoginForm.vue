@@ -46,6 +46,8 @@ const submitLogin = async () => {
         email.value = '';
         password.value = '';
 
+        console.log("Logged in!")
+
         router.push('/game');
     } catch (error) {
         error.value = error?.data?.message || 'Something went wrong';
