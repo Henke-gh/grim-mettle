@@ -10,53 +10,67 @@
                 <label for="passwordInput">Password: </label>
                 <input type="password" id="passwordInput" v-model="password" required />
             </div>
-            <button class="loginBtn">Login</button>
+            <button class="loginBtn" :disabled="loading">
+                {{ loading ? "Logging in..." : "Login" }}
+            </button>
             <p v-if="error" class="text-red-400 mt-3 text-sm">{{ error }}</p>
-            <p v-if="success" class="text-green-400 mt-3 text-sm">{{ success }}</p>
         </form>
     </section>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { useSupabaseUser } from '#imports';
+import { ref, watchEffect } from "vue";
+import { useSupabaseUser, useSupabaseClient } from "#imports";
+
 const user = useSupabaseUser();
-const email = ref('');
-const password = ref('');
-const error = ref('');
-const success = ref('');
+const supabase = useSupabaseClient();
+const router = useRouter();
+
+const email = ref("");
+const password = ref("");
+const error = ref("");
+const loading = ref(false);
+
+// Automatically redirect logged-in users
+watchEffect(() => {
+    if (user.value) {
+        router.push("/game");
+    }
+});
 
 const submitLogin = async () => {
-    error.value = '';
+    error.value = "";
+    loading.value = true;
 
-    if (password.value.length < 8 || !email.value) {
-        error.value = 'Invalid Credentials.';
+    if (!email.value || password.value.length < 8) {
+        error.value = "Invalid credentials.";
+        loading.value = false;
         return;
     }
 
     try {
-        const res = await $fetch('/api/auth/login', {
-            method: 'POST',
+        const { session } = await $fetch("/api/auth/login", {
+            method: "POST",
             body: { email: email.value, password: password.value },
-            onResponseError({ response }) {
-                error.value = response._data?.message || 'Invalid Credentials.'
-            }
         });
 
-        success.value = res.message;
-        email.value = '';
-        password.value = '';
+        if (session) {
+            await supabase.auth.setSession({
+                access_token: session.access_token,
+                refresh_token: session.refresh_token,
+            });
+        }
 
-        console.log("Logged in!")
-        console.log(user);
-
-        navigateTo('/game');
-    } catch (error) {
-        error.value = error?.data?.message || 'Something went wrong';
+        email.value = "";
+        password.value = "";
+    } catch (err) {
+        error.value = err?.data?.message || "Something went wrong.";
+    } finally {
+        loading.value = false;
     }
 };
-
 </script>
+
 
 <style scoped>
 .loginContainer {

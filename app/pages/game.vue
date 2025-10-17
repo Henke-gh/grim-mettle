@@ -9,7 +9,8 @@
 definePageMeta({
     middleware: 'auth',
 });
-
+import { useSupabaseUser } from '#imports';
+const user = useSupabaseUser();
 const supabase = useSupabaseClient();
 
 const handleSignOut = async () => {
@@ -20,7 +21,7 @@ const handleSignOut = async () => {
         console.error('Error signing out:', error.message) //Clean up error msg/handling
     }
 }
-
+console.log(user);
 </script>
 
 <style scoped></style>

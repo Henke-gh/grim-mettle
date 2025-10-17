@@ -31,7 +31,6 @@ export default defineEventHandler(async (event) => {
     });
 
     if (error) {
-      // This handles wrong password, nonexistent user, etc.
       return sendError(
         event,
         createError({
@@ -41,9 +40,8 @@ export default defineEventHandler(async (event) => {
       );
     }
 
-    return data;
+    return { session: data.session }; //Only returns the tokens
   } catch (err) {
-    // This handles unexpected Supabase/network exceptions cleanly
     return sendError(
       event,
       createError({
