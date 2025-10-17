@@ -5,6 +5,11 @@ export default defineNuxtConfig({
   pages: true,
   nitro: {
     preset: "netlify",
+    output: {
+      dir: ".output",
+      serverDir: ".output/server",
+      publicDir: ".output/public",
+    },
   },
 
   modules: [
