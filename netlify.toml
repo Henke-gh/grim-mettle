@@ -1,6 +1,7 @@
 [build]
-  command = "npm run generate"
-  publish = "dist"
+ command = "npm run build"
+  publish = ".output/public"
+  functions = ".output/server"
 
 [build.environment]
   SECRETS_SCAN_OMIT_PATHS = "server/utils/supabaseAdmin.js"
