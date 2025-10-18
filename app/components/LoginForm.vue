@@ -36,7 +36,7 @@ const loading = ref(false);
 // Automatically redirect logged-in users
 watchEffect(() => {
     if (user.value) {
-        router.push("/game");
+        router.push("/hero");
     }
 });
 
@@ -70,7 +70,7 @@ const submitLogin = async () => {
         });
 
         success.value = "Login successful!";
-        router.push('/game');
+        router.push('/hero');
     } catch (err) {
         error.value = err.message || "Something went wrong.";
     } finally {

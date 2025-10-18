@@ -20,6 +20,7 @@ const submitHero = async () => {
                 body: hero.getCreatePayload(),
             })
             success.value = res.message
+            navigateTo('/hero');
         } catch (err) {
             error.value = err?.data?.message || 'Something went wrong'
         }
