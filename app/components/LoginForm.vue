@@ -14,6 +14,7 @@
                 {{ loading ? "Logging in..." : "Login" }}
             </button>
             <p v-if="error" class="text-red-400 mt-3 text-sm">{{ error }}</p>
+            <p v-if="success" class="text-green-400 mt-3 text-sm">{{ success }}</p>
         </form>
     </section>
 </template>
@@ -29,6 +30,7 @@ const router = useRouter();
 const email = ref("");
 const password = ref("");
 const error = ref("");
+const success = ref("");
 const loading = ref(false);
 
 // Automatically redirect logged-in users
@@ -40,6 +42,7 @@ watchEffect(() => {
 
 const submitLogin = async () => {
     error.value = "";
+    success.value = "";
     loading.value = true;
 
     if (!email.value || password.value.length < 8) {

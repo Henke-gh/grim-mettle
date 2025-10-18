@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { serverSupabaseClient, serverSupabaseUser } from "#supabase/server";
-//import { supabaseAdmin } from "~~/server/utils/supabaseAdmin";
+import { serverSupabaseUser } from "#supabase/server";
+import { supabaseAdmin } from "~~/server/utils/supabaseAdmin";
 import {
   applyBaseAttributeScores,
   calculateAssignedStartingPoints,
@@ -43,12 +43,12 @@ const heroSchema = z.object({
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   const user = await serverSupabaseUser(event);
-  const supabase = await serverSupabaseClient(event);
 
   if (!user)
     throw createError({ statusCode: 401, message: "Not authenticated" });
 
   const result = heroSchema.safeParse(body);
+  console.log(result); //remove log
   if (!result.success)
     throw createError({
       statusCode: 400,
@@ -57,11 +57,18 @@ export default defineEventHandler(async (event) => {
 
   const hero = result.data;
 
+  hero.stats = Object.fromEntries(
+    Object.entries(hero.stats).map(([k, v]) => [k, Number(v)])
+  );
+
   const pointsSpent = calculateAssignedStartingPoints(hero.stats);
   if (pointsSpent > startingPoints)
     throw createError({ statusCode: 400, message: "Too many points spent." });
   if (pointsSpent < startingPoints)
-    ({ statusCode: 400, message: "Only " + pointsSpent + " points spent." });
+    throw createError({
+      statusCode: 400,
+      message: "Only " + pointsSpent + " points spent.",
+    });
 
   //Apply a base value of 5 and set updated attribute values
   const trueBaseAttributes = applyBaseAttributeScores(
@@ -76,13 +83,11 @@ export default defineEventHandler(async (event) => {
 
   //Get Hero hitpoints calculation
   const getMaxHP = computeHeroHP(hero.stats.strength, hero.stats.vitality);
-
-  //Set hp values, both are equal as a hero has full hp on hero creation
-  hero.hp_max = getMaxHP;
-  hero.hp_current = getMaxHP;
-
+  const currentHP = getMaxHP;
+  console.log(getMaxHP);
+  console.log(typeof getMaxHP);
   //Make sure user does not already have an active hero
-  const { data: existingHero } = await supabase
+  const { data: existingHero } = await supabaseAdmin
     .from("heroes")
     .select("id")
     .eq("user_id", user.id)
@@ -91,25 +96,36 @@ export default defineEventHandler(async (event) => {
   if (existingHero)
     throw createError({ statusCode: 400, message: "Hero already exists." });
 
+  console.log({
+    user_id: user.id,
+    hero_name: hero.name,
+    hp_max: getMaxHP,
+    hp_current: currentHP,
+    ...hero.stats,
+  });
   //If all good, insert new hero! Praise the spread operator
-  const { data, error } = await supabase.from("heroes").insert([
-    {
-      user_id: user.id,
-      hero_name: hero.name,
-      avatar: hero.avatar,
-      level: hero.level,
-      xp: hero.xp,
-      xp_next_lvl: hero.xp_next_lvl,
-      gold: hero.gold,
-      hp_max: hero.hp_max,
-      hp_current: hero.hp_current,
-      grit_max: hero.grit_max,
-      grit_current: hero.grit_current,
-      ...hero.stats,
-    },
-  ]);
+  const { data, error } = await supabaseAdmin
+    .from("heroes")
+    .insert([
+      {
+        user_id: user.id,
+        hero_name: hero.name,
+        avatar: hero.avatar,
+        level: hero.level,
+        xp: hero.xp,
+        xp_next_lvl: hero.xp_next_lvl,
+        gold: hero.gold,
+        hp_max: getMaxHP,
+        hp_current: currentHP,
+        grit_max: hero.grit_max,
+        grit_current: hero.grit_current,
+        ...hero.stats,
+      },
+    ])
+    .select()
+    .single();
 
   if (error) throw createError({ statusCode: 500, message: error.message });
 
-  return { success: true, hero: data[0] };
+  return { success: true, hero: data, message: "Hero created!" };
 });

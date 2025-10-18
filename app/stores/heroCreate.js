@@ -5,15 +5,15 @@ export const useHeroCreateStore = defineStore("heroCreate", {
   state: () => ({
     currentStep: 1,
     totalSteps: 2,
-    heroName: "",
+    name: "",
     avatar: 0, //Set default avatar
     level: 1,
-    hitpoints: 0,
-    maxHP: 0, //computed value based on strength + vitality calculation.
-    grit: 125,
-    maxGrit: 100, //computed value based on speed + vitality calculation.
+    hp_current: 0,
+    hp_max: 0, //computed value based on strength + vitality calculation.
+    grit_current: 125,
+    grit_max: 125,
     xp: 0,
-    xpToLvlUp: 200, //Placeholder - not sure how this will be handled.
+    xp_next_lvl: 200, //Placeholder - not sure how this will be handled.
     gold: 150, //Also needs to be set properly and given a default starting amount.
     stats: {
       strength: 0,
@@ -48,12 +48,12 @@ export const useHeroCreateStore = defineStore("heroCreate", {
       this.avatar = avatar;
     },
     setHeroName(heroName) {
-      this.heroName = heroName;
+      this.name = heroName;
     },
     allocateStatPoints(stat, value) {
-      const delta = value - this.stats[stat];
+      const delta = Number(value) - this.stats[stat];
       if (this.statPointsRemaining - delta >= 0) {
-        this.stats[stat] = value;
+        this.stats[stat] = Number(value);
         this.statPointsRemaining -= delta;
       }
     },
