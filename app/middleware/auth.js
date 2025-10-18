@@ -1,12 +1,22 @@
-export default defineNuxtRouteMiddleware(async () => {
+// middleware/auth.global.ts (or /middleware/auth.ts)
+export default defineNuxtRouteMiddleware(async (to, from) => {
   const user = useSupabaseUser();
 
-  // Wait briefly for Supabase to restore session after login
-  for (let i = 0; i < 10; i++) {
-    if (user.value) return;
-    await new Promise((resolve) => setTimeout(resolve, 150));
+  // If user is already present (client-side), allow access immediately
+  if (user.value) return;
+
+  // Try to restore session (important on refresh or SSR)
+  const supabase = useSupabaseClient();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (session && session.user) {
+    // Session restored successfully
+    user.value = session.user;
+    return;
   }
 
-  // Still no user? Redirect to login
-  return navigateTo("/");
+  // No session, redirect to login page
+  return navigateTo("/", { replace: true });
 });

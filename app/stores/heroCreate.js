@@ -6,20 +6,12 @@ export const useHeroCreateStore = defineStore("heroCreate", {
     currentStep: 1,
     totalSteps: 2,
     name: "",
-    avatar: 0, //Set default avatar
-    level: 1,
-    hp_current: 0,
-    hp_max: 0, //computed value based on strength + vitality calculation.
-    grit_current: 125,
-    grit_max: 125,
-    xp: 0,
-    xp_next_lvl: 200, //Placeholder - not sure how this will be handled.
-    gold: 150, //Also needs to be set properly and given a default starting amount.
+    avatar: 0,
     stats: {
       strength: 0,
       speed: 0,
       vitality: 0,
-      swords: 0, //skills start at zero
+      swords: 0,
       axes: 0,
       hammers: 0,
       spears: 0,
@@ -28,7 +20,7 @@ export const useHeroCreateStore = defineStore("heroCreate", {
       evasion: 0,
       initiative: 0,
     },
-    statPointsRemaining: 75, // Points pool used on stats during hero creation
+    statPointsRemaining: 75,
   }),
 
   getters: {
@@ -56,6 +48,16 @@ export const useHeroCreateStore = defineStore("heroCreate", {
         this.stats[stat] = Number(value);
         this.statPointsRemaining -= delta;
       }
+    },
+    getCreatePayload() {
+      // Only send what the API needs
+      return {
+        name: this.name,
+        avatar: this.avatar,
+        stats: Object.fromEntries(
+          Object.entries(this.stats).map(([k, v]) => [k, Number(v)])
+        ),
+      };
     },
     reset() {
       this.$reset();

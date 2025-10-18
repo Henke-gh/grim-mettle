@@ -52,22 +52,27 @@ const submitLogin = async () => {
     }
 
     try {
-        const { session } = await $fetch("/api/auth/login", {
-            method: "POST",
-            body: { email: email.value, password: password.value },
+        const { error: signInError, data } = await supabase.auth.signInWithPassword({
+            email: email.value,
+            password: password.value,
         });
-
-        if (session) {
-            await supabase.auth.setSession({
-                access_token: session.access_token,
-                refresh_token: session.refresh_token,
-            });
+        if (signInError) {
+            throw signInError;
         }
 
-        email.value = "";
-        password.value = "";
+        await new Promise((resolve) => {
+            const stop = watchEffect(() => {
+                if (user.value) {
+                    stop();
+                    resolve();
+                }
+            });
+        });
+
+        success.value = "Login successful!";
+        router.push('/game');
     } catch (err) {
-        error.value = err?.data?.message || "Something went wrong.";
+        error.value = err.message || "Something went wrong.";
     } finally {
         loading.value = false;
     }

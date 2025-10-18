@@ -15,16 +15,9 @@ const submitHero = async () => {
         loading.value = false
     } else {
         try {
-            const payload = {
-                ...hero,
-                stats: Object.fromEntries(
-                    Object.entries(hero.stats).map(([k, v]) => [k, Number(v)])
-                ),
-            };
             const res = await $fetch('/api/hero/create', {
                 method: 'POST',
-                body: payload,
-                credentials: 'include'
+                body: hero.getCreatePayload(),
             })
             success.value = res.message
         } catch (err) {

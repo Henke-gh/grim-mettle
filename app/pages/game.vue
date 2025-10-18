@@ -18,7 +18,6 @@ function handleCreate() {
 
 <template>
     <div>
-        <h2>No hero found</h2>
         <button @click="handleCreate">Create new Hero</button>
         <button @click="handleSignOut">Sign Out</button>
     </div>
