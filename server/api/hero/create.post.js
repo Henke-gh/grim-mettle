@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { serverSupabaseClient, serverSupabaseUser } from "#supabase/server";
-//import { supabaseAdmin } from "~~/server/utils/supabaseAdmin";
+import { serverSupabaseClient } from "#supabase/server";
+import { supabaseAdmin } from "~~/server/utils/supabaseAdmin";
 import {
   applyBaseAttributeScores,
   calculateAssignedStartingPoints,
@@ -8,7 +8,6 @@ import {
 } from "~~/server/utils/heroUtils";
 
 const startingPoints = 75;
-const xpToLevelTwo = 200;
 
 const heroSchema = z.object({
   name: z
@@ -17,14 +16,6 @@ const heroSchema = z.object({
     .max(16)
     .regex(/^[a-zA-Z0-9_]+$/, "Only letters, numbers, and underscores allowed"),
   avatar: z.number(),
-  gold: z.number(150),
-  level: z.number(1),
-  xp: z.number(0),
-  xp_next_lvl: z.number(xpToLevelTwo),
-  hp_current: z.number(),
-  hp_max: z.number(),
-  grit_current: z.number(125), //Assign Grit
-  grit_max: z.number(125),
   stats: z.object({
     strength: z.number().min(0),
     speed: z.number().min(0),
@@ -41,75 +32,128 @@ const heroSchema = z.object({
 });
 
 export default defineEventHandler(async (event) => {
-  const body = await readBody(event);
-  const user = await serverSupabaseUser(event);
-  const supabase = await serverSupabaseClient(event);
+  try {
+    console.log("=== START: Hero Create API ===");
+    const body = await readBody(event);
+    console.log("Request body:", JSON.stringify(body, null, 2));
 
-  if (!user)
-    throw createError({ statusCode: 401, message: "Not authenticated" });
+    // Get the user-scoped Supabase client (reads the session cookie)
+    const supabase = await serverSupabaseClient(event);
 
-  const result = heroSchema.safeParse(body);
-  if (!result.success)
-    throw createError({
-      statusCode: 400,
-      message: result.error.issues[0].message,
-    });
+    // Verify the user is authenticated
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
 
-  const hero = result.data;
+    if (userError || !user) {
+      console.error("Auth error:", userError);
+      throw createError({ statusCode: 401, message: "Not authenticated" });
+    }
 
-  const pointsSpent = calculateAssignedStartingPoints(hero.stats);
-  if (pointsSpent > startingPoints)
-    throw createError({ statusCode: 400, message: "Too many points spent." });
-  if (pointsSpent < startingPoints)
-    ({ statusCode: 400, message: "Only " + pointsSpent + " points spent." });
+    console.log("Authenticated user ID:", user.id);
 
-  //Apply a base value of 5 and set updated attribute values
-  const trueBaseAttributes = applyBaseAttributeScores(
-    hero.stats.strength,
-    hero.stats.speed,
-    hero.stats.vitality
-  );
+    const result = heroSchema.safeParse(body);
+    console.log("Zod validation result:", result.success ? "PASSED" : "FAILED");
+    if (!result.success) {
+      console.error("Validation errors:", result.error.issues);
+      throw createError({
+        statusCode: 400,
+        message: result.error.issues[0].message,
+      });
+    }
 
-  hero.stats.strength = trueBaseAttributes.finalStrength;
-  hero.stats.speed = trueBaseAttributes.finalSpeed;
-  hero.stats.vitality = trueBaseAttributes.finalVitality;
+    const hero = result.data;
+    console.log("Validated hero data:", hero);
 
-  //Get Hero hitpoints calculation
-  const getMaxHP = computeHeroHP(hero.stats.strength, hero.stats.vitality);
+    const pointsSpent = calculateAssignedStartingPoints(hero.stats);
+    console.log("Points spent:", pointsSpent);
+    if (pointsSpent > startingPoints) {
+      throw createError({ statusCode: 400, message: "Too many points spent." });
+    }
+    if (pointsSpent < startingPoints) {
+      throw createError({
+        statusCode: 400,
+        message: `Only ${pointsSpent} points spent.`,
+      });
+    }
 
-  //Set hp values, both are equal as a hero has full hp on hero creation
-  hero.hp_max = getMaxHP;
-  hero.hp_current = getMaxHP;
+    // Apply base attribute scores
+    console.log("Applying base attribute scores...");
+    const trueBaseAttributes = applyBaseAttributeScores(
+      hero.stats.strength,
+      hero.stats.speed,
+      hero.stats.vitality
+    );
+    console.log("Base attributes applied:", trueBaseAttributes);
 
-  //Make sure user does not already have an active hero
-  const { data: existingHero } = await supabase
-    .from("heroes")
-    .select("id")
-    .eq("user_id", user.id)
-    .maybeSingle();
+    hero.stats.strength = trueBaseAttributes.finalStrength;
+    hero.stats.speed = trueBaseAttributes.finalSpeed;
+    hero.stats.vitality = trueBaseAttributes.finalVitality;
+    console.log("Updated hero stats:", hero.stats);
 
-  if (existingHero)
-    throw createError({ statusCode: 400, message: "Hero already exists." });
+    // Calculate HP
+    const maxHP = computeHeroHP(hero.stats.strength, hero.stats.vitality);
+    console.log("Calculated maxHP:", maxHP);
 
-  //If all good, insert new hero! Praise the spread operator
-  const { data, error } = await supabase.from("heroes").insert([
-    {
+    // Use supabaseAdmin to bypass RLS and check for existing hero
+    console.log("Checking for existing hero...");
+    const { data: existingHero, error: checkError } = await supabaseAdmin
+      .from("heroes")
+      .select("id")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    if (checkError) {
+      console.error("Error checking existing hero:", checkError);
+      throw createError({ statusCode: 500, message: checkError.message });
+    }
+
+    console.log("Existing hero check result:", existingHero ? "Found" : "None");
+
+    if (existingHero) {
+      throw createError({ statusCode: 400, message: "Hero already exists." });
+    }
+
+    console.log(
+      "🔥 About to insert - checking supabaseAdmin:",
+      !!supabaseAdmin
+    );
+
+    // Use supabaseAdmin to insert (bypasses RLS for secure server-side control)
+    console.log("🔥 Attempting to insert hero...");
+    const insertData = {
       user_id: user.id,
       hero_name: hero.name,
       avatar: hero.avatar,
-      level: hero.level,
-      xp: hero.xp,
-      xp_next_lvl: hero.xp_next_lvl,
-      gold: hero.gold,
-      hp_max: hero.hp_max,
-      hp_current: hero.hp_current,
-      grit_max: hero.grit_max,
-      grit_current: hero.grit_current,
+      level: 1,
+      xp: 0,
+      xp_next_lvl: 200,
+      gold: 200,
+      hp_max: maxHP,
+      hp_current: maxHP,
+      grit_max: 125,
+      grit_current: 125,
       ...hero.stats,
-    },
-  ]);
+    };
+    console.log("🔥 Insert data:", JSON.stringify(insertData, null, 2));
 
-  if (error) throw createError({ statusCode: 500, message: error.message });
+    const { data, error } = await supabaseAdmin
+      .from("heroes")
+      .insert([insertData])
+      .select()
+      .single();
 
-  return { success: true, hero: data[0] };
+    if (error) {
+      console.error("❌ Supabase insert error:", error);
+      throw createError({ statusCode: 500, message: error.message });
+    }
+
+    console.log("✅ Hero created successfully:", data);
+    console.log("=== END: Hero Create API ===");
+    return { success: true, hero: data, message: "Hero created!" };
+  } catch (err) {
+    console.error("=== CAUGHT ERROR ===", err);
+    throw err;
+  }
 });

@@ -22,10 +22,10 @@ const hero = useHeroCreateStore();
             <label for="heroName">
                 <h3>Name your champion:</h3>
             </label>
-            <input type="text" id="heroName" min="3" max="16" placeholder="Give your hero a name" :value="hero.heroName"
+            <input type="text" id="heroName" min="3" max="16" placeholder="Give your hero a name" :value="hero.name"
                 v-on:input="event => hero.setHeroName(event.target.value)"></input>
         </div>
-        <button class="continueBtn" v-on:click="hero.nextStep()" :disabled="hero.heroName.length < 3">Continue</button>
+        <button class="continueBtn" v-on:click="hero.nextStep()" :disabled="hero.name.length < 3">Continue</button>
     </section>
 </template>
 
