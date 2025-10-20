@@ -8,7 +8,7 @@ onMounted(() => {
 <template>
   <div class="container" v-if="hero">
     <div class="hero">
-      <img :src="heroAvatar.src" class="heroPortrait" :alt="heroAvatar.alt" />
+      <img :src="heroAvatar.src" class="heroPortraitSmall" :alt="heroAvatar.alt" />
     </div>
     <div class="stats">
       <p class="noMargin">Name: {{ hero.hero_name }}</p>
@@ -43,7 +43,7 @@ onMounted(() => {
   margin: 0;
 }
 
-.heroPortrait {
+.heroPortraitSmall {
   border-radius: 50%;
   border: 5px double var(--purple);
   height: 5rem;

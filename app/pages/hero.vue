@@ -36,11 +36,6 @@ const skills = computed(() => {
     )
 
 })
-
-onMounted(async () => {
-    const data = await $fetch('/api/items/itemCatalog')
-    console.log(data.items)
-})
 </script>
 
 <template>
@@ -53,19 +48,21 @@ onMounted(async () => {
             <p>{{ error }}</p>
         </div>
         <div v-else-if="hero">
-            <section class="container">
-                <div class="part">
-                    <img :src="heroAvatar.src" :alt="heroAvatar.alt" class="heroPortrait" />
-                </div>
-                <div class="part">
-                    <h3>{{ hero.hero_name }} [Level: {{ hero.level }}]</h3>
-                    <p>HP: {{ hero.hp_current }}/{{ hero.hp_max }}</p>
-                    <p>Grit: {{ hero.grit_current }}/{{ hero.grit_max }}</p>
-                    <p>XP: {{ hero.xp }}/{{ hero.xp_next_lvl }}</p>
-                    <p>Gold: {{ hero.gold }}</p>
-                </div>
-            </section>
-            <section class="container">
+            <div class="gradientBorder">
+                <section class="heroContainer">
+                    <div class="part">
+                        <img :src="heroAvatar.src" :alt="heroAvatar.alt" class="heroPortrait" />
+                    </div>
+                    <div class="part">
+                        <h3>{{ hero.hero_name }} [Level: {{ hero.level }}]</h3>
+                        <p>HP: {{ hero.hp_current }}/{{ hero.hp_max }}</p>
+                        <p>Grit: {{ hero.grit_current }}/{{ hero.grit_max }}</p>
+                        <p>XP: {{ hero.xp }}/{{ hero.xp_next_lvl }}</p>
+                        <p>Gold: {{ hero.gold }}</p>
+                    </div>
+                </section>
+            </div>
+            <section class="heroContainer">
                 <div class="part">
                     <h4>Equipped</h4>
                     <p>Main hand: Short Sword</p>
@@ -79,7 +76,7 @@ onMounted(async () => {
                     <p>Jade Ring</p>
                 </div>
             </section>
-            <section class="container">
+            <section class="heroContainer">
                 <div class="part">
                     <h4>Main Attributes</h4>
                     <p class="skills" v-for="(value, key) in mainAttributes">{{ capitalise(key) }}: {{ value }}</p>
@@ -101,9 +98,10 @@ onMounted(async () => {
     padding: 0.5rem;
 }
 
-.container {
+.heroContainer {
     display: flex;
     flex-direction: row;
     gap: 1rem;
+    background-color: var(--bone-white);
 }
 </style>
