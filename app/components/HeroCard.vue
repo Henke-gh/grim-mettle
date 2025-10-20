@@ -1,18 +1,21 @@
 <script setup>
-const heroName = 'Toern'
+const { hero, heroAvatar, loading, error, fetchHero } = useHero();
+onMounted(() => {
+  fetchHero();
+})
 </script>
 
 <template>
-  <div class="container">
-    <div class="hero">
-      <img src="/avatars/avatarOne.png" class="heroPortrait" />
+  <div class="container" v-if="hero">
+    <div class=" hero">
+      <img :src="heroAvatar.src" class="heroPortrait" :alt="heroAvatar.alt" />
       <p>Level: 2 (35 / 350)</p>
     </div>
     <div class="stats">
-      <p>Name: {{ heroName }}</p>
-      <p>HP: 35 / 35</p>
-      <p>Grit: 55 / 70</p>
-      <p>Gold: 230</p>
+      <p>Name: {{ hero.hero_name }}</p>
+      <p>HP: {{ hero.hp_current }} / {{ hero.hp_max }}</p>
+      <p>Grit: {{ hero.grit_current }} / {{ hero.grit_max }}</p>
+      <p>Gold: {{ hero.gold }}</p>
     </div>
   </div>
 </template>
@@ -30,6 +33,7 @@ const heroName = 'Toern'
   background-color: var(--yellow);
   border-radius: 0.4rem;
 }
+
 .hero {
   display: flex;
   flex-direction: column;
@@ -40,6 +44,7 @@ const heroName = 'Toern'
   margin: 0;
   padding-bottom: 0.5rem;
 }
+
 .heroPortrait {
   border-radius: 50%;
   border: 4px dotted var(--purple);

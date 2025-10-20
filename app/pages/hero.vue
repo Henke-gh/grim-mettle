@@ -38,8 +38,8 @@ const skills = computed(() => {
 })
 
 onMounted(async () => {
-    const data = await $fetch('/api/items/weapons')
-    console.log(data.weapons)
+    const data = await $fetch('/api/items/itemCatalog')
+    console.log(data.items)
 })
 </script>
 
