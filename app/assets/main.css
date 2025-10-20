@@ -23,7 +23,7 @@ main {
 
 .heroPortrait {
   border-radius: 50%;
-  border: 4px dotted var(--purple);
+  border: 5px double var(--purple);
   height: 6rem;
   width: 6rem;
   margin: 5px;
