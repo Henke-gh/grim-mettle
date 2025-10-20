@@ -2,18 +2,22 @@
 
 <template>
   <section class="container">
-    <div class="linkWrap">
-      <p>[Hero]</p>
-      <img src="/heroIcon.svg" />
-    </div>
+    <NuxtLink to="/hero" style="text-decoration: none; color: var(--warm-black)">
+      <div class="linkWrap">
+        <p>[Hero]</p>
+        <img src="/heroIcon.svg" />
+      </div>
+    </NuxtLink>
     <div class="linkWrap">
       <p>[Combat]</p>
       <img src="/IconFrameCombat.svg" />
     </div>
-    <div class="linkWrap">
-      <p>[Shop]</p>
-      <img src="/IconFrameShopFirst.svg" />
-    </div>
+    <NuxtLink to="/market" style="text-decoration: none; color: var(--warm-black);">
+      <div class="linkWrap">
+        <p>[Market]</p>
+        <img src="/IconFrameShopFirst.svg" />
+      </div>
+    </NuxtLink>
     <div class="linkWrap">
       <p>[Healing]</p>
       <img src="/healingIcon.svg" />

@@ -3,23 +3,11 @@
 //100 - 199 = shields
 //200 - 299 = armours
 //300 - 399 = trinkets
+//400+ = default starting items
 
 export const weapons = [
   {
     id: 0,
-    category: "default",
-    name: "Fists",
-    minDmg: 1,
-    maxDmg: 2,
-    skillReq: 0,
-    weight: 0,
-    goldCost: 0,
-    bonus: {},
-    description:
-      "Looks like you're unarmed. Might want to look into that situation.",
-  },
-  {
-    id: 1,
     category: "sword",
     name: "Short Sword",
     minDmg: 2,
@@ -31,7 +19,7 @@ export const weapons = [
     description: "Keep it short and sweet.",
   },
   {
-    id: 2,
+    id: 1,
     category: "sword",
     name: "Long Sword",
     minDmg: 5,
@@ -64,12 +52,12 @@ export const armour = [
   {
     id: 200,
     category: "armour",
-    name: "Plain Tunic",
-    damageReduction: 0,
-    goldCost: 0,
-    weight: 0,
+    name: "Leather Tunic",
+    damageReduction: 1,
+    goldCost: 75,
+    weight: 1,
     bonus: {},
-    description: "It's what you arrived in. It's got holes in it.",
+    description: "This one's made from leather, it's a fantasy trope.",
   },
 ];
 
@@ -87,4 +75,30 @@ export const trinkets = [
   },
 ];
 
-export const itemCatalog = [weapons, shields, armour, trinkets];
+export const starterGear = [
+  {
+    id: 400,
+    category: "default",
+    name: "Fists",
+    minDmg: 1,
+    maxDmg: 2,
+    skillReq: 0,
+    weight: 0,
+    goldCost: 0,
+    bonus: {},
+    description:
+      "Looks like you're unarmed. Might want to look into improving that situation.",
+  },
+  {
+    id: 401,
+    category: "armour",
+    name: "Plain Tunic",
+    damageReduction: 0,
+    goldCost: 0,
+    weight: 0,
+    bonus: {},
+    description: "It's what you arrived in. It's got holes in it.",
+  },
+];
+
+export const itemCatalog = [weapons, shields, armour, trinkets, starterGear];

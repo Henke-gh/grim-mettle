@@ -7,15 +7,15 @@ onMounted(() => {
 
 <template>
   <div class="container" v-if="hero">
-    <div class=" hero">
+    <div class="hero">
       <img :src="heroAvatar.src" class="heroPortrait" :alt="heroAvatar.alt" />
-      <p>Level: 2 (35 / 350)</p>
     </div>
     <div class="stats">
-      <p>Name: {{ hero.hero_name }}</p>
-      <p>HP: {{ hero.hp_current }} / {{ hero.hp_max }}</p>
-      <p>Grit: {{ hero.grit_current }} / {{ hero.grit_max }}</p>
-      <p>Gold: {{ hero.gold }}</p>
+      <p class="noMargin">Name: {{ hero.hero_name }}</p>
+      <p class="noMargin">Level: {{ hero.level }} ({{ hero.xp_current }} / {{ hero.xp_next_lvl }})</p>
+      <p class="noMargin">HP: {{ hero.hp_current }} / {{ hero.hp_max }}</p>
+      <p class="noMargin">Grit: {{ hero.grit_current }} / {{ hero.grit_max }}</p>
+      <p class="noMargin">Gold: {{ hero.gold }}</p>
     </div>
   </div>
 </template>
@@ -29,9 +29,8 @@ onMounted(() => {
   position: fixed;
   top: 0;
   width: 100%;
-  height: 9rem;
+  height: 6.5rem;
   background-color: var(--yellow);
-  border-radius: 0.4rem;
 }
 
 .hero {
@@ -40,16 +39,14 @@ onMounted(() => {
   align-items: center;
 }
 
-.hero p {
+.noMargin {
   margin: 0;
-  padding-bottom: 0.5rem;
 }
 
 .heroPortrait {
   border-radius: 50%;
-  border: 4px dotted var(--purple);
-  height: 6rem;
-  width: 6rem;
-  margin: 5px;
+  border: 5px double var(--purple);
+  height: 5rem;
+  width: 5rem;
 }
 </style>
