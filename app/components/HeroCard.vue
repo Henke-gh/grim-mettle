@@ -1,18 +1,21 @@
 <script setup>
-const heroName = 'Toern'
+const { hero, heroAvatar, loading, error, fetchHero } = useHero();
+onMounted(() => {
+  fetchHero();
+})
 </script>
 
 <template>
-  <div class="container">
+  <div class="container" v-if="hero">
     <div class="hero">
-      <img src="/avatars/avatarOne.png" class="heroPortrait" />
-      <p>Level: 2 (35 / 350)</p>
+      <img :src="heroAvatar.src" class="heroPortrait" :alt="heroAvatar.alt" />
     </div>
     <div class="stats">
-      <p>Name: {{ heroName }}</p>
-      <p>HP: 35 / 35</p>
-      <p>Grit: 55 / 70</p>
-      <p>Gold: 230</p>
+      <p class="noMargin">Name: {{ hero.hero_name }}</p>
+      <p class="noMargin">Level: {{ hero.level }} ({{ hero.xp_current }} / {{ hero.xp_next_lvl }})</p>
+      <p class="noMargin">HP: {{ hero.hp_current }} / {{ hero.hp_max }}</p>
+      <p class="noMargin">Grit: {{ hero.grit_current }} / {{ hero.grit_max }}</p>
+      <p class="noMargin">Gold: {{ hero.gold }}</p>
     </div>
   </div>
 </template>
@@ -26,25 +29,24 @@ const heroName = 'Toern'
   position: fixed;
   top: 0;
   width: 100%;
-  height: 9rem;
+  height: 6.5rem;
   background-color: var(--yellow);
-  border-radius: 0.4rem;
 }
+
 .hero {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.hero p {
+.noMargin {
   margin: 0;
-  padding-bottom: 0.5rem;
 }
+
 .heroPortrait {
   border-radius: 50%;
-  border: 4px dotted var(--purple);
-  height: 6rem;
-  width: 6rem;
-  margin: 5px;
+  border: 5px double var(--purple);
+  height: 5rem;
+  width: 5rem;
 }
 </style>

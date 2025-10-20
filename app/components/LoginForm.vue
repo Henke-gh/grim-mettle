@@ -1,6 +1,6 @@
 <template>
     <section class="loginContainer">
-        <h2>Login</h2>
+        <h2>Login to start playing</h2>
         <form class="loginForm" @submit.prevent="submitLogin">
             <div class="segment">
                 <label for="emailInput">E-mail: </label>

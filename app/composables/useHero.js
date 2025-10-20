@@ -1,3 +1,5 @@
+import { heroAvatars } from "../../utils/avatars";
+import { computeDerivedStatBonus } from "~~/utils/heroUtils";
 export const useHero = () => {
   const supabase = useSupabaseClient();
   const user = useSupabaseUser();
@@ -20,7 +22,7 @@ export const useHero = () => {
         .from("heroes")
         .select("*")
         .eq("user_id", user.value.sub)
-        .single();
+        .maybeSingle();
       if (fetchError) throw fetchError;
 
       if (!data) {
@@ -35,8 +37,28 @@ export const useHero = () => {
       loading.value = false;
     }
   };
+
+  //get the hero avatar image
+  const heroAvatar = computed(() => {
+    if (!hero.value) return null;
+    return heroAvatars.find((avatar) => avatar.id === hero.value.avatar);
+  });
+
+  //calculate final stat values
+  const derivedStats = computed(() => {
+    if (!hero.value) return null;
+    return computeDerivedStatBonus({
+      speed: hero.value.speed,
+      block: hero.value.block,
+      evasion: hero.value.evasion,
+      initiative: hero.value.initiative,
+    });
+  });
+
   return {
     hero,
+    heroAvatar,
+    derivedStats,
     loading,
     error,
     fetchHero,
