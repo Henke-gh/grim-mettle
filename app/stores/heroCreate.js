@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { heroAvatars } from "../utils/avatars";
+import { heroAvatars } from "../../utils/avatars";
 
 export const useHeroCreateStore = defineStore("heroCreate", {
   state: () => ({

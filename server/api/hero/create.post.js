@@ -5,7 +5,7 @@ import {
   applyBaseAttributeScores,
   calculateAssignedStartingPoints,
   computeHeroHP,
-} from "~~/server/utils/heroUtils";
+} from "~~/utils/heroUtils";
 
 const startingPoints = 75;
 

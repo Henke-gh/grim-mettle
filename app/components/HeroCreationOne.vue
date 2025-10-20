@@ -1,5 +1,5 @@
 <script setup>
-import { heroAvatars } from "../utils/avatars.js"
+import { heroAvatars } from "../../utils/avatars.js"
 import { useHeroCreateStore } from "#imports";
 
 const avatars = heroAvatars;

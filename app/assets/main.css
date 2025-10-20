@@ -20,3 +20,11 @@ body {
 main {
   padding-bottom: 5rem;
 }
+
+.heroPortrait {
+  border-radius: 50%;
+  border: 4px dotted var(--purple);
+  height: 6rem;
+  width: 6rem;
+  margin: 5px;
+}
