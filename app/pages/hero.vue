@@ -36,11 +36,6 @@ const skills = computed(() => {
     )
 
 })
-
-onMounted(async () => {
-    const data = await $fetch('/api/items/itemCatalog')
-    console.log(data.items)
-})
 </script>
 
 <template>
@@ -101,17 +96,6 @@ onMounted(async () => {
 <style scoped>
 .wrapper {
     padding: 0.5rem;
-}
-
-.gradientBorder {
-    background: #eb39f5;
-    background: linear-gradient(24deg,
-            rgba(235, 57, 245, 1) 0%,
-            rgba(56, 245, 207, 1) 50%,
-            rgba(245, 201, 56, 1) 100%);
-    padding: 0.2rem;
-    border-radius: 5px;
-
 }
 
 .heroContainer {

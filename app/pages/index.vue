@@ -64,7 +64,7 @@ section {
 }
 
 .swordsImg {
-    height: 5rem;
+    height: 4.5rem;
     width: auto;
 }
 
