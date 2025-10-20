@@ -34,8 +34,13 @@ const skills = computed(() => {
     return Object.fromEntries(
         Object.entries(allSkills).filter(([_, value]) => value > 0)
     )
+
 })
 
+onMounted(async () => {
+    const data = await $fetch('/api/items/weapons')
+    console.log(data.weapons)
+})
 </script>
 
 <template>
@@ -58,6 +63,20 @@ const skills = computed(() => {
                     <p>Grit: {{ hero.grit_current }}/{{ hero.grit_max }}</p>
                     <p>XP: {{ hero.xp }}/{{ hero.xp_next_lvl }}</p>
                     <p>Gold: {{ hero.gold }}</p>
+                </div>
+            </section>
+            <section class="container">
+                <div class="part">
+                    <h4>Equipped</h4>
+                    <p>Main hand: Short Sword</p>
+                    <p>Off-hand: -empty-</p>
+                    <p>Armour: Rag Tunic</p>
+                    <p>Trinkets:</p>
+                </div>
+                <div class="part">
+                    <h4>Inventory</h4>
+                    <p>Buckler</p>
+                    <p>Jade Ring</p>
                 </div>
             </section>
             <section class="container">

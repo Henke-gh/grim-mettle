@@ -22,7 +22,7 @@ export const useHero = () => {
         .from("heroes")
         .select("*")
         .eq("user_id", user.value.sub)
-        .single();
+        .maybeSingle();
       if (fetchError) throw fetchError;
 
       if (!data) {

@@ -9,9 +9,10 @@ import CustomFooter from "~/components/CustomFooter.vue"
 <template>
     <CustomHeader />
     <section class="welcome">
-        <h1>Welcome to Grim Mettle</h1>
         <article>
-            <h2>Test your mettle, claim your fame!</h2>
+            <div class="guardContainer">
+                <img :src="guard" alt="A hooded guard watching the gates of an arena" class="guardImg" />
+            </div>
             <p>Grim Mettle lets you create a hero and battle foes in arena combat. Level up and spend skill points to
                 improve your skills or learn new ones.</p>
             <p>On your journey you will equip your hero with all manner of items to further improve your character and
@@ -32,9 +33,6 @@ import CustomFooter from "~/components/CustomFooter.vue"
         <NuxtLink to="/register" style="text-decoration: none; color: var(--bone-white); cursor: pointer;">
             <p>[Register new user]</p>
         </NuxtLink>
-    </div>
-    <div class="guardContainer">
-        <img :src="guard" alt="A hooded guard watching the gates of an arena" class="guardImg" />
     </div>
     <CustomFooter />
 </template>
