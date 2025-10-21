@@ -9,6 +9,11 @@
   --yellow: #f5c938;
   --brown: #756e56;
 }
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
@@ -23,19 +28,31 @@ main {
 
 .heroPortrait {
   border-radius: 50%;
-  border: 5px double var(--purple);
+  border: 5px double var(--dark-green);
   height: 6rem;
   width: 6rem;
   margin: 5px;
 }
 
-.gradientBorder {
+/* .gradientBorder {
   background: #eb39f5;
   background: linear-gradient(
     24deg,
     rgba(235, 57, 245, 1) 0%,
     rgba(56, 245, 207, 1) 50%,
     rgba(245, 201, 56, 1) 100%
+  );
+  padding: 0.2rem;
+  border-radius: 5px;
+} */
+
+.gradientBorder {
+  background: #eb39f5;
+  background: linear-gradient(
+    24deg,
+    var(--dark-green) 0%,
+    var(--brown) 50%,
+    var(--yellow) 100%
   );
   padding: 0.2rem;
   border-radius: 5px;
