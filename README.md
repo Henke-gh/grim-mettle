@@ -1,5 +1,10 @@
 # Grim Mettle
-A text based gladiatorial adventure
+
+![The gate guard](https://github.com/Henke-gh/grim-mettle/blob/develop/app/assets/images/scout_sharp.png)
+
+Where heroes live forever - until they die. A text-based gladiatorial adventure.
+
+Create your hero, specialise in weapon skills, gear up and take on the threats challenging you.
 
 # Nuxt Minimal Starter
 
