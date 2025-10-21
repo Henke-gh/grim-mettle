@@ -30,12 +30,12 @@ function sendToLogin() {
             <img :src="swords" alt="Two crossed swords" class="swordsImg" />
         </div>
         <div class="loginContainer">
-            <div class="gradientBorder">
+            <div class="gradientBorder fitContent">
                 <button class="ctaLogin" v-on:click="sendToLogin">
                     <h1>Play now</h1>
-                    <p class="customP">Log in and start playing</p>
                 </button>
             </div>
+            <p class="customP">Log in and start playing</p>
         </div>
     </section>
     <div class="swordlineContainer spacing"><img :src="swordLine" alt="A line of four swords" /></div>
@@ -88,7 +88,6 @@ section {
     text-align: center;
     background-color: var(--dark-green);
     padding: 0.4rem;
-    font-size: 1rem;
     font-weight: 600;
     color: var(--bone-white);
     gap: 0.5rem;

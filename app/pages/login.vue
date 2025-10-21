@@ -1,53 +1,57 @@
 <template>
+    <CustomHeader />
     <div class="wrapper">
         <section class="loginWrapper">
-            <div class="swordsContainer">
-                <img :src="swords" alt="Two crossed swords" class="swordsImg" />
+            <div class="gradientBorder fitContent">
+                <div class="loginContainer">
+                    <LoginForm />
+                </div>
             </div>
-            <div class="loginContainer">
-                <LoginForm />
+            <div class="ctaRegister">
+                <p class="customP">Don't have an account? It only takes a moment to set up.</p>
+                <div class="gradientBorder fitContent">
+                    <NuxtLink to="/register" style="text-decoration: none; color: var(--bone-white); cursor: pointer;">
+                        <button class="ctaLogin registerBtn">[Register new user]</button>
+                    </NuxtLink>
+                </div>
             </div>
         </section>
-        <div class="ctaRegister">
-            <NuxtLink to="/register" style="text-decoration: none; color: var(--bone-white); cursor: pointer;">
-                <p>[Register new user]</p>
-            </NuxtLink>
-        </div>
     </div>
+    <CustomFooter />
 </template>
 
 <script setup>
-
 </script>
 
 <style scoped>
 .loginWrapper {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
     justify-content: space-between;
+    gap: 1rem;
+}
+
+.loginContainer {
+    padding: 0.5rem;
     background-color: var(--light-green);
-}
-
-.swordsContainer {
-    background-color: var(--dark-green);
-    border-radius: 50%;
-    padding: 0.2rem;
-    border: 3px dashed var(--yellow);
-}
-
-.swordsImg {
-    height: 4.5rem;
-    width: auto;
 }
 
 .ctaRegister {
     background-color: var(--dark-green);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
+    gap: 0.5rem;
     padding: 0.4rem;
     font-size: 1rem;
     font-weight: 600;
     color: var(--bone-white);
+}
+
+.fitContent {
+    width: fit-content;
 }
 
 .ctaRegister p {
