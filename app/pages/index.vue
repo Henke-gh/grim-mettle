@@ -4,6 +4,10 @@ import swordLine from "../assets/images/swordLine.svg"
 import guard from "../assets/images/scout_sharp.png"
 import CustomHeader from "~/components/CustomHeader.vue"
 import CustomFooter from "~/components/CustomFooter.vue"
+
+function sendToLogin() {
+    navigateTo('/login')
+}
 </script>
 
 <template>
@@ -26,13 +30,22 @@ import CustomFooter from "~/components/CustomFooter.vue"
             <img :src="swords" alt="Two crossed swords" class="swordsImg" />
         </div>
         <div class="loginContainer">
-            <LoginForm />
+            <div class="gradientBorder">
+                <button class="ctaLogin" v-on:click="sendToLogin">
+                    <h1>Play now</h1>
+                    <p class="customP">Log in and start playing</p>
+                </button>
+            </div>
         </div>
     </section>
+    <div class="swordlineContainer spacing"><img :src="swordLine" alt="A line of four swords" /></div>
     <div class="ctaRegister">
-        <NuxtLink to="/register" style="text-decoration: none; color: var(--bone-white); cursor: pointer;">
-            <p>[Register new user]</p>
-        </NuxtLink>
+        <p class="customP">Don't have an account? It only takes a moment to set up.</p>
+        <div class="gradientBorder fitContent">
+            <NuxtLink to="/register" style="text-decoration: none; color: var(--bone-white); cursor: pointer;">
+                <button class="ctaLogin registerBtn">[Register new user]</button>
+            </NuxtLink>
+        </div>
     </div>
     <CustomFooter />
 </template>
@@ -52,7 +65,7 @@ section {
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-between;
+    gap: 2rem;
     background-color: var(--light-green);
 }
 
@@ -69,16 +82,38 @@ section {
 }
 
 .ctaRegister {
-    background-color: var(--dark-green);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
+    background-color: var(--dark-green);
     padding: 0.4rem;
     font-size: 1rem;
     font-weight: 600;
     color: var(--bone-white);
+    gap: 0.5rem;
+}
+
+.ctaLogin {
+    border: none;
+    font-family: monospace;
+    font-weight: 600;
+    color: var(--warm-black);
+    background-color: var(--bone-white);
+    border-radius: 5px;
+    padding: 0.5rem 1rem 0.5rem 1rem;
+}
+
+.ctaLogin h1 {
+    margin: 0;
 }
 
 .ctaRegister p {
     margin: 0;
+}
+
+.customP {
+    font-weight: 400;
 }
 
 .guardContainer {
@@ -92,5 +127,17 @@ section {
     width: 95vw;
     max-width: 500px;
     height: auto;
+}
+
+.fitContent {
+    max-width: fit-content;
+}
+
+.registerBtn {
+    font-size: 1rem;
+}
+
+.spacing {
+    margin: 0.5rem;
 }
 </style>
