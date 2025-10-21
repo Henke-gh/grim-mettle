@@ -45,7 +45,7 @@ onMounted(() => {
 
 .heroPortraitSmall {
   border-radius: 50%;
-  border: 5px double var(--purple);
+  border: 5px double var(--dark-green);
   height: 5rem;
   width: 5rem;
 }

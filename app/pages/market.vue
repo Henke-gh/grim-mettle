@@ -78,6 +78,7 @@ const { data } = await useFetch('/api/items/itemCatalog')
 .storeHeader {
     background-color: var(--bone-white);
     padding: 0.5rem;
+    border-radius: 5px;
 }
 
 .storeHeader h1 {
