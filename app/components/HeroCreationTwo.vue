@@ -111,8 +111,7 @@ const submitHero = async () => {
                     </div>
                 </div>
             </div>
-            <button class="submitBtn" :disabled="hero.statPointsRemaining !== 0">Create
-                Hero</button>
+            <DefaultButton text="Create Hero" type="submit" :disabled="hero.statPointsRemaining !== 0" />
         </form>
     </section>
 </template>

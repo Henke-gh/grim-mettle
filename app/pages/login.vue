@@ -9,11 +9,7 @@
             </div>
             <div class="ctaRegister">
                 <p class="customP">Don't have an account? It only takes a moment to set up.</p>
-                <div class="gradientBorder fitContent">
-                    <NuxtLink to="/register" style="text-decoration: none; color: var(--bone-white); cursor: pointer;">
-                        <button class="ctaLogin registerBtn">[Register new user]</button>
-                    </NuxtLink>
-                </div>
+                <DefaultButton text="Register new user" routeTo="/register" theme="light" />
             </div>
         </section>
     </div>

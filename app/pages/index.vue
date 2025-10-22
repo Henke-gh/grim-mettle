@@ -5,9 +5,6 @@ import guard from "../assets/images/scout_sharp.png"
 import CustomHeader from "~/components/CustomHeader.vue"
 import CustomFooter from "~/components/CustomFooter.vue"
 
-function sendToLogin() {
-    navigateTo('/login')
-}
 </script>
 
 <template>
@@ -30,22 +27,14 @@ function sendToLogin() {
             <img :src="swords" alt="Two crossed swords" class="swordsImg" />
         </div>
         <div class="loginContainer">
-            <div class="gradientBorder fitContent">
-                <button class="ctaLogin" v-on:click="sendToLogin">
-                    <h1>Play now</h1>
-                </button>
-            </div>
+            <DefaultButton text="Login Now" routeTo="/login" theme="default" />
             <p class="customP">Log in and start playing</p>
         </div>
     </section>
     <div class="swordlineContainer spacing"><img :src="swordLine" alt="A line of four swords" /></div>
     <div class="ctaRegister">
         <p class="customP">Don't have an account? It only takes a moment to set up.</p>
-        <div class="gradientBorder fitContent">
-            <NuxtLink to="/register" style="text-decoration: none; color: var(--bone-white); cursor: pointer;">
-                <button class="ctaLogin registerBtn">[Register new user]</button>
-            </NuxtLink>
-        </div>
+        <DefaultButton text="Register new user" routeTo="/register" theme="light" type="button" />
     </div>
     <CustomFooter />
 </template>

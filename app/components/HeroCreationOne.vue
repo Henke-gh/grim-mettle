@@ -25,7 +25,7 @@ const hero = useHeroCreateStore();
             <input type="text" id="heroName" min="3" max="16" placeholder="Give your hero a name" :value="hero.name"
                 v-on:input="event => hero.setHeroName(event.target.value)"></input>
         </div>
-        <button class="continueBtn" v-on:click="hero.nextStep()" :disabled="hero.name.length < 3">Continue</button>
+        <DefaultButton text="Continue" type="button" :disabled="hero.name.length < 3" @click="hero.nextStep()" />
     </section>
 </template>
 
