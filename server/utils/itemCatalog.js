@@ -8,7 +8,7 @@
 export const weapons = [
   {
     id: 0,
-    category: "sword",
+    category: "swords",
     name: "Short Sword",
     minDmg: 2,
     maxDmg: 4,
@@ -20,7 +20,7 @@ export const weapons = [
   },
   {
     id: 1,
-    category: "sword",
+    category: "swords",
     name: "Long Sword",
     minDmg: 5,
     maxDmg: 10,
@@ -101,4 +101,4 @@ export const starterGear = [
   },
 ];
 
-export const itemCatalog = [weapons, shields, armour, trinkets, starterGear];
+export const itemCatalog = { weapons, shields, armour, trinkets, starterGear };

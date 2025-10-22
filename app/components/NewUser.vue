@@ -20,7 +20,8 @@
                 <input type="password" id="repeatPasswordInput" v-model="repeatPassword" placeholder="Repeat password"
                     min="8" />
             </div>
-            <button class="loginBtn" :disabled="loading">{{ loading ? 'Registering...' : 'Register' }}</button>
+            <!-- <button class="loginBtn" :disabled="loading">{{ loading ? 'Registering...' : 'Register' }}</button> -->
+            <DefaultButton text="Register" type="submit" :disabled="loading" />
             <p v-if="error" class="text-red-400 mt-3 text-sm">{{ error }}</p>
             <p v-if="success" class="text-green-400 mt-3 text-sm">{{ success }}</p>
         </form>
