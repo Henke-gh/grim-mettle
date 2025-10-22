@@ -9,7 +9,7 @@
 </template>
 
 <script setup>
-import grimLogo from "../assets/images/logo.svg"
+import grimLogo from "../assets/images/Logo_variant.svg"
 </script>
 
 <style scoped>
