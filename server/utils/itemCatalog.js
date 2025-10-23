@@ -75,6 +75,7 @@ export const trinkets = [
   },
 ];
 
+//These id's are default values in the hero_equipment-table.
 export const starterGear = [
   {
     id: 400,

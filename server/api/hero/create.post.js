@@ -149,6 +149,20 @@ export default defineEventHandler(async (event) => {
       throw createError({ statusCode: 500, message: error.message });
     }
 
+    //initialise/ insert hero into equipment table.
+    //Early insertion here means we can rely purely on UPDATEs later on when the player switches gear on and off.
+    const { defaultEquipmentError } = await supabaseAdmin
+      .from("hero_equipment")
+      .insert({
+        user_id: user.id,
+        hero_id: data.id,
+        id: data.id,
+      });
+
+    if (defaultEquipmentError) {
+      throw createError({ statusCode: 500, message: error.message });
+    }
+
     console.log("✅ Hero created successfully:", data);
     console.log("=== END: Hero Create API ===");
     return { success: true, hero: data, message: "Hero created!" };
