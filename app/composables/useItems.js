@@ -1,4 +1,4 @@
-import { itemCatalog } from "../../server/utils/itemCatalog";
+import { itemCatalog } from "~~/utils/itemCatalog";
 
 export const useItems = () => {
   const getItemById = (itemId) => {

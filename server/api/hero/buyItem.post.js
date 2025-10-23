@@ -1,7 +1,7 @@
 import { supabaseAdmin } from "~~/server/utils/supabaseAdmin";
 import { serverSupabaseClient } from "#supabase/server";
 import { z } from "zod";
-import { itemCatalog } from "../../utils/itemCatalog";
+import { itemCatalog } from "~~/utils/itemCatalog";
 
 const buyItemSchema = z.object({
   id: z.number(),

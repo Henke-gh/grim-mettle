@@ -1,4 +1,4 @@
-import { weapons } from "~~/server/utils/itemCatalog";
+import { weapons } from "~~/utils/itemCatalog";
 
 const weaponPayload = weapons;
 

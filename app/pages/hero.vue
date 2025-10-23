@@ -3,53 +3,28 @@ definePageMeta({
     middleware: ["auth",],
 });
 import { capitalise } from "../../utils/general"
-const { hero, heroAvatar, derivedStats, loading, error, fetchHero } = useHero();
-const { inventory, fetchInventory, error: inventoryError } = useInventory();
-const { getItemById } = useItems();
-onMounted(() => {
-    fetchHero();
-    fetchInventory();
-})
 
-const mainAttributes = computed(() => {
-    if (!hero.value) return null
-    return {
-        strength: hero.value.strength,
-        speed: hero.value.speed,
-        vitality: hero.value.vitality
-    }
-})
+const { hero,
+    heroAvatar,
+    loading,
+    error,
+    mainAttributes,
+    skills,
+    inventoryWithItems,
+    equippedItems,
+    hasInventory,
+    initialise,
+    inventoryError,
+    equipError,
+    equipment,
+    getItemById } = useHeroView();
 
-const skills = computed(() => {
-    if (!hero.value || !derivedStats.value) return null
-    const allSkills = {
-        swords: hero.value.swords,
-        axes: hero.value.axes,
-        hammers: hero.value.hammers,
-        spears: hero.value.spears,
-        daggers: hero.value.daggers,
-        block: derivedStats.value.trueBlock,
-        evasion: derivedStats.value.trueEvasion,
-        initiative: derivedStats.value.trueInitiative
-    }
-    //Converts to an array, filters out skills with a value of 0,
-    //converts back to an object and returns filtered list to reduce bloat on hero overview page
-    return Object.fromEntries(
-        Object.entries(allSkills).filter(([_, value]) => value > 0)
-    )
-})
-
-const hasInventory = computed(() => {
-    return inventory.value && inventory.value.length > 0;
-})
-//Takes the item ids from the db call in useInventory and maps them to their counterpart in itemCatalog.
-const inventoryWithItems = computed(() => {
-    if (!inventory.value) return []
-
-    return inventory.value.map(inv => ({
-        ...inv,
-        item: getItemById(inv.item_id)
-    }))
+onMounted(async () => {
+    await initialise();
+    console.log(equipment.value)
+    console.log("LOG: ", equippedItems.value);
+    console.log("Main hand item test:", getItemById(400)); // Test direct lookup
+    console.log("Armour item test:", getItemById(401));
 })
 </script>
 
@@ -81,11 +56,15 @@ const inventoryWithItems = computed(() => {
         <section class="itemContainer">
             <h3>Items</h3>
             <div class="part">
-                <h4>Equipped</h4>
-                <p>Main hand: Short Sword</p>
-                <p>Off-hand: -empty-</p>
-                <p>Armour: Rag Tunic</p>
-                <p>Trinkets:</p>
+                <h4>Equipped Items:</h4>
+                <p>Main hand: {{ equippedItems?.mainHand?.name || "- empty -" }}</p>
+                <p>Off-hand: {{ equippedItems?.offHand?.name || "- empty -" }}</p>
+                <p>Armour: {{ equippedItems?.armour?.name || "- empty -" }}</p>
+                <h4>Trinkets:</h4>
+                <p v-if="equippedItems?.trinkets.length === 0">- none -</p>
+                <p v-for="(trinket, index) in equippedItems?.trinkets" :key="index">
+                    {{ trinket.name }}
+                </p>
             </div>
             <div class="part" v-if="!hasInventory">
                 <h4>Inventory</h4>
