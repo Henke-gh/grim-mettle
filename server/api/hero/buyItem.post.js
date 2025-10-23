@@ -86,7 +86,13 @@ export default defineEventHandler(async (event) => {
     //Insert item into hero inventory
     const { data: inserted, error: insertError } = await supabaseAdmin
       .from("hero_inventory")
-      .insert({ hero_id: hero.id, item_id: item.id })
+      .insert({
+        hero_id: hero.id,
+        item_id: item.id,
+        user_id: user.id,
+        quantity: 1,
+        item_type: itemType,
+      })
       .select()
       .maybeSingle();
 

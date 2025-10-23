@@ -4,8 +4,11 @@ definePageMeta({
 });
 import { capitalise } from "../../utils/general"
 const { hero, heroAvatar, derivedStats, loading, error, fetchHero } = useHero();
+const { inventory, fetchInventory, error: inventoryError } = useInventory();
+const { getItemById } = useItems();
 onMounted(() => {
     fetchHero();
+    fetchInventory();
 })
 
 const mainAttributes = computed(() => {
@@ -34,7 +37,19 @@ const skills = computed(() => {
     return Object.fromEntries(
         Object.entries(allSkills).filter(([_, value]) => value > 0)
     )
+})
 
+const hasInventory = computed(() => {
+    return inventory.value && inventory.value.length > 0;
+})
+//Takes the item ids from the db call in useInventory and maps them to their counterpart in itemCatalog.
+const inventoryWithItems = computed(() => {
+    if (!inventory.value) return []
+
+    return inventory.value.map(inv => ({
+        ...inv,
+        item: getItemById(inv.item_id)
+    }))
 })
 </script>
 
@@ -72,10 +87,14 @@ const skills = computed(() => {
                 <p>Armour: Rag Tunic</p>
                 <p>Trinkets:</p>
             </div>
-            <div class="part">
+            <div class="part" v-if="!hasInventory">
                 <h4>Inventory</h4>
-                <p>Buckler</p>
-                <p>Jade Ring</p>
+                <p>-- Inventory empty --</p>
+                <p v-if="inventoryError">{{ inventoryError }}</p>
+            </div>
+            <div class="part heroInventory" v-else>
+                <h4>Inventory</h4>
+                <p v-for="entry in inventoryWithItems" :key="entry.item_id">{{ entry.item.name }}</p>
             </div>
         </section>
         <section class="skillWrapper">
