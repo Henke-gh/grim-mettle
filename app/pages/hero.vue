@@ -15,16 +15,10 @@ const { hero,
     hasInventory,
     initialise,
     inventoryError,
-    equipError,
-    equipment,
-    getItemById } = useHeroView();
+    equipError, } = useHeroView();
 
 onMounted(async () => {
     await initialise();
-    console.log(equipment.value)
-    console.log("LOG: ", equippedItems.value);
-    console.log("Main hand item test:", getItemById(400)); // Test direct lookup
-    console.log("Armour item test:", getItemById(401));
 })
 </script>
 

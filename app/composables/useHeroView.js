@@ -95,7 +95,5 @@ export const useHeroView = () => {
     initialise,
     inventoryError,
     equipError,
-    equipment,
-    getItemById,
   };
 };

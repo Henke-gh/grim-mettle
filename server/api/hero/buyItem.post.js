@@ -35,11 +35,8 @@ export default defineEventHandler(async (event) => {
     }
 
     const { id, itemType } = result.data;
-    console.log(itemType);
-    console.log(itemCatalog);
     //Find requested item in itemCatalog
     const itemCollection = itemCatalog[itemType];
-    console.log(itemCollection);
     if (!Array.isArray(itemCollection)) {
       throw createError({ statusCode: 400, message: "Invalid item type" });
     }
