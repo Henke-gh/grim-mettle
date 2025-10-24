@@ -10,9 +10,7 @@
                 <label for="passwordInput">Password: </label>
                 <input type="password" id="passwordInput" v-model="password" required />
             </div>
-            <button class="loginBtn" :disabled="loading">
-                {{ loading ? "Logging in..." : "Login" }}
-            </button>
+            <DefaultButton text="Login" type="submit" :disabled="loading" theme="default" />
             <p v-if="error" class="text-red-400 mt-3 text-sm">{{ error }}</p>
             <p v-if="success" class="text-green-400 mt-3 text-sm">{{ success }}</p>
         </form>
@@ -84,12 +82,13 @@ const submitLogin = async () => {
 .loginContainer {
     display: flex;
     flex-direction: column;
+    gap: 0.8rem;
 }
 
 .loginForm {
     display: flex;
     flex-direction: column;
-    gap: 0.2rem;
+    gap: 0.5rem;
 }
 
 .segment {
@@ -97,9 +96,5 @@ const submitLogin = async () => {
     flex-direction: row;
     justify-content: space-between;
     gap: 0.2rem
-}
-
-.loginBtn {
-    width: fit-content;
 }
 </style>

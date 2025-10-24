@@ -8,11 +8,14 @@
 export const weapons = [
   {
     id: 0,
-    category: "sword",
+    category: "swords",
+    slot: "main_hand",
+    twoHanded: false,
     name: "Short Sword",
     minDmg: 2,
     maxDmg: 4,
-    skillReq: 10,
+    skillReq: { swords: 10 },
+    strengthReq: 5,
     weight: 2,
     goldCost: 50,
     bonus: {},
@@ -20,11 +23,14 @@ export const weapons = [
   },
   {
     id: 1,
-    category: "sword",
+    category: "swords",
+    slot: "main_hand",
+    twoHanded: false,
     name: "Long Sword",
     minDmg: 5,
     maxDmg: 10,
-    skillReq: 40,
+    skillReq: { swords: 40 },
+    strengthReq: 25,
     weight: 5,
     goldCost: 200,
     bonus: { swords: 5 },
@@ -38,11 +44,13 @@ export const shields = [
   {
     id: 100,
     category: "shields",
+    slot: "off_hand",
     name: "Buckler",
-    skillReq: 10,
+    skillReq: { block: 10 },
+    strengthReq: 5,
     blockValue: 5,
     goldCost: 25,
-    weight: 5,
+    weight: 0,
     bonus: { block: 5 },
     description: "A metal disc.",
   },
@@ -75,10 +83,13 @@ export const trinkets = [
   },
 ];
 
+//These id's are default values in the hero_equipment-table.
 export const starterGear = [
   {
     id: 400,
     category: "default",
+    slot: "main_hand",
+    twoHanded: false,
     name: "Fists",
     minDmg: 1,
     maxDmg: 2,
@@ -101,4 +112,4 @@ export const starterGear = [
   },
 ];
 
-export const itemCatalog = [weapons, shields, armour, trinkets, starterGear];
+export const itemCatalog = { weapons, shields, armour, trinkets, starterGear };

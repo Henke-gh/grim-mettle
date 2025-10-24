@@ -3,38 +3,22 @@ definePageMeta({
     middleware: ["auth",],
 });
 import { capitalise } from "../../utils/general"
-const { hero, heroAvatar, derivedStats, loading, error, fetchHero } = useHero();
-onMounted(() => {
-    fetchHero();
-})
 
-const mainAttributes = computed(() => {
-    if (!hero.value) return null
-    return {
-        strength: hero.value.strength,
-        speed: hero.value.speed,
-        vitality: hero.value.vitality
-    }
-})
+const { hero,
+    heroAvatar,
+    loading,
+    error,
+    mainAttributes,
+    skills,
+    inventoryWithItems,
+    equippedItems,
+    hasInventory,
+    initialise,
+    inventoryError,
+    equipError, } = useHeroView();
 
-const skills = computed(() => {
-    if (!hero.value || !derivedStats.value) return null
-    const allSkills = {
-        swords: hero.value.swords,
-        axes: hero.value.axes,
-        hammers: hero.value.hammers,
-        spears: hero.value.spears,
-        daggers: hero.value.daggers,
-        block: derivedStats.value.trueBlock,
-        evasion: derivedStats.value.trueEvasion,
-        initiative: derivedStats.value.trueInitiative
-    }
-    //Converts to an array, filters out skills with a value of 0,
-    //converts back to an object and returns filtered list to reduce bloat on hero overview page
-    return Object.fromEntries(
-        Object.entries(allSkills).filter(([_, value]) => value > 0)
-    )
-
+onMounted(async () => {
+    await initialise();
 })
 </script>
 
@@ -66,16 +50,24 @@ const skills = computed(() => {
         <section class="itemContainer">
             <h3>Items</h3>
             <div class="part">
-                <h4>Equipped</h4>
-                <p>Main hand: Short Sword</p>
-                <p>Off-hand: -empty-</p>
-                <p>Armour: Rag Tunic</p>
-                <p>Trinkets:</p>
+                <h4>Equipped Items:</h4>
+                <p>Main hand: {{ equippedItems?.mainHand?.name || "- empty -" }}</p>
+                <p>Off-hand: {{ equippedItems?.offHand?.name || "- empty -" }}</p>
+                <p>Armour: {{ equippedItems?.armour?.name || "- empty -" }}</p>
+                <h4>Trinkets:</h4>
+                <p v-if="equippedItems?.trinkets.length === 0">- none -</p>
+                <p v-for="(trinket, index) in equippedItems?.trinkets" :key="index">
+                    {{ trinket.name }}
+                </p>
             </div>
-            <div class="part">
+            <div class="part" v-if="!hasInventory">
                 <h4>Inventory</h4>
-                <p>Buckler</p>
-                <p>Jade Ring</p>
+                <p>-- Inventory empty --</p>
+                <p v-if="inventoryError">{{ inventoryError }}</p>
+            </div>
+            <div class="part heroInventory" v-else>
+                <h4>Inventory</h4>
+                <p v-for="entry in inventoryWithItems" :key="entry.item_id">{{ entry.item.name }}</p>
             </div>
         </section>
         <section class="skillWrapper">

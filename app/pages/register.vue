@@ -5,7 +5,7 @@
         <div class="gradientBorder">
             <NewUser />
         </div>
-        <article>
+        <article class="registrationInfo">
             <h3>Verifying your account</h3>
             <p>Upon registering your new account you will recieve an e-mail with a confirmation link.</p>
             <h3>Email & Username</h3>
@@ -27,9 +27,13 @@ import "../components/NewUser.vue"
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 1rem;
 }
 
-article {
+.registrationInfo {
     max-width: 20rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 </style>

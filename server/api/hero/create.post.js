@@ -33,9 +33,7 @@ const heroSchema = z.object({
 
 export default defineEventHandler(async (event) => {
   try {
-    console.log("=== START: Hero Create API ===");
     const body = await readBody(event);
-    console.log("Request body:", JSON.stringify(body, null, 2));
 
     // Get the user-scoped Supabase client (reads the session cookie)
     const supabase = await serverSupabaseClient(event);
@@ -47,16 +45,13 @@ export default defineEventHandler(async (event) => {
     } = await supabase.auth.getUser();
 
     if (userError || !user) {
-      console.error("Auth error:", userError);
       throw createError({ statusCode: 401, message: "Not authenticated" });
     }
 
     console.log("Authenticated user ID:", user.id);
 
     const result = heroSchema.safeParse(body);
-    console.log("Zod validation result:", result.success ? "PASSED" : "FAILED");
     if (!result.success) {
-      console.error("Validation errors:", result.error.issues);
       throw createError({
         statusCode: 400,
         message: result.error.issues[0].message,
@@ -64,10 +59,8 @@ export default defineEventHandler(async (event) => {
     }
 
     const hero = result.data;
-    console.log("Validated hero data:", hero);
 
     const pointsSpent = calculateAssignedStartingPoints(hero.stats);
-    console.log("Points spent:", pointsSpent);
     if (pointsSpent > startingPoints) {
       throw createError({ statusCode: 400, message: "Too many points spent." });
     }
@@ -79,25 +72,20 @@ export default defineEventHandler(async (event) => {
     }
 
     // Apply base attribute scores
-    console.log("Applying base attribute scores...");
     const trueBaseAttributes = applyBaseAttributeScores(
       hero.stats.strength,
       hero.stats.speed,
       hero.stats.vitality
     );
-    console.log("Base attributes applied:", trueBaseAttributes);
 
     hero.stats.strength = trueBaseAttributes.finalStrength;
     hero.stats.speed = trueBaseAttributes.finalSpeed;
     hero.stats.vitality = trueBaseAttributes.finalVitality;
-    console.log("Updated hero stats:", hero.stats);
 
     // Calculate HP
     const maxHP = computeHeroHP(hero.stats.strength, hero.stats.vitality);
-    console.log("Calculated maxHP:", maxHP);
 
     // Use supabaseAdmin to bypass RLS and check for existing hero
-    console.log("Checking for existing hero...");
     const { data: existingHero, error: checkError } = await supabaseAdmin
       .from("heroes")
       .select("id")
@@ -105,23 +93,14 @@ export default defineEventHandler(async (event) => {
       .maybeSingle();
 
     if (checkError) {
-      console.error("Error checking existing hero:", checkError);
       throw createError({ statusCode: 500, message: checkError.message });
     }
-
-    console.log("Existing hero check result:", existingHero ? "Found" : "None");
 
     if (existingHero) {
       throw createError({ statusCode: 400, message: "Hero already exists." });
     }
 
-    console.log(
-      "🔥 About to insert - checking supabaseAdmin:",
-      !!supabaseAdmin
-    );
-
     // Use supabaseAdmin to insert (bypasses RLS for secure server-side control)
-    console.log("🔥 Attempting to insert hero...");
     const insertData = {
       user_id: user.id,
       hero_name: hero.name,
@@ -136,7 +115,6 @@ export default defineEventHandler(async (event) => {
       grit_current: 125,
       ...hero.stats,
     };
-    console.log("🔥 Insert data:", JSON.stringify(insertData, null, 2));
 
     const { data, error } = await supabaseAdmin
       .from("heroes")
@@ -145,15 +123,25 @@ export default defineEventHandler(async (event) => {
       .single();
 
     if (error) {
-      console.error("❌ Supabase insert error:", error);
       throw createError({ statusCode: 500, message: error.message });
     }
 
-    console.log("✅ Hero created successfully:", data);
-    console.log("=== END: Hero Create API ===");
+    //initialise/ insert hero into equipment table.
+    //Early insertion here means we can rely purely on UPDATEs later on when the player switches gear on and off.
+    const { defaultEquipmentError } = await supabaseAdmin
+      .from("hero_equipment")
+      .insert({
+        user_id: user.id,
+        hero_id: data.id,
+        id: data.id,
+      });
+
+    if (defaultEquipmentError) {
+      throw createError({ statusCode: 500, message: error.message });
+    }
+
     return { success: true, hero: data, message: "Hero created!" };
   } catch (err) {
-    console.error("=== CAUGHT ERROR ===", err);
     throw err;
   }
 });

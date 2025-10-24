@@ -19,54 +19,151 @@
         <section class="storeContainer" v-else>
             <div class="category">
                 <h2>Weapons</h2>
-                <div class="item" v-for="weapon in data.items[0]">
-                    <p>[{{ weapon.name }}]</p>
+                <div class="item" v-for="weapon in data.items.weapons">
+                    <p>{{ weapon.name }}</p>
                     <div class="part">
                         <p>Cost: {{ weapon.goldCost }} gold</p>
-                        <button class="inspectBtn">Inspect</button>
+                        <button class="inspectBtn" @click="openModal(weapon, 'weapons')">Inspect</button>
                     </div>
                 </div>
             </div>
             <div class="category">
                 <h2>Shields</h2>
-                <div class="item" v-for="shield in data.items[1]">
+                <div class="item" v-for="shield in data.items.shields">
                     <p>{{ shield.name }}</p>
                     <div class="part">
                         <p>Cost: {{ shield.goldCost }} gold</p>
-                        <button class="inspectBtn">Inspect</button>
+                        <button class="inspectBtn" @click="openModal(shield, shield.category)">Inspect</button>
                     </div>
                 </div>
             </div>
             <div class="category">
                 <h2>Armour</h2>
-                <div class="item" v-for="armour in data.items[2]">
+                <div class="item" v-for="armour in data.items.armour">
                     <p>{{ armour.name }}</p>
                     <div class="part">
                         <p>Cost: {{ armour.goldCost }} gold</p>
-                        <button class="inspectBtn">Inspect</button>
+                        <button class="inspectBtn" @click="openModal(armour, armour.category)">Inspect</button>
                     </div>
                 </div>
             </div>
             <div class="category">
                 <h2>Trinkets</h2>
-                <div class="item" v-for="trinket in data.items[3]">
+                <div class="item" v-for="trinket in data.items.trinkets">
                     <p>{{ trinket.name }}</p>
                     <div class="part">
                         <p>Cost: {{ trinket.goldCost }} gold</p>
-                        <button class="inspectBtn">Inspect</button>
+                        <button class="inspectBtn" @click="openModal(trinket, trinket.category)">Inspect</button>
                     </div>
                 </div>
             </div>
         </section>
         <section class="storeHeroSales">
             <h2>Your items:</h2>
+            <p>You have nothing to sell.</p>
         </section>
     </div>
+    <teleport to="body">
+        <div v-if="showModal" class="modalOverlay" @click.self="closeModal" role="dialog" aria-modal="true"
+            :aria-label="selectedItem?.name || 'Item details'">
+            <div class="modalContent" ref="modalRef">
+                <header class="modalHeader">
+                    <h3>{{ selectedItem.name }}</h3>
+                    <button class="closeBtn" @click="closeModal" aria-label="Close">&times;</button>
+                </header>
+                <section class="modalBody">
+                    <p><strong>Category:</strong> {{ selectedItem.category || '—' }}</p>
+                    <p v-if="selectedItem.minDmg !== undefined"><strong>Damage:</strong> {{ selectedItem.minDmg }} - {{
+                        selectedItem.maxDmg }}</p>
+                    <p v-if="selectedItem.damageReduction !== undefined"><strong>DR:</strong> {{
+                        selectedItem.damageReduction }}</p>
+                    <p v-if="selectedItem.blockValue !== undefined"><strong>Block:</strong> {{ selectedItem.blockValue
+                    }}
+                    </p>
+                    <p><strong>Weight:</strong> {{ selectedItem.weight ?? '—' }}</p>
+                    <p><strong>Skill Req:</strong> {{ selectedItem.skillReq ?? '—' }}</p>
+                    <p><strong>Cost:</strong> {{ selectedItem.goldCost }} gold</p>
+                    <p v-if="Object.keys(selectedItem.bonus ?? {}).length"><strong>Bonus:</strong> {{
+                        JSON.stringify(selectedItem.bonus) }}</p>
+                    <p class="desc">{{ selectedItem.description }}</p>
+                </section>
+                <footer class="modalFooter">
+                    <div>
+                        <button class="inspectBtn" @click="closeModal" :disabled="buyingItem">Close</button>
+                        <button class="inspectBtn" @click="buyItem" :disabled="buyingItem">
+                            <span v-if="!buyingItem">Buy</span>
+                            <span v-else>Buying..</span>
+                        </button>
+                        <p v-if="errorMessage">{{ errorMessage }}</p>
+                        <p v-if="successMessage">{{ successMessage }}</p>
+                    </div>
+                </footer>
+            </div>
+        </div>
+    </teleport>
+
     <HeroNav />
 </template>
 
 <script setup>
+import { ref, onMounted, onBeforeUnmount } from 'vue';
+
 const { data } = await useFetch('/api/items/itemCatalog')
+
+const showModal = ref(false);
+const selectedItem = ref({});
+const selectedItemType = ref('');
+const modalRef = ref(null);
+const buyingItem = ref(false);
+const errorMessage = ref('');
+const successMessage = ref('');
+
+function openModal(item, itemType) {
+    selectedItem.value = item || {}
+    selectedItemType.value = itemType || ''
+    errorMessage.value = ''
+    successMessage.value = ''
+    showModal.value = true
+    //small delay to focus content
+    setTimeout(() => modalRef.value?.focus?.(), 0)
+}
+
+function closeModal() {
+    showModal.value = false
+    selectedItem.value = {}
+    selectedItemType.value = ''
+    buyingItem.value = false
+    errorMessage.value = ''
+    successMessage.value = ''
+}
+
+async function buyItem() {
+    if (buyingItem.value) return
+    buyingItem.value = true;
+    errorMessage.value = '';
+    successMessage.value = '';
+    try {
+        const payload = { id: selectedItem.value.id, itemType: selectedItemType.value };
+        const response = await $fetch('/api/hero/buyItem', { method: 'POST', body: payload })
+        successMessage.value = 'Purchase Succesful'
+
+        setTimeout(() => {
+            closeModal()
+            window.location.reload();
+        }, 700)
+    } catch (err) {
+        errorMessage.value = (err?.data?.message || err?.message || 'Purchase Failed')
+    } finally {
+        buyingItem.value = false;
+    }
+}
+
+function onKeydown(e) {
+    if (e.key === 'Escape' && showModal.value) closeModal()
+}
+
+onMounted(() => window.addEventListener('keydown', onKeydown));
+onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
 </script>
 
 <style scoped>
@@ -127,5 +224,53 @@ const { data } = await useFetch('/api/items/itemCatalog')
 
 .storeHeroSales {
     padding: 0.5rem;
+}
+
+/* MODAL STYLING */
+.modalOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 60;
+    padding: 1rem;
+}
+
+.modalContent {
+    background: var(--bone-white);
+    color: var(--dark-green);
+    width: min(90%, 640px);
+    max-height: 90vh;
+    overflow: auto;
+    border-radius: 8px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    outline: none;
+    padding: 1rem;
+}
+
+.modalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.closeBtn {
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--dark-green);
+}
+
+.modalBody p {
+    margin: 0.4rem 0;
+}
+
+.modalFooter {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 0.75rem;
 }
 </style>

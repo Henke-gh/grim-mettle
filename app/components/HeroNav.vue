@@ -8,10 +8,12 @@
         <img src="/heroIcon.svg" />
       </div>
     </NuxtLink>
-    <div class="linkWrap">
-      <p>[Combat]</p>
-      <img src="/IconFrameCombat.svg" />
-    </div>
+    <NuxtLink to="/arena" style="text-decoration: none; color: var(--warm-black);">
+      <div class="linkWrap">
+        <p>[Combat]</p>
+        <img src="/IconFrameCombat.svg" />
+      </div>
+    </NuxtLink>
     <NuxtLink to="/market" style="text-decoration: none; color: var(--warm-black);">
       <div class="linkWrap">
         <p>[Market]</p>
