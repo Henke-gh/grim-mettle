@@ -70,8 +70,8 @@ const submitForm = async () => {
     display: flex;
     flex-direction: column;
     justify-self: center;
-    max-width: 19rem;
-    background-color: var(--light-green);
+    max-width: 20rem;
+    background-color: var(--bone-white);
     padding: 1rem;
     border-radius: 5px;
 }

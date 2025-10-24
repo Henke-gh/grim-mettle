@@ -9,39 +9,57 @@ import CustomFooter from "~/components/CustomFooter.vue"
 
 <template>
     <CustomHeader />
-    <section class="welcome">
-        <article>
+    <div class="indexWrapper">
+        <section class="welcome">
             <div class="guardContainer">
                 <img :src="guard" alt="A hooded guard watching the gates of an arena" class="guardImg" />
             </div>
-            <p>Grim Mettle lets you create a hero and battle foes in arena combat. Level up and spend skill points to
-                improve your skills or learn new ones.</p>
-            <p>On your journey you will equip your hero with all manner of items to further improve your character and
-                prepare for
-                the dangers that lie ahead.</p>
-        </article>
-        <div class="swordlineContainer"><img :src="swordLine" alt="A line of four swords" /></div>
-    </section>
-    <section class="loginWrapper">
-        <div class="swordsContainer">
-            <img :src="swords" alt="Two crossed swords" class="swordsImg" />
+            <article class="introText">
+                <p>Grim Mettle lets you create a hero and battle foes in arena combat. Level up and spend skill points
+                    to
+                    improve your skills or learn new ones.</p>
+                <p>On your journey you will equip your hero with all manner of items to further improve your character
+                    and
+                    prepare for
+                    the dangers that lie ahead.</p>
+            </article>
+        </section>
+        <div class="swordlineContainer spacing"><img :src="swordLine" alt="A line of four swords" /></div>
+        <div class="gradientBorder fitContent">
+            <section class="loginWrapper">
+                <div class="swordsContainer">
+                    <img :src="swords" alt="Two crossed swords" class="swordsImg" />
+                </div>
+                <div class="loginContainer">
+                    <DefaultButton text="Login Now" routeTo="/login" theme="default" class="fitContent" />
+                    <p class="customP">Log in and start playing</p>
+                </div>
+            </section>
         </div>
-        <div class="loginContainer">
-            <DefaultButton text="Login Now" routeTo="/login" theme="default" />
-            <p class="customP">Log in and start playing</p>
+        <div class="swordlineContainer spacing"><img :src="swordLine" alt="A line of four swords" /></div>
+        <div class="ctaRegister">
+            <p class="customP">Don't have an account? It only takes a moment to set up.</p>
+            <DefaultButton text="Register new user" routeTo="/register" theme="light" type="button" />
         </div>
-    </section>
-    <div class="swordlineContainer spacing"><img :src="swordLine" alt="A line of four swords" /></div>
-    <div class="ctaRegister">
-        <p class="customP">Don't have an account? It only takes a moment to set up.</p>
-        <DefaultButton text="Register new user" routeTo="/register" theme="light" type="button" />
     </div>
     <CustomFooter />
 </template>
 
 <style scoped>
-section {
-    padding: 0.5rem;
+.indexWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.welcome {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.introText p {
+    margin: 0.7rem 0;
 }
 
 .swordlineContainer {
@@ -55,7 +73,13 @@ section {
     flex-direction: row;
     align-items: center;
     gap: 2rem;
-    background-color: var(--light-green);
+    background-color: var(--bone-white);
+}
+
+.loginContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
 .swordsContainer {

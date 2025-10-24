@@ -1,7 +1,11 @@
 <template>
-    <footer>
-        <p>Henrik Andersen 2025 - Grim Mettle</p>
-    </footer>
+    <ClientOnly>
+        <teleport to="#__nuxt">
+            <footer>
+                <p>Henrik Andersen 2025 - Grim Mettle</p>
+            </footer>
+        </teleport>
+    </ClientOnly>
 </template>
 
 <script setup>
@@ -10,8 +14,6 @@
 
 <style scoped>
 footer {
-    position: fixed;
-    bottom: 0;
     padding-top: 1rem;
     padding-bottom: 1rem;
     width: 100%;
