@@ -15,7 +15,11 @@ const { hero,
     hasInventory,
     initialise,
     inventoryError,
-    equipError, } = useHeroView();
+    equipError,
+    actionError,
+    actionLoading,
+    actionSuccess,
+    unequipItem, } = useHeroView();
 
 onMounted(async () => {
     await initialise();
@@ -51,14 +55,21 @@ onMounted(async () => {
             <h3>Items</h3>
             <div class="part">
                 <h4>Equipped Items:</h4>
-                <p>Main hand: {{ equippedItems?.mainHand?.name || "- empty -" }}</p>
-                <p>Off-hand: {{ equippedItems?.offHand?.name || "- empty -" }}</p>
-                <p>Armour: {{ equippedItems?.armour?.name || "- empty -" }}</p>
+                <div class="equippedItem">
+                    <p>Main hand: {{ equippedItems?.mainHand?.name || "- empty -" }}</p>
+                    <button @click="unequipItem('main_hand')" :disabled="actionLoading">Unequip</button>
+                </div>
+                <div class="equippedItem">
+                    <p>Off-hand: {{ equippedItems?.offHand?.name || "- empty -" }}</p>
+                </div>
+                <div class="equippedItem">
+                    <p>Armour: {{ equippedItems?.armour?.name || "- empty -" }}</p>
+                </div>
                 <h4>Trinkets:</h4>
                 <p v-if="equippedItems?.trinkets.length === 0">- none -</p>
-                <p v-for="(trinket, index) in equippedItems?.trinkets" :key="index">
-                    {{ trinket.name }}
-                </p>
+                <div class="equippedItem" v-for="(trinket, index) in equippedItems?.trinkets" :key="index">
+                    <p>{{ trinket.name }}</p>
+                </div>
             </div>
             <div class="part" v-if="!hasInventory">
                 <h4>Inventory</h4>

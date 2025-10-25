@@ -10,6 +10,10 @@ export const useHeroView = () => {
   const { equipment, fetchEquipment, equipError } = useEquipment();
   const { getItemById } = useItems();
 
+  const actionSuccess = ref(false);
+  const actionError = ref(null);
+  const actionLoading = ref(null);
+
   //Initialise all data.
   const initialise = async () => {
     await Promise.all([fetchHero(), fetchEquipment(), fetchInventory()]);
@@ -82,6 +86,34 @@ export const useHeroView = () => {
     return inventory.value && inventory.value.length > 0;
   });
 
+  //Unequip an item
+  const unequipItem = async (item_slot) => {
+    actionLoading.value = true;
+    actionError.value = null;
+    actionSuccess.value = null;
+
+    try {
+      const response = await $fetch("/api/items/unequip", {
+        method: "POST",
+        body: { item_slot },
+      });
+
+      actionSuccess.value = response.message;
+
+      await Promise.all([fetchEquipment(), fetchHero()]);
+    } catch (err) {
+      actionError.value = err?.data?.message || "Failed to unequip item.";
+    } finally {
+      actionLoading.value = false;
+
+      if (actionSuccess.value) {
+        setTimeout(() => {
+          actionSuccess.value = null;
+        }, 3000);
+      }
+    }
+  };
+
   return {
     hero,
     heroAvatar,
@@ -95,5 +127,9 @@ export const useHeroView = () => {
     initialise,
     inventoryError,
     equipError,
+    actionError,
+    actionLoading,
+    actionSuccess,
+    unequipItem,
   };
 };
