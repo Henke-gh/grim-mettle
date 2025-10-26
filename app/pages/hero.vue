@@ -19,7 +19,10 @@ const { hero,
     actionError,
     actionLoading,
     actionSuccess,
-    unequipItem, } = useHeroView();
+    unequipItem,
+    equipItem,
+    canEquip,
+    isEquipped } = useHeroView();
 
 onMounted(async () => {
     await initialise();
@@ -78,7 +81,14 @@ onMounted(async () => {
             </div>
             <div class="part heroInventory" v-else>
                 <h4>Inventory</h4>
-                <p v-for="entry in inventoryWithItems" :key="entry.item_id">{{ entry.item.name }}</p>
+                <div class="equippedItem" v-for="entry in inventoryWithItems" :key="entry.item_id">
+                    <p>{{ entry.item.name }}</p>
+                    <button v-if="!isEquipped(entry.item_id)" @click="equipItem(entry.item_id, entry.item.slot)"
+                        :disabled="actionLoading || !canEquip(entry.item)" class="equip-btn"
+                        :class="{ 'disabled': !canEquip(entry.item) }">
+                        {{ canEquip(entry.item) ? 'Equip' : 'Requirements not met' }}
+                    </button>
+                </div>
             </div>
         </section>
         <section class="skillWrapper">

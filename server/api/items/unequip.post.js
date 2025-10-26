@@ -15,18 +15,20 @@ const itemSchema = z.object({
 
 export default defineEventHandler(async (event) => {
   try {
-    const body = await readBody(event);
+    // Get the user-scoped Supabase client (reads the session cookie)
+    const supabase = await serverSupabaseClient(event);
 
-    const supabase = await serverSupabaseClient();
+    // Verify the user is authenticated
     const {
       data: { user },
       error: userError,
     } = await supabase.auth.getUser();
 
-    if (!user || userError) {
-      throw createError({ statusCode: 400, message: "Not authenticated." });
+    if (userError || !user) {
+      throw createError({ statusCode: 401, message: "Not authenticated" });
     }
 
+    const body = await readBody(event);
     const result = itemSchema.safeParse(body);
     if (!result.success) {
       throw createError({
