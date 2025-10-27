@@ -49,5 +49,6 @@ export const viewMonsterCollection = monsterCatalog.map((monster) => ({
   id: monster.id,
   name: monster.name,
   level: monster.level,
+  weapon: monster.weapon,
   description: monster.description,
 }));
