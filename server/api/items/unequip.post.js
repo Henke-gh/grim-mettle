@@ -3,14 +3,14 @@ import { serverSupabaseClient } from "#supabase/server";
 import { z } from "zod";
 
 const itemSchema = z.object({
-  itemSlot: z.enum(
+  item_slot: z.enum([
     "main_hand",
     "off_hand",
     "armour",
     "trinket_1",
     "trinket_2",
-    "trinket_3"
-  ),
+    "trinket_3",
+  ]),
 });
 
 export default defineEventHandler(async (event) => {
@@ -30,26 +30,27 @@ export default defineEventHandler(async (event) => {
 
     const body = await readBody(event);
     const result = itemSchema.safeParse(body);
+    console.log(result);
     if (!result.success) {
       throw createError({
         statusCode: 400,
-        message: result.error.issues.message[0],
+        message: result.error.issues[0].message,
       });
     }
 
     const { item_slot } = result.data;
 
-    const { hero, heroError } = await supabaseAdmin
+    const { data: hero, error: heroError } = await supabaseAdmin
       .from("heroes")
       .select("id")
       .eq("user_id", user.id)
       .single();
-
+    console.log(hero);
     if (heroError || !hero) {
       throw createError({ statusCode: 404, message: "Hero not found" });
     }
 
-    const { errorMsg } = await supabaseAdmin
+    const { error: errorMsg } = await supabaseAdmin
       .from("hero_equipment")
       .update({ [item_slot]: null })
       .eq("hero_id", hero.id);

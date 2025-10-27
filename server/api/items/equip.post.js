@@ -37,7 +37,7 @@ export default defineEventHandler(async (event) => {
     if (!result.success) {
       throw createError({
         statusCode: 400,
-        message: result.error.message,
+        message: result.error.issues[0].message,
       });
     }
 
