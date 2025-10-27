@@ -60,13 +60,18 @@ onMounted(async () => {
                 <h4>Equipped Items:</h4>
                 <div class="equippedItem">
                     <p>Main hand: {{ equippedItems?.mainHand?.name || "- empty -" }}</p>
-                    <button @click="unequipItem('main_hand')" :disabled="actionLoading">Unequip</button>
+                    <button v-if="equippedItems?.mainHand?.name" @click="unequipItem('main_hand')"
+                        :disabled="actionLoading">Unequip</button>
                 </div>
                 <div class="equippedItem">
                     <p>Off-hand: {{ equippedItems?.offHand?.name || "- empty -" }}</p>
+                    <button v-if="equippedItems?.offHand?.name" @click="unequipItem('off_hand')"
+                        :disabled="actionLoading">Unequip</button>
                 </div>
                 <div class="equippedItem">
                     <p>Armour: {{ equippedItems?.armour?.name || "- empty -" }}</p>
+                    <button v-if="equippedItems?.armour?.name" @click="unequipItem('armour')"
+                        :disabled="actionLoading">Unequip</button>
                 </div>
                 <h4>Trinkets:</h4>
                 <p v-if="equippedItems?.trinkets.length === 0">- none -</p>
@@ -82,7 +87,7 @@ onMounted(async () => {
             <div class="part heroInventory" v-else>
                 <h4>Inventory</h4>
                 <div class="equippedItem" v-for="entry in inventoryWithItems" :key="entry.item_id">
-                    <p>{{ entry.item.name }}</p>
+                    <p v-if="!isEquipped(entry.item_id)">{{ entry.item.name }}</p>
                     <button v-if="!isEquipped(entry.item_id)" @click="equipItem(entry.item_id, entry.item.slot)"
                         :disabled="actionLoading || !canEquip(entry.item)" class="equip-btn"
                         :class="{ 'disabled': !canEquip(entry.item) }">
@@ -138,6 +143,13 @@ onMounted(async () => {
     border: 2px solid var(--dark-green);
     padding: 0.5rem;
     gap: 0.5rem;
+}
+
+.equippedItem {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 18rem;
 }
 
 .skillWrapper {
