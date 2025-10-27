@@ -78,7 +78,7 @@
                     <p v-if="selectedItem.damageReduction !== undefined"><strong>DR:</strong> {{
                         selectedItem.damageReduction }}</p>
                     <p v-if="selectedItem.blockValue !== undefined"><strong>Block:</strong> {{ selectedItem.blockValue
-                    }}
+                        }}
                     </p>
                     <p><strong>Weight:</strong> {{ selectedItem.weight ?? '—' }}</p>
                     <p><strong>Skill Req:</strong> {{ selectedItem.skillReq ?? '—' }}</p>
@@ -106,6 +106,9 @@
 </template>
 
 <script setup>
+definePageMeta({
+    middleware: ["auth",],
+});
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 
 const { data } = await useFetch('/api/items/itemCatalog')
