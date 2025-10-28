@@ -3,6 +3,7 @@ import { serverSupabaseClient } from "#supabase/server";
 import { supabaseAdmin } from "~~/server/utils/supabaseAdmin";
 import { monsterCatalog } from "#imports";
 import { computeDerivedStatBonus } from "~~/utils/heroUtils";
+import { doCombat } from "~~/server/utils/combat";
 
 const combatSubmitSchema = z.object({
   monsterID: z.number(),
@@ -73,7 +74,15 @@ export default defineEventHandler(async (event) => {
     hero.block = statBonuses.trueBlock;
     hero.initiative = statBonuses.trueInitiative;
 
+    const retreatValue = Math.ceil(
+      (combatSettings.retreatValue / 100) * hero.hp_max
+    );
+
     console.log("Hero with bonuses:", hero);
+
+    const combatLog = doCombat(hero, retreatValue, monster);
+
+    console.log(combatLog);
   } catch (err) {
     throw err;
   }
