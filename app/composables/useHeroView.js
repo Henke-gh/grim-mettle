@@ -10,6 +10,10 @@ export const useHeroView = () => {
   const { equipment, fetchEquipment, equipError } = useEquipment();
   const { getItemById } = useItems();
 
+  const actionSuccess = ref(false);
+  const actionError = ref(null);
+  const actionLoading = ref(null);
+
   //Initialise all data.
   const initialise = async () => {
     await Promise.all([fetchHero(), fetchEquipment(), fetchInventory()]);
@@ -82,6 +86,90 @@ export const useHeroView = () => {
     return inventory.value && inventory.value.length > 0;
   });
 
+  /* === Equip and Unequip === */
+  // Check if item is currently equipped
+  const isEquipped = (itemId) => {
+    if (!equipment.value) return false;
+    const slots = [
+      "main_hand",
+      "off_hand",
+      "armour",
+      "trinket_1",
+      "trinket_2",
+      "trinket_3",
+    ];
+    return slots.some((slot) => equipment.value[slot] === itemId);
+  };
+
+  //Check if hero has enough strength to equip selected item (applies to shields and weapons)
+  const canEquip = (item) => {
+    if (!hero.value || !item) return false;
+
+    if (item.strengthReq && hero.value.strength < item.strengthReq) {
+      return false;
+    }
+    return true;
+  };
+
+  const equipItem = async (item_id, item_slot) => {
+    actionLoading.value = true;
+    actionError.value = null;
+    actionSuccess.value = null;
+
+    try {
+      const response = await $fetch("/api/items/equip", {
+        method: "POST",
+        body: { item_slot, item_id },
+      });
+
+      actionSuccess.value = response.message;
+
+      await Promise.all([fetchEquipment(), fetchHero()]);
+      console.log("After refetch - equipment:", equipment.value); // ← Add this
+      console.log("After refetch - equippedItems:", equippedItems.value);
+    } catch (err) {
+      actionError.value = err?.data?.message || "Failed to equipd item.";
+      console.error("Equip err:", err);
+    } finally {
+      actionLoading.value = false;
+
+      //set timeout of success message, 3 seconds
+      if (actionSuccess.value) {
+        setTimeout(() => {
+          actionSuccess.value = null;
+        }, 3000);
+      }
+    }
+  };
+
+  //Unequip an item
+  const unequipItem = async (item_slot) => {
+    actionLoading.value = true;
+    actionError.value = null;
+    actionSuccess.value = null;
+
+    try {
+      const response = await $fetch("/api/items/unequip", {
+        method: "POST",
+        body: { item_slot },
+      });
+
+      actionSuccess.value = response.message;
+
+      await Promise.all([fetchEquipment(), fetchHero()]);
+    } catch (err) {
+      actionError.value = err?.data?.message || "Failed to unequip item.";
+    } finally {
+      actionLoading.value = false;
+
+      if (actionSuccess.value) {
+        setTimeout(() => {
+          actionSuccess.value = null;
+        }, 3000);
+      }
+    }
+  };
+
   return {
     hero,
     heroAvatar,
@@ -95,5 +183,12 @@ export const useHeroView = () => {
     initialise,
     inventoryError,
     equipError,
+    actionError,
+    actionLoading,
+    actionSuccess,
+    unequipItem,
+    equipItem,
+    isEquipped,
+    canEquip,
   };
 };

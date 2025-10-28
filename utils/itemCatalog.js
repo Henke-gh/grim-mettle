@@ -7,7 +7,7 @@
 
 export const weapons = [
   {
-    id: 0,
+    id: 1,
     category: "swords",
     slot: "main_hand",
     twoHanded: false,
@@ -22,7 +22,7 @@ export const weapons = [
     description: "Keep it short and sweet.",
   },
   {
-    id: 1,
+    id: 2,
     category: "swords",
     slot: "main_hand",
     twoHanded: false,
@@ -60,6 +60,7 @@ export const armour = [
   {
     id: 200,
     category: "armour",
+    slot: "armour",
     name: "Leather Tunic",
     damageReduction: 1,
     goldCost: 75,
@@ -73,6 +74,7 @@ export const trinkets = [
   {
     id: 300,
     category: "trinkets",
+    slot: "trinket",
     name: "Wrought-Iron Ring",
     goldCost: 150,
     bonus: {
@@ -111,5 +113,26 @@ export const starterGear = [
     description: "It's what you arrived in. It's got holes in it.",
   },
 ];
+
+// Helper function to get item by ID
+export const getItemById = (itemId) => {
+  const id = Number(itemId);
+  if (id >= 0 && id <= 99) {
+    return weapons.find((w) => w.id === id);
+  }
+  if (id >= 100 && id <= 199) {
+    return shields.find((s) => s.id === id);
+  }
+  if (id >= 200 && id <= 299) {
+    return armour.find((a) => a.id === id);
+  }
+  if (id >= 300 && id <= 399) {
+    return trinkets.find((t) => t.id === id);
+  }
+  if (id >= 400) {
+    return starterGear.find((g) => g.id === id);
+  }
+  return null;
+};
 
 export const itemCatalog = { weapons, shields, armour, trinkets, starterGear };

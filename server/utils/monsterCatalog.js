@@ -2,6 +2,7 @@
 
 export const monsterCatalog = [
   {
+    id: 1,
     name: "Desert Rat",
     level: 1,
     xpPayout: 15,
@@ -15,6 +16,7 @@ export const monsterCatalog = [
     description: "This lil' guy carries all the diseases.",
   },
   {
+    id: 2,
     name: "Goblin Mugger",
     level: 1,
     xpPayout: 20,
@@ -28,6 +30,7 @@ export const monsterCatalog = [
     description: "The little shits are everywhere.",
   },
   {
+    id: 3,
     name: "Bandit",
     level: 2,
     xpPayout: 25,
@@ -41,3 +44,11 @@ export const monsterCatalog = [
     description: "A run of the mill lowlife.",
   },
 ];
+
+export const viewMonsterCollection = monsterCatalog.map((monster) => ({
+  id: monster.id,
+  name: monster.name,
+  level: monster.level,
+  weapon: monster.weapon,
+  description: monster.description,
+}));

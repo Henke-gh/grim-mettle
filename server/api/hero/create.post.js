@@ -48,8 +48,6 @@ export default defineEventHandler(async (event) => {
       throw createError({ statusCode: 401, message: "Not authenticated" });
     }
 
-    console.log("Authenticated user ID:", user.id);
-
     const result = heroSchema.safeParse(body);
     if (!result.success) {
       throw createError({

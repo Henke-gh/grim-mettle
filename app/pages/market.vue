@@ -9,7 +9,7 @@
                         <p>Browse around, have a look! I'm sure you'll find something you can afford.</p>
                         <p>A new trinket, perhaps?</p>
                     </article>
-                    <img src="../assets/images/vendor.png" alt="The goblin vendor welcomes you" class="vendorImg" />
+                    <img src="../assets/images/vendor.png" alt="The goblin vendor welcomes you." class="vendorImg" />
                 </div>
             </header>
         </div>
@@ -106,6 +106,9 @@
 </template>
 
 <script setup>
+definePageMeta({
+    middleware: ["auth",],
+});
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 
 const { data } = await useFetch('/api/items/itemCatalog')

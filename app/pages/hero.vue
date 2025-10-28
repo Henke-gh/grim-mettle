@@ -15,7 +15,14 @@ const { hero,
     hasInventory,
     initialise,
     inventoryError,
-    equipError, } = useHeroView();
+    equipError,
+    actionError,
+    actionLoading,
+    actionSuccess,
+    unequipItem,
+    equipItem,
+    canEquip,
+    isEquipped } = useHeroView();
 
 onMounted(async () => {
     await initialise();
@@ -51,14 +58,26 @@ onMounted(async () => {
             <h3>Items</h3>
             <div class="part">
                 <h4>Equipped Items:</h4>
-                <p>Main hand: {{ equippedItems?.mainHand?.name || "- empty -" }}</p>
-                <p>Off-hand: {{ equippedItems?.offHand?.name || "- empty -" }}</p>
-                <p>Armour: {{ equippedItems?.armour?.name || "- empty -" }}</p>
+                <div class="equippedItem">
+                    <p>Main hand: {{ equippedItems?.mainHand?.name || "- empty -" }}</p>
+                    <button v-if="equippedItems?.mainHand?.name" @click="unequipItem('main_hand')"
+                        :disabled="actionLoading">Unequip</button>
+                </div>
+                <div class="equippedItem">
+                    <p>Off-hand: {{ equippedItems?.offHand?.name || "- empty -" }}</p>
+                    <button v-if="equippedItems?.offHand?.name" @click="unequipItem('off_hand')"
+                        :disabled="actionLoading">Unequip</button>
+                </div>
+                <div class="equippedItem">
+                    <p>Armour: {{ equippedItems?.armour?.name || "- empty -" }}</p>
+                    <button v-if="equippedItems?.armour?.name" @click="unequipItem('armour')"
+                        :disabled="actionLoading">Unequip</button>
+                </div>
                 <h4>Trinkets:</h4>
                 <p v-if="equippedItems?.trinkets.length === 0">- none -</p>
-                <p v-for="(trinket, index) in equippedItems?.trinkets" :key="index">
-                    {{ trinket.name }}
-                </p>
+                <div class="equippedItem" v-for="(trinket, index) in equippedItems?.trinkets" :key="index">
+                    <p>{{ trinket.name }}</p>
+                </div>
             </div>
             <div class="part" v-if="!hasInventory">
                 <h4>Inventory</h4>
@@ -67,7 +86,14 @@ onMounted(async () => {
             </div>
             <div class="part heroInventory" v-else>
                 <h4>Inventory</h4>
-                <p v-for="entry in inventoryWithItems" :key="entry.item_id">{{ entry.item.name }}</p>
+                <div class="equippedItem" v-for="entry in inventoryWithItems" :key="entry.item_id">
+                    <p v-if="!isEquipped(entry.item_id)">{{ entry.item.name }}</p>
+                    <button v-if="!isEquipped(entry.item_id)" @click="equipItem(entry.item_id, entry.item.slot)"
+                        :disabled="actionLoading || !canEquip(entry.item)" class="equip-btn"
+                        :class="{ 'disabled': !canEquip(entry.item) }">
+                        {{ canEquip(entry.item) ? 'Equip' : 'Requirements not met' }}
+                    </button>
+                </div>
             </div>
         </section>
         <section class="skillWrapper">
@@ -117,6 +143,13 @@ onMounted(async () => {
     border: 2px solid var(--dark-green);
     padding: 0.5rem;
     gap: 0.5rem;
+}
+
+.equippedItem {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 18rem;
 }
 
 .skillWrapper {
