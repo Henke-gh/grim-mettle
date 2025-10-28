@@ -124,7 +124,7 @@ export const useHeroView = () => {
 
       actionSuccess.value = response.message;
 
-      await Promise.all([fetchEquipment(), fetchHero()]);
+      await fetchEquipment();
       console.log("After refetch - equipment:", equipment.value); // ← Add this
       console.log("After refetch - equippedItems:", equippedItems.value);
     } catch (err) {
@@ -156,7 +156,7 @@ export const useHeroView = () => {
 
       actionSuccess.value = response.message;
 
-      await Promise.all([fetchEquipment(), fetchHero()]);
+      await fetchEquipment();
     } catch (err) {
       actionError.value = err?.data?.message || "Failed to unequip item.";
     } finally {

@@ -33,7 +33,8 @@
                         </option>
                     </select>
                 </div>
-                <button @click="initiateFight(selectedMonster, selectedStance, retreatPercent)">Fight</button>
+                <p>-- {{ errorMsg }} --</p>
+                <button @click="initiateFight()">Fight</button>
                 <button @click="regretChallenge">Back</button>
             </section>
         </div>
@@ -72,8 +73,10 @@ const retreatPercent = ref(50);
 const selectedStance = ref("balanced");
 const { data: monsters, error } = await useAsyncData('monsters', () => $fetch('/api/monster/monsterCollection'));
 const { hero, initialise } = useHeroView();
+const errorMsg = ref('');
 
-const retreatOptions = Array.from({ length: 11 }, (_, index) => 100 - index * 10);
+//Creates an array with the selectable retreat values.
+const retreatOptions = Array.from({ length: 11 }, (_, hp) => 100 - hp * 10);
 const stances = ["balanced", "offensive", "defensive"];
 
 if (error.value) {
@@ -107,9 +110,21 @@ function regretChallenge() {
     showCombatSettings.value = false;
 }
 
-function initiateFight(monster, stance, retreatValue) {
-    console.log("Initiating fight:");
-    console.log(stance);
+//Makes some provisional checks before routing to the combat api for final validation and execution of combat.
+async function initiateFight() {
+    const desiredRetreatValue = Math.ceil((retreatPercent.value / 100) * hero.value.hp_max);
+
+    if (hero.value.hp_current < desiredRetreatValue) {
+        errorMsg.value = "You don't have enough HP. Recover a bit or adjust your retreat value."
+    } else {
+        try {
+            const payload = { monsterID: selectedMonster.value.id, stance: selectedStance.value, retreatValue: retreatPercent.value };
+            await $fetch('/api/combat/fightMonster', { method: 'POST', body: payload })
+            console.log("COMBAT!");
+        } catch (err) {
+            throw err;
+        }
+    }
 }
 
 function onKeydown(e) {
