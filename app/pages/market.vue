@@ -9,7 +9,7 @@
                         <p>Browse around, have a look! I'm sure you'll find something you can afford.</p>
                         <p>A new trinket, perhaps?</p>
                     </article>
-                    <img src="../assets/images/vendor.png" alt="The goblin vendor welcomes you" class="vendorImg" />
+                    <img src="../assets/images/vendor.png" alt="The goblin vendor welcomes you." class="vendorImg" />
                 </div>
             </header>
         </div>
@@ -78,7 +78,7 @@
                     <p v-if="selectedItem.damageReduction !== undefined"><strong>DR:</strong> {{
                         selectedItem.damageReduction }}</p>
                     <p v-if="selectedItem.blockValue !== undefined"><strong>Block:</strong> {{ selectedItem.blockValue
-                        }}
+                    }}
                     </p>
                     <p><strong>Weight:</strong> {{ selectedItem.weight ?? '—' }}</p>
                     <p><strong>Skill Req:</strong> {{ selectedItem.skillReq ?? '—' }}</p>

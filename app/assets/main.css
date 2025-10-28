@@ -54,3 +54,13 @@ section {
 .italic {
   font-style: italic;
 }
+
+.swordlineContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.fitContent {
+  width: fit-content;
+}

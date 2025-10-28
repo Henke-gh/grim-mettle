@@ -62,12 +62,6 @@ import CustomFooter from "~/components/CustomFooter.vue"
     margin: 0.7rem 0;
 }
 
-.swordlineContainer {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-}
-
 .loginWrapper {
     display: flex;
     flex-direction: row;
