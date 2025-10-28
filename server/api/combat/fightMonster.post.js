@@ -1,6 +1,8 @@
 import { z } from "zod";
 import { serverSupabaseClient } from "#supabase/server";
 import { supabaseAdmin } from "~~/server/utils/supabaseAdmin";
+import { monsterCatalog } from "#imports";
+import { computeDerivedStatBonus } from "~~/utils/heroUtils";
 
 const combatSubmitSchema = z.object({
   monsterID: z.number(),
@@ -24,7 +26,6 @@ export default defineEventHandler(async (event) => {
     }
 
     const body = await readBody(event);
-    console.log(body);
 
     const result = combatSubmitSchema.safeParse(body);
     if (!result.success) {
@@ -35,7 +36,44 @@ export default defineEventHandler(async (event) => {
     }
 
     const combatSettings = result.data;
-    console.log(combatSettings);
+    console.log("combat settings:", combatSettings);
+
+    //get monster based on submitted id.
+    const monster = monsterCatalog.find(
+      (m) => m.id === combatSettings.monsterID
+    );
+    console.log("monster data:", monster);
+
+    //get hero from heroes table and update modified/ derived stat values.
+    const { data: hero, error: heroError } = await supabaseAdmin
+      .from("heroes")
+      .select("*")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    if (heroError) {
+      throw createError({ statusCode: 500, message: heroError.message });
+    }
+
+    if (!hero) {
+      throw createError({ statusCode: 400, message: "Hero not found." });
+    }
+
+    console.log("hero from DB:", hero);
+
+    //Apply derived stat bonuses
+    const statBonuses = computeDerivedStatBonus({
+      speed: hero.speed,
+      block: hero.block,
+      evasion: hero.evasion,
+      initiative: hero.initiative,
+    });
+
+    hero.evasion = statBonuses.trueEvasion;
+    hero.block = statBonuses.trueBlock;
+    hero.initiative = statBonuses.trueInitiative;
+
+    console.log("Hero with bonuses:", hero);
   } catch (err) {
     throw err;
   }

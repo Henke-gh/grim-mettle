@@ -33,7 +33,7 @@
                         </option>
                     </select>
                 </div>
-                <p>-- {{ errorMsg }} --</p>
+                <p v-if="errorMsg">{{ errorMsg }}</p>
                 <button @click="initiateFight()">Fight</button>
                 <button @click="regretChallenge">Back</button>
             </section>
