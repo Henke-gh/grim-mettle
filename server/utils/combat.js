@@ -1,3 +1,21 @@
+//Set hero fatigue value
+function setHeroFatigue(heroSpeed) {
+  const fatigue = Math.floor(5 + heroSpeed * 0.4);
+
+  return fatigue;
+}
+
+//Determine initiative (each round)
+function determineInitiative(heroInit, monsterInit) {
+  const heroInitiative = Math.floor(Math.random() * (heroInit - 0 + 1));
+  const monsterInitiative = Math.floor(Math.random() * (monsterInit - 0 + 1));
+  if (heroInitiative >= monsterInitiative) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 //Calculates hit damage, also needs to take monster/hero strength rating.
 //Max and min values are inclusive when randomised.
 function doDamage(weapon, strength) {
@@ -10,36 +28,65 @@ function doDamage(weapon, strength) {
   return damage;
 }
 
-//Determine initiative (each round)
-function determineInitiative(heroInit, monsterInit) {
-  const heroInitiative = Math.floor(Math.random() * (heroInit - 0 + 1));
-  const monsterInitiative = Math.floor(Math.random() * (monsterInit - 0 + 1));
-  console.log("hero ini:", heroInitiative);
-  console.log("monster ini:", monsterInitiative);
-  if (heroInitiative >= monsterInitiative) {
+//Give combatants a small chance for critical attack or miss.
+function isCritical() {
+  const rollCritical = Math.random() * 101;
+
+  if (rollCritical > 96) {
     return true;
   } else {
     return false;
   }
 }
 
-//Set hero fatigue value
-function setHeroFatigue(heroSpeed) {
-  const fatigue = Math.floor(5 + heroSpeed * 0.4);
-
-  return fatigue;
-}
 //Determine if attacker hits or if defender evades
-function makeHeroAttack(hero, heroWeapon, monster) {
-  //Determine which weapon skill to use by picking item category from currently equipped weapon.
-  const weaponSkillName = heroWeapon.category;
-  const heroWeaponSkillReq = heroWeapon.skillReq;
-  const heroAttackSkill = hero.weaponSkillName;
-  const monsterEvasion = monster.skills.evasion;
-}
+function makeAttack(attacker, defender, weapon) {
+  const attackSkill = weapon.category;
+  let skillDiff = attacker[attackSkill] - defender.evasion;
 
-function makeMonsterAttack(monster, hero) {}
-//Determine if defender blocks
+  //Apply penalty if attacker does not meet the skill req on equipped weapon.
+  if (weapon.skillReq && attacker[attackSkill] < weapon.skillReq) {
+    const penalty = weapon.skillReq - attacker[attackSkill];
+    skillDiff -= penalty * 3;
+  }
+
+  //Determine hit chance based on the skill diff between attackers weapon skill and defender evaion.
+  let hitChance;
+  if (skillDiff >= 20) hitChance = 95;
+  else if (skillDiff >= 10) hitChance = 80;
+  else if (skillDiff >= 5) hitChance = 70;
+  else if (skillDiff >= 0) hitChance = 60;
+  else if (skillDiff >= -5) hitChance = 50;
+  else if (skillDiff >= -10) hitChance = 35;
+  else if (skillDiff >= -20) hitChance = 20;
+  else hitChance = 10;
+
+  const rollHitTarget = Math.random() * 100;
+
+  if (rollHitTarget <= hitChance) {
+    return true;
+  } else {
+    return false;
+  }
+}
+//Determine if defender blocks if a shield is present in the off hand.
+function attemptBlock() {}
+
+//One full turn consists of two combatActions, each participant (hero and monster) gets to act and respond to attack.
+function combatAction(attacker, defender, weapon) {
+  const damage = doDamage(weapon, attacker.strength);
+  const attackSuccessful = makeAttack(attacker, defender, weapon);
+  let attackHits;
+
+  if (attackSuccessful) {
+    attackHits = true;
+  } else {
+    attackHits = false;
+  }
+
+  const result = { damage, attackHits };
+  return result;
+}
 
 //Main Combat Loop
 export function doCombat(hero, heroEquipment, retreatValue, monster) {
@@ -47,9 +94,10 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
   const heroRetreatsAt = retreatValue;
   const combatLog = [];
   let heroHP = hero.hp_current;
+  let monsterHP = monster.hp;
   let turnCounter = 1;
 
-  while (heroHP > heroRetreatsAt && monster.hp > 0) {
+  while (heroHP > heroRetreatsAt && monsterHP > 0) {
     combatLog.push("Round " + turnCounter);
 
     if (monster.fatigue < turnCounter) {
@@ -63,18 +111,71 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
       break;
     }
 
-    if (determineInitiative(hero.initiative, monster.skills.initiative)) {
-      const damage = doDamage(heroEquipment.main_hand, hero.strength);
-      console.log("Hero Damage: ", damage);
-      combatLog.push("Hero goes first.");
+    if (determineInitiative(hero.initiative, monster.initiative)) {
+      combatLog.push(hero.hero_name + " goes first.");
+      const outcome = combatAction(hero, monster, heroEquipment.main_hand);
+      if (outcome.attackHits) {
+        combatLog.push(
+          hero.hero_name +
+            " charges with " +
+            heroEquipment.main_hand.name +
+            " and delivers a clean strike."
+        );
+        combatLog.push(
+          monster.name + " takes " + outcome.damage + " points of damage!"
+        );
+
+        monsterHP -= outcome.damage;
+        if (monsterHP <= 0) {
+          combatLog.push(monster.name + " is defeated.");
+          break;
+        }
+      } else {
+        combatLog.push(
+          hero.hero_name +
+            " swings " +
+            heroEquipment.main_hand.name +
+            " in a wide arc.."
+        );
+        combatLog.push(monster.name + " evades the desperate attack.");
+      }
     } else {
-      const damage = doDamage(monster.weapon, monster.strength);
-      console.log("Monster Damage: ", damage);
-      combatLog.push("Monster gets the upper hand.");
+      combatLog.push(monster.name + " gets the upper hand.");
+      const outcome = combatAction(monster, hero, monster.weapon);
+      if (outcome.attackHits) {
+        combatLog.push(
+          monster.name +
+            " comes barreling towards " +
+            hero.hero_name +
+            " with " +
+            monster.weapon.name +
+            "!"
+        );
+        combatLog.push(
+          "With murder in their eyes " +
+            monster.name +
+            " inflicts " +
+            outcome.damage +
+            " points of damage."
+        );
+
+        heroHP -= outcome.damage;
+        if (heroHP <= heroRetreatsAt) {
+          combatLog.push(hero.hero_name + " is defeated.");
+          if (heroHP <= 0) {
+            combatLog.push(hero.hero_name + " is slain!");
+          }
+          break;
+        }
+      } else {
+        combatLog.push(
+          monster.name + " slashes furiously at the air. Or something.."
+        );
+      }
     }
     turnCounter++;
   }
-  console.log(turnCounter);
-  console.log(heroHP);
-  return combatLog;
+
+  const result = { combatLog, heroHP, turnCounter };
+  return result;
 }

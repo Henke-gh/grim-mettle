@@ -38,13 +38,11 @@ export default defineEventHandler(async (event) => {
     }
 
     const combatSettings = result.data;
-    console.log("combat settings:", combatSettings);
 
     //get monster based on submitted id.
     const monster = monsterCatalog.find(
       (m) => m.id === combatSettings.monsterID
     );
-    console.log("monster data:", monster);
 
     //get hero from heroes table.
     const { data: hero, error: heroError } = await supabaseAdmin
@@ -61,8 +59,6 @@ export default defineEventHandler(async (event) => {
       throw createError({ statusCode: 400, message: "Hero not found." });
     }
 
-    console.log("hero from DB:", hero);
-
     //Apply derived stat bonuses
     const statBonuses = computeDerivedStatBonus({
       speed: hero.speed,
@@ -74,8 +70,6 @@ export default defineEventHandler(async (event) => {
     hero.evasion = statBonuses.trueEvasion;
     hero.block = statBonuses.trueBlock;
     hero.initiative = statBonuses.trueInitiative;
-
-    console.log("Hero with bonuses:", hero);
 
     //Get hero equipped items (gets item IDs)
     const { data: equipment, error: equipError } = await supabase
@@ -92,8 +86,6 @@ export default defineEventHandler(async (event) => {
       throw createError({ statusCode: 400, message: "No equipment found." });
     }
 
-    console.log("Hero equipment;", equipment);
-
     //Get all equipped items
     const heroEquipment = {
       main_hand: getItemById(equipment.main_hand),
@@ -104,17 +96,16 @@ export default defineEventHandler(async (event) => {
       trinket_3: getItemById(equipment.trinket_3),
     };
 
-    console.log("Items:", heroEquipment);
     //Set hp value at which the player hero will retreat/ give up the fight.
     const retreatValue = Math.ceil(
       (combatSettings.retreatValue / 100) * hero.hp_max
     );
     //Run the combat loop
-    const combatLog = doCombat(hero, heroEquipment, retreatValue, monster);
+    const combatResult = doCombat(hero, heroEquipment, retreatValue, monster);
 
-    console.log("COMBAT LOG: ", combatLog);
+    console.log("COMBAT LOG: ", combatResult.combatLog);
     {
-      return combatLog;
+      return combatResult.combatLog;
     }
   } catch (err) {
     throw err;
