@@ -44,13 +44,13 @@ export function doCombat(hero, retreatValue, monster) {
   let heroHP = hero.hp_current;
   let turnCounter = 1;
 
-  while (heroHP > heroRetreatsAt && monster.hp_current > 0) {
-    combatLog.push(("Round ", turnCounter));
+  while (heroHP > heroRetreatsAt && monster.hp > 0) {
+    combatLog.push("Round " + turnCounter);
 
     if (heroFatigue >= turnCounter) {
       turnCounter++;
     } else {
-      combatLog.push("Hero has gassed out.");
+      combatLog.push(hero.hero_name + " has gassed out.");
       break;
     }
   }
