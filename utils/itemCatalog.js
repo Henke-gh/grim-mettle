@@ -92,7 +92,7 @@ export const starterGear = [
     category: "default",
     slot: "main_hand",
     twoHanded: false,
-    name: "Fists",
+    name: "Unarmed",
     minDmg: 1,
     maxDmg: 2,
     skillReq: 0,
@@ -100,7 +100,7 @@ export const starterGear = [
     goldCost: 0,
     bonus: {},
     description:
-      "Looks like you're unarmed. Might want to look into improving that situation.",
+      "Your fists will only carry you so far. Might want to look into improving that situation.",
   },
   {
     id: 401,

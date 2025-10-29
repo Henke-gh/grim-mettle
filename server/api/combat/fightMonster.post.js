@@ -4,6 +4,7 @@ import { supabaseAdmin } from "~~/server/utils/supabaseAdmin";
 import { monsterCatalog } from "#imports";
 import { computeDerivedStatBonus } from "~~/utils/heroUtils";
 import { doCombat } from "~~/server/utils/combat";
+import { getItemById } from "~~/utils/itemCatalog";
 
 const combatSubmitSchema = z.object({
   monsterID: z.number(),
@@ -45,7 +46,7 @@ export default defineEventHandler(async (event) => {
     );
     console.log("monster data:", monster);
 
-    //get hero from heroes table and update modified/ derived stat values.
+    //get hero from heroes table.
     const { data: hero, error: heroError } = await supabaseAdmin
       .from("heroes")
       .select("*")
@@ -74,15 +75,47 @@ export default defineEventHandler(async (event) => {
     hero.block = statBonuses.trueBlock;
     hero.initiative = statBonuses.trueInitiative;
 
+    console.log("Hero with bonuses:", hero);
+
+    //Get hero equipped items (gets item IDs)
+    const { data: equipment, error: equipError } = await supabase
+      .from("hero_equipment")
+      .select("*")
+      .eq("hero_id", hero.id)
+      .maybeSingle();
+
+    if (equipError) {
+      throw createError({ statusCode: 500, message: equipError.message });
+    }
+
+    if (!equipment) {
+      throw createError({ statusCode: 400, message: "No equipment found." });
+    }
+
+    console.log("Hero equipment;", equipment);
+
+    //Get all equipped items
+    const heroEquipment = {
+      main_hand: getItemById(equipment.main_hand),
+      off_hand: getItemById(equipment.off_hand),
+      armour: getItemById(equipment.armour),
+      trinket_1: getItemById(equipment.trinket_1),
+      trinket_2: getItemById(equipment.trinket_2),
+      trinket_3: getItemById(equipment.trinket_3),
+    };
+
+    console.log("Items:", heroEquipment);
+    //Set hp value at which the player hero will retreat/ give up the fight.
     const retreatValue = Math.ceil(
       (combatSettings.retreatValue / 100) * hero.hp_max
     );
+    //Run the combat loop
+    const combatLog = doCombat(hero, heroEquipment, retreatValue, monster);
 
-    console.log("Hero with bonuses:", hero);
-
-    const combatLog = doCombat(hero, retreatValue, monster);
-
-    console.log(combatLog);
+    console.log("COMBAT LOG: ", combatLog);
+    {
+      return combatLog;
+    }
   } catch (err) {
     throw err;
   }

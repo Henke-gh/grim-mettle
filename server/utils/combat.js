@@ -1,6 +1,6 @@
 //Calculates hit damage, also needs to take monster/hero strength rating.
 //Max and min values are inclusive when randomised.
-export function doDamage(weapon, strength) {
+function doDamage(weapon, strength) {
   const minDmg = Math.ceil(weapon.minDmg);
   const maxDmg = Math.floor(weapon.maxDmg);
   const dmgBonus = Math.ceil(strength / 10);
@@ -11,10 +11,11 @@ export function doDamage(weapon, strength) {
 }
 
 //Determine initiative (each round)
-export function determineInitiative(heroInit, monsterInit) {
+function determineInitiative(heroInit, monsterInit) {
   const heroInitiative = Math.floor(Math.random() * (heroInit - 0 + 1));
   const monsterInitiative = Math.floor(Math.random() * (monsterInit - 0 + 1));
-
+  console.log("hero ini:", heroInitiative);
+  console.log("monster ini:", monsterInitiative);
   if (heroInitiative >= monsterInitiative) {
     return true;
   } else {
@@ -23,23 +24,27 @@ export function determineInitiative(heroInit, monsterInit) {
 }
 
 //Set hero fatigue value
-export function setHeroFatigue(heroSpeed) {
+function setHeroFatigue(heroSpeed) {
   const fatigue = Math.floor(5 + heroSpeed * 0.4);
 
   return fatigue;
 }
 //Determine if attacker hits or if defender evades
+function makeHeroAttack(hero, heroWeapon, monster) {
+  //Determine which weapon skill to use by picking item category from currently equipped weapon.
+  const weaponSkillName = heroWeapon.category;
+  const heroWeaponSkillReq = heroWeapon.skillReq;
+  const heroAttackSkill = hero.weaponSkillName;
+  const monsterEvasion = monster.skills.evasion;
+}
 
+function makeMonsterAttack(monster, hero) {}
 //Determine if defender blocks
 
 //Main Combat Loop
-export function doCombat(hero, retreatValue, monster) {
+export function doCombat(hero, heroEquipment, retreatValue, monster) {
   const heroFatigue = setHeroFatigue(hero.speed);
   const heroRetreatsAt = retreatValue;
-  const heroHasInitiative = determineInitiative(
-    hero.initiative,
-    monster.initiative
-  );
   const combatLog = [];
   let heroHP = hero.hp_current;
   let turnCounter = 1;
@@ -47,12 +52,27 @@ export function doCombat(hero, retreatValue, monster) {
   while (heroHP > heroRetreatsAt && monster.hp > 0) {
     combatLog.push("Round " + turnCounter);
 
-    if (heroFatigue >= turnCounter) {
-      turnCounter++;
-    } else {
+    if (monster.fatigue < turnCounter) {
+      combatLog.push(
+        monster.name + " collapses in the sand. Too tired to get up."
+      );
+      break;
+    }
+    if (heroFatigue < turnCounter) {
       combatLog.push(hero.hero_name + " has gassed out.");
       break;
     }
+
+    if (determineInitiative(hero.initiative, monster.skills.initiative)) {
+      const damage = doDamage(heroEquipment.main_hand, hero.strength);
+      console.log("Hero Damage: ", damage);
+      combatLog.push("Hero goes first.");
+    } else {
+      const damage = doDamage(monster.weapon, monster.strength);
+      console.log("Monster Damage: ", damage);
+      combatLog.push("Monster gets the upper hand.");
+    }
+    turnCounter++;
   }
   console.log(turnCounter);
   console.log(heroHP);
