@@ -111,7 +111,13 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
       break;
     }
 
-    if (determineInitiative(hero.initiative, monster.initiative)) {
+    const heroGoesFirst = determineInitiative(
+      hero.initiative,
+      monster.initiative
+    );
+
+    if (heroGoesFirst) {
+      //Player hero won initiative and attacks first.
       combatLog.push(hero.hero_name + " goes first.");
       const outcome = combatAction(hero, monster, heroEquipment.main_hand);
       if (outcome.attackHits) {
@@ -140,6 +146,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
         combatLog.push(monster.name + " evades the desperate attack.");
       }
     } else {
+      //Monster won the initiative and attacks first.
       combatLog.push(monster.name + " gets the upper hand.");
       const outcome = combatAction(monster, hero, monster.weapon);
       if (outcome.attackHits) {

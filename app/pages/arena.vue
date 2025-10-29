@@ -72,6 +72,7 @@ const selectedMonster = ref('');
 const showCombatSettings = ref(false);
 const retreatPercent = ref(50);
 const selectedStance = ref("balanced");
+const combatResult = useCombatResult();
 const { data: monsters, error } = await useAsyncData('monsters', () => $fetch('/api/monster/monsterCollection'));
 const { hero, initialise } = useHeroView();
 const errorMsg = ref('');
@@ -120,8 +121,11 @@ async function initiateFight() {
     } else {
         try {
             const payload = { monsterID: selectedMonster.value.id, stance: selectedStance.value, retreatValue: retreatPercent.value };
-            await $fetch('/api/combat/fightMonster', { method: 'POST', body: payload })
-            console.log("COMBAT!");
+            const result = await $fetch('/api/combat/fightMonster', { method: 'POST', body: payload })
+            if (result) {
+                combatResult.combatLog.value = result;
+                navigateTo('/combat');
+            }
         } catch (err) {
             throw err;
         }
