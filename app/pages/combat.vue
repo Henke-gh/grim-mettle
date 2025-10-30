@@ -21,18 +21,19 @@
                         </template>
                     </p>
                     <!-- Combat Resolves -->
+                    <p v-else-if="action.type === 'fatigue'">
+                        {{ action.data.fighter }} collapses in the sand, too tired to keep fighting.
+                    </p>
                     <p v-else-if="action.type === 'defeat'">
                         {{ action.data.defeated }} {{ action.data.slain ? 'is slain!' : 'is defeated.' }}
                     </p>
                 </article>
             </div>
-            <div v-else-if="entry.type === 'fatigue'" class="fatigue">
-                <p>{{ entry.data.actor }} collapses from exhaustion!</p>
-            </div>
             <div v-else-if="entry.type === 'combat_end'" class="combat-end">
-                <p v-if="entry.data.result === 'victory'">Victory!</p>
-                <p v-else-if="entry.data.result === 'death'">You have been defeated...</p>
-                <p v-else>You retreat from combat!</p>
+                <p v-if="entry.data.result === 'victory'">You are victorious!</p>
+                <p v-else-if="entry.data.result === 'death'">Your journey ends. The dead salute you and the living move
+                    on.</p>
+                <p v-else>You live to fight another day, tend to your wounds.</p>
             </div>
         </section>
         <button @click="exitCombatLog">Continue</button>
@@ -56,48 +57,6 @@ onMounted(() => {
 
 function exitCombatLog() {
     navigateTo('/arena');
-}
-
-//Processes the log entries.
-function getLogText(entry) {
-    switch (entry.type) {
-        case "combat_start":
-            return `${entry.data.hero} vs ${entry.data.monster}`;
-        case "turn":
-            return null; //Handled separately
-        case "initiative":
-            return `${entry.data.fighter} gets the upper hand and charges forward!`;
-
-        case "attack":
-            if (entry.data.hit) {
-                if (entry.data.critical) {
-                    return `Crits can't happen yet.`
-                }
-                return `${entry.data.attacker} strikes a fierce blow to ${entry.data.defender} with ${entry.data.weapon} dealing ${entry.data.damage} points of damage.`;
-            } else {
-                return `${entry.data.attacker} swings ${entry.data.weapon} in a wide arc, hitting all the air..` + `The attack is easily evaded by ${entry.data.defender}.`;
-            }
-
-        case "defeat":
-            if (entry.data.slain) {
-                return `${entry.data.defeated} is slain! The last feast is for the crows..`;
-            }
-            return `${entry.data.defeated} is defeated.`;
-
-        case "fatigue":
-            return `${entry.data.fighter} collapses in the sand. Too tired to keep fighting.`;
-
-        case "combat_end":
-            if (entry.data.result === "victory") {
-                return `Victory!`;
-            } else if (entry.data.result === "death") {
-                return `Your grim mettle takes you no further.`
-            } else {
-                return `Tend to your wounds, you live to fight another day.`
-            }
-        default:
-            return null;
-    }
 }
 </script>
 

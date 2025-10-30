@@ -94,11 +94,40 @@ function combatAction(attacker, defender, weapon) {
   return result;
 }
 
+//calculate rewards upon successful combat,
+//base values are modified by level difference to prevent cheesing lower level monsters.
+//Award more xp if monster is significantly higher level.
+function giveRewards(monster, hero) {
+  const gold = Math.floor(Math.random() * 15 + 5);
+  const xp = monster.xpPayout;
+  let finalGold;
+  let finalXp;
+
+  const levelDiff = hero.level - monster.level;
+
+  if (levelDiff >= 5) {
+    finalGold = Math.floor(gold * 0.1);
+    finalXp = Math.floor(xp * 0.1);
+  } else if (levelDiff >= 2) {
+    finalGold = Math.floor(gold * 0.5);
+    finalXp = Math.floor(xp * 0.5);
+  } else if (levelDiff >= -5) {
+    finalGold = gold;
+    finalXp = Math.floor(xp * 1.5);
+  } else {
+    finalGold = gold;
+    finalXp = xp;
+  }
+
+  return { gold: finalGold, xp: finalXp };
+}
+
 //Main Combat Loop
 export function doCombat(hero, heroEquipment, retreatValue, monster) {
   const heroFatigue = setHeroFatigue(hero.speed);
   const heroRetreatsAt = retreatValue;
   const combatLog = [];
+  let rewards = { gold: 0, xp: 0 };
   let heroHP = hero.hp_current;
   let monsterHP = monster.hp;
   let turnCounter = 1;
@@ -116,21 +145,48 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
     };
 
     if (monster.fatigue < turnCounter) {
-      combatLog.push(addLogEntry("turn", turn));
-      combatLog.push(
+      turn.actions.push(
         addLogEntry("fatigue", {
           fighter: monster.name,
           fighterType: "monster",
         })
       );
+      turn.actions.push(
+        addLogEntry("defeat", {
+          defeated: monster.name,
+          defeatedType: "monster",
+          victor: hero.hero_name,
+        })
+      );
+      combatLog.push(addLogEntry("turn", turn));
+      combatLog.push(
+        addLogEntry("combat_end", {
+          result: "victory",
+          turns: turnCounter,
+        })
+      );
       break;
     }
     if (heroFatigue < turnCounter) {
-      combatLog.push(addLogEntry("turn", turn));
-      combatLog.push(
+      turn.actions.push(
         addLogEntry("fatigue", {
           fighter: hero.hero_name,
           fighterType: "hero",
+        })
+      );
+      turn.actions.push(
+        addLogEntry("defeat", {
+          defeated: hero.hero_name,
+          defeatedType: "hero",
+          victor: monster.name,
+          slain: heroHP <= 0,
+        })
+      );
+      combatLog.push(addLogEntry("turn", turn));
+      combatLog.push(
+        addLogEntry("combat_end", {
+          result: heroHP <= 0 ? "death" : "retreat",
+          turns: turnCounter,
         })
       );
       break;
@@ -310,6 +366,6 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
     turnCounter++;
   }
 
-  const result = { combatLog, heroHP, turnCounter };
+  const result = { combatLog, heroHP, turnCounter, rewards };
   return result;
 }
