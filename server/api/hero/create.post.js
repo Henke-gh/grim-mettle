@@ -99,6 +99,7 @@ export default defineEventHandler(async (event) => {
     }
 
     // Use supabaseAdmin to insert (bypasses RLS for secure server-side control)
+    const updateLastRegen = new Date().toISOString();
     const insertData = {
       user_id: user.id,
       hero_name: hero.name,
@@ -111,6 +112,7 @@ export default defineEventHandler(async (event) => {
       hp_current: maxHP,
       grit_max: 125,
       grit_current: 125,
+      last_regen: updateLastRegen,
       ...hero.stats,
     };
 

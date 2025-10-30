@@ -1,7 +1,7 @@
 <script setup>
 const { hero, heroAvatar, loading, error, fetchHero } = useHero();
-onMounted(() => {
-  fetchHero();
+onMounted(async () => {
+  await fetchHero();
 })
 </script>
 

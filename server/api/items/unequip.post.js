@@ -30,7 +30,6 @@ export default defineEventHandler(async (event) => {
 
     const body = await readBody(event);
     const result = itemSchema.safeParse(body);
-    console.log(result);
     if (!result.success) {
       throw createError({
         statusCode: 400,
@@ -45,7 +44,6 @@ export default defineEventHandler(async (event) => {
       .select("id")
       .eq("user_id", user.id)
       .single();
-    console.log(hero);
     if (heroError || !hero) {
       throw createError({ statusCode: 404, message: "Hero not found" });
     }

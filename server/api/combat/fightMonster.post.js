@@ -104,6 +104,9 @@ export default defineEventHandler(async (event) => {
     //Executes all combat related game logic and returns the results
     const combatResult = doCombat(hero, heroEquipment, retreatValue, monster);
 
+    //Add intermediate hero HP-check before updating
+    //If hero HP is 0 or lower, the hero died in combat and gets DELETED! So dramatic..
+
     //Update hero in heroes table. Hp, grit - turns in combat, gold and xp
     const { error: updateError } = await supabaseAdmin
       .from("heroes")

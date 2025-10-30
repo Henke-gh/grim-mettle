@@ -31,9 +31,7 @@ export default defineEventHandler(async (event) => {
     }
 
     const body = await readBody(event);
-    console.log("Body response: ", body);
     const result = itemSchema.safeParse(body);
-    console.log("parseResponse:", result);
     if (!result.success) {
       throw createError({
         statusCode: 400,
@@ -48,8 +46,6 @@ export default defineEventHandler(async (event) => {
       .select("id, strength")
       .eq("user_id", user.id)
       .single();
-    console.log("heroData;", hero);
-    console.log("userID:", user.id);
     if (heroError || !hero) {
       throw createError({ statusCode: 404, message: "Hero not found" });
     }
@@ -60,7 +56,6 @@ export default defineEventHandler(async (event) => {
       .eq("hero_id", hero.id)
       .eq("item_id", item_id)
       .single();
-    console.log("inventoryItem:", inventoryItem);
     if (!inventoryItem) {
       throw createError({
         statusCode: 400,
@@ -79,14 +74,6 @@ export default defineEventHandler(async (event) => {
       throw createError({ statusCode: 400, message: "Not enough strength." });
     }
 
-    /*     const { data: currentEquipment } = await supabaseAdmin
-      .from("hero_equipment")
-      .select("*")
-      .eq("hero_id", hero.id)
-      .maybeSingle();
- */
-    //const updateData = { [item_slot]: item_id };
-
     //Equip item
     const { error: errorEquipping } = await supabaseAdmin
       .from("hero_equipment")
@@ -96,7 +83,6 @@ export default defineEventHandler(async (event) => {
     if (errorEquipping) {
       throw createError({ statusCode: 500, message: errorEquipping.message });
     }
-    console.log("success");
     return { success: true, message: `${itemToEquip.name} equipped.` };
   } catch (err) {
     throw err;

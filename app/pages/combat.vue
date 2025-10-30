@@ -55,7 +55,6 @@ onMounted(() => {
     if (!log) {
         return navigateTo('/arena');
     }
-    console.log(log);
 })
 
 function exitCombatLog() {
