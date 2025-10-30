@@ -138,7 +138,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
   );
 
   while (heroHP > heroRetreatsAt && monsterHP > 0) {
-    //Stores the actions/ events of each turn and gets pushed to the combatLog at the end of combat.
+    //Stores the actions/ events of each turn and gets pushed to the combatLog at the end of each loop.
     const turn = {
       number: turnCounter,
       actions: [],

@@ -104,6 +104,21 @@ export default defineEventHandler(async (event) => {
     //Executes all combat related game logic and returns the results
     const combatResult = doCombat(hero, heroEquipment, retreatValue, monster);
 
+    //Update hero in heroes table. Hp, grit - turns in combat, gold and xp
+    const { error: updateError } = await supabaseAdmin
+      .from("heroes")
+      .update({
+        hp_current: combatResult.heroHP,
+        grit_current: (hero.grit_current -= combatResult.turnCounter),
+        gold: (hero.gold += combatResult.rewards.gold),
+        xp: (hero.xp += combatResult.rewards.xp),
+      })
+      .eq("id", hero.id);
+
+    if (updateError) {
+      throw createError({ statusCode: 500, message: updateError.message });
+    }
+
     return combatResult.combatLog;
   } catch (err) {
     throw err;

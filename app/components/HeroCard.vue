@@ -12,7 +12,7 @@ onMounted(() => {
     </div>
     <div class="stats">
       <p class="noMargin">Name: {{ hero.hero_name }}</p>
-      <p class="noMargin">Level: {{ hero.level }} ({{ hero.xp_current }} / {{ hero.xp_next_lvl }})</p>
+      <p class="noMargin">Level: {{ hero.level }} ({{ hero.xp }} / {{ hero.xp_next_lvl }})</p>
       <p class="noMargin">HP: {{ hero.hp_current }} / {{ hero.hp_max }}</p>
       <p class="noMargin">Grit: {{ hero.grit_current }} / {{ hero.grit_max }}</p>
       <p class="noMargin">Gold: {{ hero.gold }}</p>

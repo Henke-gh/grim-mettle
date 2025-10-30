@@ -13,8 +13,8 @@ export const monsterCatalog = [
     evasion: 5,
     block: 0,
     initiative: 5,
-    fatigue: 150,
-    hp: 200,
+    fatigue: 12,
+    hp: 20,
     weapon: {
       name: "Crooked Teeth",
       minDmg: 1,
