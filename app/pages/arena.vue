@@ -10,7 +10,7 @@
             <ul class="monsterList" v-if="monsters">
                 <li class="listItem" v-for="monster in monsters" :key="monster.id">
                     <p>{{ monster.name }} - Level: {{ monster.level }}</p>
-                    <button @click="showDetailedInfo(monster)">[ View ]</button>
+                    <button class="inspectViewBtn bold" @click="showDetailedInfo(monster)">View</button>
                 </li>
             </ul>
             <p v-else>Loading monsters..</p>
@@ -34,8 +34,8 @@
                     </select>
                 </div>
                 <p v-if="errorMsg">{{ errorMsg }}</p>
-                <button @click="initiateFight()">Fight</button>
-                <button @click="regretChallenge">Back</button>
+                <button class="inspectViewBtn biggerBtn bold" @click="initiateFight()">Fight</button>
+                <button class="inspectViewBtn biggerBtn bold closeBtn" @click="regretChallenge">Back</button>
             </section>
         </div>
     </div>
@@ -49,8 +49,9 @@
                     <p>Armour: {{ selectedMonster.armour.name }}</p>
                     <p class="italic">{{ selectedMonster.description }}</p>
                     <div class="monsterModalControls">
-                        <button @click="closeDetailedInfo">Close</button>
-                        <button @click="challengeMonster(selectedMonster)">Challenge</button>
+                        <button class="inspectViewBtn biggerBtn bold closeBtn" @click="closeDetailedInfo">Close</button>
+                        <button class="inspectViewBtn biggerBtn bold"
+                            @click="challengeMonster(selectedMonster)">Challenge</button>
                     </div>
                 </section>
             </div>
@@ -159,7 +160,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
 .monsterList {
     display: flex;
     flex-direction: column;
-    gap: 0.2rem;
+    gap: 0.4rem;
     width: 20rem;
     list-style: none;
 }
