@@ -29,8 +29,11 @@
                     </p>
                 </article>
             </div>
-            <div v-else-if="entry.type === 'combat_end'" class="combat-end">
-                <p v-if="entry.data.result === 'victory'">You are victorious!</p>
+            <div v-else-if="entry.type === 'combat_end'">
+                <p v-if="entry.data.result === 'victory'">{{ entry.data.hero }} is victorious!</p>
+                <div v-if="entry.data.rewards">You earn {{ entry.data.rewards.xp }} XP and {{ entry.data.rewards.gold }}
+                    gold from the
+                    duke's coffers.</div>
                 <p v-else-if="entry.data.result === 'death'">Your journey ends. The dead salute you and the living move
                     on.</p>
                 <p v-else>You live to fight another day, tend to your wounds.</p>

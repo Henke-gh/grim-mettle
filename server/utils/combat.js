@@ -98,7 +98,7 @@ function combatAction(attacker, defender, weapon) {
 //base values are modified by level difference to prevent cheesing lower level monsters.
 //Award more xp if monster is significantly higher level.
 function giveRewards(monster, hero) {
-  const gold = Math.floor(Math.random() * 15 + 5);
+  const gold = Math.floor(Math.random() * 11 + 10);
   const xp = monster.xpPayout;
   let finalGold;
   let finalXp;
@@ -111,7 +111,7 @@ function giveRewards(monster, hero) {
   } else if (levelDiff >= 2) {
     finalGold = Math.floor(gold * 0.5);
     finalXp = Math.floor(xp * 0.5);
-  } else if (levelDiff >= -5) {
+  } else if (levelDiff <= -5) {
     finalGold = gold;
     finalXp = Math.floor(xp * 1.5);
   } else {
@@ -145,6 +145,10 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
     };
 
     if (monster.fatigue < turnCounter) {
+      const getReward = giveRewards(monster, hero);
+      rewards.gold = getReward.gold;
+      rewards.xp = getReward.xp;
+
       turn.actions.push(
         addLogEntry("fatigue", {
           fighter: monster.name,
@@ -163,6 +167,9 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
         addLogEntry("combat_end", {
           result: "victory",
           turns: turnCounter,
+          hero: hero.hero_name,
+          monster: monster.name,
+          rewards: { gold: rewards.gold, xp: rewards.xp },
         })
       );
       break;
@@ -187,6 +194,8 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
         addLogEntry("combat_end", {
           result: heroHP <= 0 ? "death" : "retreat",
           turns: turnCounter,
+          hero: hero.hero_name,
+          monster: monster.name,
         })
       );
       break;
@@ -223,6 +232,10 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
       if (outcome.attackHits) {
         monsterHP -= outcome.damage;
         if (monsterHP <= 0) {
+          const getReward = giveRewards(monster, hero);
+          rewards.gold = getReward.gold;
+          rewards.xp = getReward.xp;
+
           turn.actions.push(
             addLogEntry("defeat", {
               defeated: monster.name,
@@ -236,8 +249,12 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
             addLogEntry("combat_end", {
               result: "victory",
               turns: turnCounter,
+              hero: hero.hero_name,
+              monster: monster.name,
+              rewards: { gold: rewards.gold, xp: rewards.xp },
             })
           );
+
           break;
         }
       }
@@ -275,6 +292,8 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
             addLogEntry("combat_end", {
               result: heroHP <= 0 ? "death" : "retreat",
               turns: turnCounter,
+              hero: hero.hero_name,
+              monster: monster.name,
             })
           );
           break;
@@ -314,6 +333,8 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
             addLogEntry("combat_end", {
               result: heroHP <= 0 ? "death" : "retreat",
               turns: turnCounter,
+              hero: hero.hero_name,
+              monster: monster.name,
             })
           );
           break;
@@ -344,6 +365,10 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
       }
 
       if (monsterHP <= 0) {
+        const getReward = giveRewards(monster, hero);
+        rewards.gold = getReward.gold;
+        rewards.xp = getReward.xp;
+
         turn.actions.push(
           addLogEntry("defeat", {
             defeated: monster.name,
@@ -357,6 +382,9 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
           addLogEntry("combat_end", {
             result: "victory",
             turns: turnCounter,
+            hero: hero.hero_name,
+            monster: monster.name,
+            rewards: { gold: rewards.gold, xp: rewards.xp },
           })
         );
         break;

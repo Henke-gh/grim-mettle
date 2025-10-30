@@ -101,12 +101,10 @@ export default defineEventHandler(async (event) => {
       (combatSettings.retreatValue / 100) * hero.hp_max
     );
     //Run the combat loop
+    //Executes all combat related game logic and returns the results
     const combatResult = doCombat(hero, heroEquipment, retreatValue, monster);
 
-    console.log("COMBAT LOG: ", combatResult.combatLog);
-    {
-      return combatResult.combatLog;
-    }
+    return combatResult.combatLog;
   } catch (err) {
     throw err;
   }
