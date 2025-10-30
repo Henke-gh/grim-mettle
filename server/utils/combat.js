@@ -246,7 +246,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
         if (heroHP <= heroRetreatsAt) {
           turn.actions.push(
             addLogEntry("defeat", {
-              defeated: hero.name,
+              defeated: hero.hero_name,
               defeatedType: "hero",
               victor: monster.name,
               slain: heroHP <= 0,
@@ -272,7 +272,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
 
       turn.actions.push(
         addLogEntry("attack", {
-          attacker: hero.name,
+          attacker: hero.hero_name,
           attackerType: "hero",
           defender: monster.name,
           defenderType: "monster",
