@@ -1,3 +1,8 @@
+//combatlog entry helper, makes building a more structured combat log easier.
+function addLogEntry(type, data) {
+  return { type, data };
+}
+
 //Set hero fatigue value
 function setHeroFatigue(heroSpeed) {
   const fatigue = Math.floor(5 + heroSpeed * 0.4);
@@ -76,6 +81,7 @@ function attemptBlock() {}
 function combatAction(attacker, defender, weapon) {
   const damage = doDamage(weapon, attacker.strength);
   const attackSuccessful = makeAttack(attacker, defender, weapon);
+  const criticalHit = false;
   let attackHits;
 
   if (attackSuccessful) {
@@ -84,7 +90,7 @@ function combatAction(attacker, defender, weapon) {
     attackHits = false;
   }
 
-  const result = { damage, attackHits };
+  const result = { damage, attackHits, criticalHit };
   return result;
 }
 
@@ -97,17 +103,36 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
   let monsterHP = monster.hp;
   let turnCounter = 1;
 
+  //Push combat start to log
+  combatLog.push(
+    addLogEntry("combat_start", { hero: hero.hero_name, monster: monster.name })
+  );
+
   while (heroHP > heroRetreatsAt && monsterHP > 0) {
-    combatLog.push("Round " + turnCounter);
+    //Stores the actions/ events of each turn and gets pushed to the combatLog at the end of combat.
+    const turn = {
+      number: turnCounter,
+      actions: [],
+    };
 
     if (monster.fatigue < turnCounter) {
+      combatLog.push(addLogEntry("turn", turn));
       combatLog.push(
-        monster.name + " collapses in the sand. Too tired to get up."
+        addLogEntry("fatigue", {
+          fighter: monster.name,
+          fighterType: "monster",
+        })
       );
       break;
     }
     if (heroFatigue < turnCounter) {
-      combatLog.push(hero.hero_name + " has gassed out.");
+      combatLog.push(addLogEntry("turn", turn));
+      combatLog.push(
+        addLogEntry("fatigue", {
+          fighter: hero.hero_name,
+          fighterType: "hero",
+        })
+      );
       break;
     }
 
@@ -116,70 +141,172 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
       monster.initiative
     );
 
+    turn.actions.push(
+      addLogEntry("initiative", {
+        fighter: heroGoesFirst ? hero.hero_name : monster.name,
+        fighterType: heroGoesFirst ? hero.hero_name : monster.name,
+      })
+    );
+
     if (heroGoesFirst) {
       //Player hero won initiative and attacks first.
-      combatLog.push(hero.hero_name + " goes first.");
       const outcome = combatAction(hero, monster, heroEquipment.main_hand);
-      if (outcome.attackHits) {
-        combatLog.push(
-          hero.hero_name +
-            " charges with " +
-            heroEquipment.main_hand.name +
-            " and delivers a clean strike."
-        );
-        combatLog.push(
-          monster.name + " takes " + outcome.damage + " points of damage!"
-        );
 
+      turn.actions.push(
+        addLogEntry("attack", {
+          attacker: hero.hero_name,
+          attackerType: "hero",
+          defender: monster.name,
+          defenderType: "monster",
+          weapon: heroEquipment.main_hand.name,
+          hit: outcome.attackHits,
+          damage: outcome.damage,
+          critical: outcome.criticalHit,
+        })
+      );
+      if (outcome.attackHits) {
         monsterHP -= outcome.damage;
         if (monsterHP <= 0) {
-          combatLog.push(monster.name + " is defeated.");
+          turn.actions.push(
+            addLogEntry("defeat", {
+              defeated: monster.name,
+              defeatedType: "monster",
+              victor: hero.hero_name,
+            })
+          );
+
+          combatLog.push(addLogEntry("turn", turn));
+          combatLog.push(
+            addLogEntry("combat_end", {
+              result: "victory",
+              turns: turnCounter,
+            })
+          );
           break;
         }
-      } else {
-        combatLog.push(
-          hero.hero_name +
-            " swings " +
-            heroEquipment.main_hand.name +
-            " in a wide arc.."
-        );
-        combatLog.push(monster.name + " evades the desperate attack.");
+      }
+
+      //If not dead, monster counter-attacks.
+      const counterAttackOutcome = combatAction(monster, hero, monster.weapon);
+
+      turn.actions.push(
+        addLogEntry("attack", {
+          attacker: monster.name,
+          attackerType: "monster",
+          defender: hero.hero_name,
+          defenderType: "hero",
+          weapon: monster.weapon.name,
+          hit: counterAttackOutcome.attackHits,
+          damage: counterAttackOutcome.damage,
+          critical: counterAttackOutcome.criticalHit,
+        })
+      );
+      if (counterAttackOutcome.attackHits) {
+        heroHP -= counterAttackOutcome.damage;
+
+        if (heroHP <= heroRetreatsAt) {
+          turn.actions.push(
+            addLogEntry("defeat", {
+              defeated: hero.hero_name,
+              defeatedType: "hero",
+              victor: monster.name,
+              slain: heroHP <= 0,
+            })
+          );
+
+          combatLog.push(addLogEntry("turn", turn));
+          combatLog.push(
+            addLogEntry("combat_end", {
+              result: heroHP <= 0 ? "death" : "retreat",
+              turns: turnCounter,
+            })
+          );
+          break;
+        }
       }
     } else {
       //Monster won the initiative and attacks first.
-      combatLog.push(monster.name + " gets the upper hand.");
       const outcome = combatAction(monster, hero, monster.weapon);
-      if (outcome.attackHits) {
-        combatLog.push(
-          monster.name +
-            " comes barreling towards " +
-            hero.hero_name +
-            " with " +
-            monster.weapon.name +
-            "!"
-        );
-        combatLog.push(
-          "With murder in their eyes " +
-            monster.name +
-            " inflicts " +
-            outcome.damage +
-            " points of damage."
-        );
 
+      turn.actions.push(
+        addLogEntry("attack", {
+          attacker: monster.name,
+          attackerType: "monster",
+          defender: hero.hero_name,
+          defenderType: "hero",
+          weapon: monster.weapon.name,
+          hit: outcome.attackHits,
+          damage: outcome.damage,
+          critical: outcome.criticalHit,
+        })
+      );
+      if (outcome.attackHits) {
         heroHP -= outcome.damage;
+
         if (heroHP <= heroRetreatsAt) {
-          combatLog.push(hero.hero_name + " is defeated.");
-          if (heroHP <= 0) {
-            combatLog.push(hero.hero_name + " is slain!");
-          }
+          turn.actions.push(
+            addLogEntry("defeat", {
+              defeated: hero.name,
+              defeatedType: "hero",
+              victor: monster.name,
+              slain: heroHP <= 0,
+            })
+          );
+
+          combatLog.push(addLogEntry("turn", turn));
+          combatLog.push(
+            addLogEntry("combat_end", {
+              result: heroHP <= 0 ? "death" : "retreat",
+              turns: turnCounter,
+            })
+          );
           break;
         }
-      } else {
-        combatLog.push(
-          monster.name + " slashes furiously at the air. Or something.."
+      }
+      //The hero counter-attacks, if not at retreat value or dead.
+      const counterAttackOutcome = combatAction(
+        hero,
+        monster,
+        heroEquipment.main_hand
+      );
+
+      turn.actions.push(
+        addLogEntry("attack", {
+          attacker: hero.name,
+          attackerType: "hero",
+          defender: monster.name,
+          defenderType: "monster",
+          weapon: heroEquipment.main_hand.name,
+          hit: counterAttackOutcome.attackHits,
+          damage: counterAttackOutcome.damage,
+          critical: counterAttackOutcome.criticalHit,
+        })
+      );
+
+      if (counterAttackOutcome.attackHits) {
+        monsterHP -= counterAttackOutcome.damage;
+      }
+
+      if (monsterHP <= 0) {
+        turn.actions.push(
+          addLogEntry("defeat", {
+            defeated: monster.name,
+            defeatedType: "monster",
+            victor: hero.hero_name,
+          })
         );
+
+        combatLog.push(addLogEntry("turn", turn));
+        combatLog.push(
+          addLogEntry("combat_end", {
+            result: "victory",
+            turns: turnCounter,
+          })
+        );
+        break;
       }
     }
+    combatLog.push(addLogEntry("turn", turn));
     turnCounter++;
   }
 
