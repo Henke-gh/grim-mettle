@@ -22,10 +22,16 @@ const { hero,
     unequipItem,
     equipItem,
     canEquip,
-    isEquipped } = useHeroView();
-
+    isEquipped,
+    fetchHero } = useHeroView();
+const { checkAndTriggerRegen } = useRegenCheck();
 onMounted(async () => {
     await initialise();
+    const response = await checkAndTriggerRegen(hero.value);
+
+    if (response?.regenerated) {
+        await fetchHero();
+    }
 })
 </script>
 

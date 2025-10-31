@@ -1,7 +1,14 @@
 <script setup>
 const { hero, heroAvatar, loading, error, fetchHero } = useHero();
+const { checkAndTriggerRegen } = useRegenCheck();
+
 onMounted(async () => {
   await fetchHero();
+  const response = await checkAndTriggerRegen(hero.value);
+
+  if (response?.regenerated) {
+    await fetchHero();
+  }
 })
 </script>
 
