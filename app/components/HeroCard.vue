@@ -1,5 +1,5 @@
 <script setup>
-const { hero, heroAvatar, loading, error, fetchHero } = useHero();
+const { hero, heroAvatar, loading, error, fetchHero, canLevelUp } = useHero();
 const { checkAndTriggerRegen } = useRegenCheck();
 
 onMounted(async () => {
@@ -17,7 +17,11 @@ onMounted(async () => {
     <div class="hero">
       <img :src="heroAvatar.src" class="heroPortraitSmall" :alt="heroAvatar.alt" />
     </div>
-    <div class="stats">
+    <div class="levelUp" v-if="canLevelUp">
+      <p>You've gained a level!</p>
+      <DefaultButton text="Level Up" theme="light" />
+    </div>
+    <div class="stats" v-if="!canLevelUp">
       <p class="noMargin">Name: {{ hero.hero_name }}</p>
       <p class="noMargin">Level: {{ hero.level }} ({{ hero.xp }} / {{ hero.xp_next_lvl }})</p>
       <p class="noMargin">HP: {{ hero.hp_current }} / {{ hero.hp_max }}</p>
@@ -55,5 +59,10 @@ onMounted(async () => {
   border: 5px double var(--dark-green);
   height: 5rem;
   width: 5rem;
+}
+
+.levelUp {
+  display: flex;
+  flex-direction: column;
 }
 </style>
