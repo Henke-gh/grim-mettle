@@ -106,6 +106,37 @@ export default defineEventHandler(async (event) => {
 
     //Add intermediate hero HP-check before updating
     //If hero HP is 0 or lower, the hero died in combat and gets DELETED! So dramatic..
+    //If dead, the heroes name, level, and xp is put in the graveyard table.
+    if (combatResult.heroHP <= 0) {
+      const { error: graveError } = await supabaseAdmin
+        .from("graveyard")
+        .insert({
+          hero_name: hero.hero_name,
+          hero_lvl: hero.level,
+          hero_xp: hero.xp,
+        });
+
+      if (graveError) {
+        throw createError({
+          statusCode: 500,
+          message: graveError.message,
+        });
+      }
+
+      const { error: heroDeleteError } = await supabaseAdmin
+        .from("heroes")
+        .delete()
+        .eq("id", hero.id);
+
+      if (heroDeleteError) {
+        throw createError({
+          statusCode: 500,
+          message: heroDeleteError.message,
+        });
+      }
+
+      return combatResult.combatLog;
+    }
 
     //Update hero in heroes table. Hp, grit - turns in combat, gold and xp
     const { error: updateError } = await supabaseAdmin

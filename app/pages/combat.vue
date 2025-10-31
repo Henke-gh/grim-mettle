@@ -29,6 +29,7 @@
                     </p>
                 </article>
             </div>
+            <!-- Rewards, retreats or deaths -->
             <div v-else-if="entry.type === 'combat_end'">
                 <p v-if="entry.data.result === 'victory'">{{ entry.data.hero }} is victorious!</p>
                 <div v-if="entry.data.rewards">You earn {{ entry.data.rewards.xp }} XP and {{ entry.data.rewards.gold }}
