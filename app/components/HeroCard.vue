@@ -18,8 +18,8 @@ onMounted(async () => {
       <img :src="heroAvatar.src" class="heroPortraitSmall" :alt="heroAvatar.alt" />
     </div>
     <div class="levelUp" v-if="canLevelUp">
-      <p>You've gained a level!</p>
-      <DefaultButton text="Level Up" theme="light" />
+      <p>You&apos;ve gained a level!</p>
+      <DefaultButton theme="light" text="Level Up" routeTo="/level-up" />
     </div>
     <div class="stats" v-if="!canLevelUp">
       <p class="noMargin">Name: {{ hero.hero_name }}</p>
@@ -64,5 +64,8 @@ onMounted(async () => {
 .levelUp {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  font-weight: 600;
+  gap: 0.3rem;
 }
 </style>
