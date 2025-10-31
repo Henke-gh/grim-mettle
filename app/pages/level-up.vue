@@ -93,8 +93,10 @@ definePageMeta({
 });
 
 import { useLevelUpStore } from "../stores/heroLevelUp"
+import { ref } from "vue";
 const levelUpHero = useLevelUpStore();
 const { hero, loading, error, fetchHero, canLevelUp, derivedStats } = useHero();
+const errorMsg = ref('');
 
 onMounted(async () => {
     await fetchHero();
@@ -103,7 +105,13 @@ onMounted(async () => {
     }
 })
 
-function submitLevelUp() { }
+async function submitLevelUp() {
+    if (hero.statPointsRemaining !== 0) {
+        errorMsg.value = "Spend all your skill points"
+        //loading.value = false
+    }
+    //Add route
+}
 
 </script>
 
