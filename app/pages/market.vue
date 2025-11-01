@@ -7,7 +7,7 @@
                 <div class="headerStoreContainer">
                     <article>
                         <p>Browse around, have a look! I'm sure you'll find something you can afford.</p>
-                        <p>A new trinket, perhaps?</p>
+                        <p>A new trinket, perhaps? Or some protection?</p>
                     </article>
                     <img src="../assets/images/vendor.png" alt="The goblin vendor welcomes you." class="vendorImg" />
                 </div>
@@ -72,20 +72,27 @@
                     <button class="closeByXBtn" @click="closeModal" aria-label="Close">&times;</button>
                 </header>
                 <section class="modalBody">
-                    <p><strong>Category:</strong> {{ selectedItem.category || '—' }}</p>
+                    <p><strong>Category:</strong> {{ capitalise(selectedItem.category) || '—' }}</p>
                     <p v-if="selectedItem.minDmg !== undefined"><strong>Damage:</strong> {{ selectedItem.minDmg }} - {{
                         selectedItem.maxDmg }}</p>
-                    <p v-if="selectedItem.damageReduction !== undefined"><strong>DR:</strong> {{
+                    <p v-if="selectedItem.damageReduction !== undefined"><strong>Damage Reduction:</strong> {{
                         selectedItem.damageReduction }}</p>
-                    <p v-if="selectedItem.blockValue !== undefined"><strong>Block:</strong> {{ selectedItem.blockValue
+                    <p v-if="selectedItem.blockValue !== undefined"><strong>Block Value:</strong> {{
+                        selectedItem.blockValue
                         }}
                     </p>
-                    <p><strong>Weight:</strong> {{ selectedItem.weight ?? '—' }}</p>
-                    <p><strong>Skill Req:</strong> {{ selectedItem.skillReq ?? '—' }}</p>
+                    <p v-if="selectedItem.weight"><strong>Weight:</strong> {{ selectedItem.weight ?? '—' }}</p>
+                    <p v-if="selectedItem.strengthReq"><strong>Strength Req:</strong> {{ selectedItem.strengthReq ?? '—'
+                    }}</p>
+                    <p v-if="selectedItem.skillReq"><strong>Skill Req:</strong> <span
+                            v-for="value, key in selectedItem.skillReq" :key="key"> {{ capitalise(key) }}: {{ value
+                            }}</span></p>
+                    <p v-if="Object.keys(selectedItem.bonus ?? {}).length"><strong>Bonus: </strong><span
+                            v-for="value, key in selectedItem.bonus" :key="key"> {{ capitalise(key) }}: {{ value
+                            }}</span>
+                    </p>
                     <p><strong>Cost:</strong> {{ selectedItem.goldCost }} gold</p>
-                    <p v-if="Object.keys(selectedItem.bonus ?? {}).length"><strong>Bonus:</strong> {{
-                        JSON.stringify(selectedItem.bonus) }}</p>
-                    <p class="desc">{{ selectedItem.description }}</p>
+                    <p class="descriptionLine">{{ selectedItem.description }}</p>
                 </section>
                 <footer class="modalFooter">
                     <div class="modalFooterBtnContainer">
@@ -111,6 +118,7 @@ definePageMeta({
     middleware: ["auth",],
 });
 import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { capitalise } from '~~/utils/general';
 
 const { data } = await useFetch('/api/items/itemCatalog')
 
@@ -261,6 +269,10 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
 
 .modalBody p {
     margin: 0.4rem 0;
+}
+
+.descriptionLine {
+    font-style: italic;
 }
 
 .modalFooter {
