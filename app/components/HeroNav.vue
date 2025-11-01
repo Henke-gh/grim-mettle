@@ -46,6 +46,7 @@
   width: 100%;
   z-index: 900;
   background-color: var(--yellow);
+  border-top: 5px double var(--bone-white);
 }
 
 .linkWrap {

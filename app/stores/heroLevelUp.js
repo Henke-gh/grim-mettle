@@ -26,7 +26,7 @@ export const useLevelUpStore = defineStore("heroLevelUp", {
         this.statPointsRemaining -= delta;
       }
     },
-    getCreatePayload() {
+    getLevelUpPayload() {
       return {
         stats: Object.fromEntries(
           Object.entries(this.stats).map(([k, v]) => [k, Number(v)])

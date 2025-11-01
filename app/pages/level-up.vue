@@ -92,11 +92,13 @@ definePageMeta({
     middleware: ["auth",],
 });
 
+import { success } from "zod";
 import { useLevelUpStore } from "../stores/heroLevelUp"
 import { ref } from "vue";
 const levelUpHero = useLevelUpStore();
 const { hero, loading, error, fetchHero, canLevelUp, derivedStats } = useHero();
 const errorMsg = ref('');
+const successMsg = ref('');
 
 onMounted(async () => {
     await fetchHero();
@@ -106,11 +108,24 @@ onMounted(async () => {
 })
 
 async function submitLevelUp() {
-    if (hero.statPointsRemaining !== 0) {
+    console.log("level up now");
+    errorMsg.value = '';
+    successMsg.value = '';
+    if (levelUpHero.statPointsRemaining !== 0) {
         errorMsg.value = "Spend all your skill points"
         //loading.value = false
     }
-    //Add route
+    try {
+        const res = await $fetch('/api/hero/levelUp', {
+            method: 'POST',
+            body: levelUpHero.getLevelUpPayload(),
+        })
+
+        successMsg.value = res.message;
+        navigateTo('/hero');
+    } catch (err) {
+        errorMsg.value = err?.data?.message || 'Something went wrong'
+    }
 }
 
 </script>
