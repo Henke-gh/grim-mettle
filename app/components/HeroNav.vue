@@ -20,14 +20,18 @@
         <img src="/IconFrameShopFirst.svg" />
       </div>
     </NuxtLink>
-    <div class="linkWrap">
-      <p>[Healing]</p>
-      <img src="/healingIcon.svg" />
-    </div>
-    <div class="linkWrap">
-      <p>[Tavern]</p>
-      <img src="/tavernIcon.svg" />
-    </div>
+    <NuxtLink to="/healing" style="text-decoration: none; color: var(--warm-black);">
+      <div class="linkWrap">
+        <p>[Healing]</p>
+        <img src="/healingIcon.svg" />
+      </div>
+    </NuxtLink>
+    <NuxtLink to="/tavern" style="text-decoration: none; color: var(--warm-black);">
+      <div class="linkWrap">
+        <p>[Tavern]</p>
+        <img src="/tavernIcon.svg" />
+      </div>
+    </NuxtLink>
   </section>
 </template>
 
@@ -42,6 +46,7 @@
   width: 100%;
   z-index: 900;
   background-color: var(--yellow);
+  border-top: 5px double var(--bone-white);
 }
 
 .linkWrap {

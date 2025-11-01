@@ -23,7 +23,7 @@
                     <p>{{ weapon.name }}</p>
                     <div class="part">
                         <p>Cost: {{ weapon.goldCost }} gold</p>
-                        <button class="inspectBtn" @click="openModal(weapon, 'weapons')">Inspect</button>
+                        <button class="inspectViewBtn bold" @click="openModal(weapon, 'weapons')">View</button>
                     </div>
                 </div>
             </div>
@@ -33,7 +33,7 @@
                     <p>{{ shield.name }}</p>
                     <div class="part">
                         <p>Cost: {{ shield.goldCost }} gold</p>
-                        <button class="inspectBtn" @click="openModal(shield, shield.category)">Inspect</button>
+                        <button class="inspectViewBtn bold" @click="openModal(shield, shield.category)">View</button>
                     </div>
                 </div>
             </div>
@@ -43,7 +43,7 @@
                     <p>{{ armour.name }}</p>
                     <div class="part">
                         <p>Cost: {{ armour.goldCost }} gold</p>
-                        <button class="inspectBtn" @click="openModal(armour, armour.category)">Inspect</button>
+                        <button class="inspectViewBtn bold" @click="openModal(armour, armour.category)">View</button>
                     </div>
                 </div>
             </div>
@@ -53,7 +53,7 @@
                     <p>{{ trinket.name }}</p>
                     <div class="part">
                         <p>Cost: {{ trinket.goldCost }} gold</p>
-                        <button class="inspectBtn" @click="openModal(trinket, trinket.category)">Inspect</button>
+                        <button class="inspectViewBtn bold" @click="openModal(trinket, trinket.category)">View</button>
                     </div>
                 </div>
             </div>
@@ -69,7 +69,7 @@
             <div class="modalContent" ref="modalRef">
                 <header class="modalHeader">
                     <h3>{{ selectedItem.name }}</h3>
-                    <button class="closeBtn" @click="closeModal" aria-label="Close">&times;</button>
+                    <button class="closeByXBtn" @click="closeModal" aria-label="Close">&times;</button>
                 </header>
                 <section class="modalBody">
                     <p><strong>Category:</strong> {{ selectedItem.category || '—' }}</p>
@@ -78,7 +78,7 @@
                     <p v-if="selectedItem.damageReduction !== undefined"><strong>DR:</strong> {{
                         selectedItem.damageReduction }}</p>
                     <p v-if="selectedItem.blockValue !== undefined"><strong>Block:</strong> {{ selectedItem.blockValue
-                    }}
+                        }}
                     </p>
                     <p><strong>Weight:</strong> {{ selectedItem.weight ?? '—' }}</p>
                     <p><strong>Skill Req:</strong> {{ selectedItem.skillReq ?? '—' }}</p>
@@ -88,15 +88,16 @@
                     <p class="desc">{{ selectedItem.description }}</p>
                 </section>
                 <footer class="modalFooter">
-                    <div>
-                        <button class="inspectBtn" @click="closeModal" :disabled="buyingItem">Close</button>
-                        <button class="inspectBtn" @click="buyItem" :disabled="buyingItem">
+                    <div class="modalFooterBtnContainer">
+                        <button class="inspectViewBtn biggerBtn bold closeBtn" @click="closeModal"
+                            :disabled="buyingItem">Close</button>
+                        <button class="inspectViewBtn biggerBtn bold" @click="buyItem" :disabled="buyingItem">
                             <span v-if="!buyingItem">Buy</span>
                             <span v-else>Buying..</span>
                         </button>
-                        <p v-if="errorMessage">{{ errorMessage }}</p>
-                        <p v-if="successMessage">{{ successMessage }}</p>
                     </div>
+                    <p v-if="errorMessage">{{ errorMessage }}</p>
+                    <p v-if="successMessage">{{ successMessage }}</p>
                 </footer>
             </div>
         </div>
@@ -210,19 +211,10 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
 }
 
 .category {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
     width: 20rem;
-    padding: 0.5rem;
-}
-
-.inspectBtn {
-    border: none;
-    border-left: 3px solid var(--light-green);
-    font-family: monospace;
-    font-weight: 600;
-    color: var(--light-green);
-    background-color: var(--dark-green);
-    border-radius: 0px 5px 5px 0px;
-    padding: 0.5rem;
 }
 
 .storeHeroSales {
@@ -259,7 +251,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
     align-items: center;
 }
 
-.closeBtn {
+.closeByXBtn {
     background: transparent;
     border: none;
     font-size: 1.5rem;
@@ -273,7 +265,14 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
 
 .modalFooter {
     display: flex;
+    flex-direction: column;
     justify-content: flex-end;
     margin-top: 0.75rem;
+}
+
+.modalFooterBtnContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 </style>

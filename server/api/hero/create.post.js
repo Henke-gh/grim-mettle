@@ -7,7 +7,7 @@ import {
   computeHeroHP,
 } from "~~/utils/heroUtils";
 
-const startingPoints = 75;
+const startingPoints = 50;
 
 const heroSchema = z.object({
   name: z
@@ -99,18 +99,20 @@ export default defineEventHandler(async (event) => {
     }
 
     // Use supabaseAdmin to insert (bypasses RLS for secure server-side control)
+    const updateLastRegen = new Date().toISOString();
     const insertData = {
       user_id: user.id,
       hero_name: hero.name,
       avatar: hero.avatar,
       level: 1,
       xp: 0,
-      xp_next_lvl: 200,
-      gold: 200,
+      xp_next_lvl: 75,
+      gold: 100,
       hp_max: maxHP,
       hp_current: maxHP,
       grit_max: 125,
       grit_current: 125,
+      last_regen: updateLastRegen,
       ...hero.stats,
     };
 

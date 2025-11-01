@@ -55,6 +55,12 @@ export const useHero = () => {
     });
   });
 
+  //check if hero has enough xp to level up
+  const canLevelUp = computed(() => {
+    if (!hero.value) return false;
+    return hero.value.xp >= hero.value.xp_next_lvl;
+  });
+
   return {
     hero,
     heroAvatar,
@@ -62,5 +68,6 @@ export const useHero = () => {
     loading,
     error,
     fetchHero,
+    canLevelUp,
   };
 };

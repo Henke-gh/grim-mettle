@@ -1,5 +1,4 @@
-// middleware/auth.global.ts (or /middleware/auth.ts)
-export default defineNuxtRouteMiddleware(async (to, from) => {
+export default defineNuxtRouteMiddleware(async () => {
   const user = useSupabaseUser();
 
   // If user is already present (client-side), allow access immediately

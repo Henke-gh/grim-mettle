@@ -31,7 +31,7 @@ import CustomFooter from "~/components/CustomFooter.vue"
                     <img :src="swords" alt="Two crossed swords" class="swordsImg" />
                 </div>
                 <div class="loginContainer">
-                    <DefaultButton text="Login Now" routeTo="/login" theme="default" class="fitContent" />
+                    <DefaultButton text="Login" routeTo="/login" theme="default" class="" />
                     <p class="customP">Log in and start playing</p>
                 </div>
             </section>
@@ -66,6 +66,7 @@ import CustomFooter from "~/components/CustomFooter.vue"
     display: flex;
     flex-direction: row;
     align-items: center;
+    padding: 0.4rem 2rem;
     gap: 2rem;
     background-color: var(--bone-white);
 }

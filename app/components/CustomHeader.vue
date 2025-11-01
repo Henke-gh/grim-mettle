@@ -21,7 +21,7 @@ header {
     background-color: var(--yellow);
     padding: 0.5rem;
     margin-bottom: 0.5rem;
-    border-bottom: 1px solid var(--dark-green);
+    border-bottom: 5px double var(--bone-white);
 }
 
 .logo {

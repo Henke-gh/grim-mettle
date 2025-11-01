@@ -22,10 +22,16 @@ const { hero,
     unequipItem,
     equipItem,
     canEquip,
-    isEquipped } = useHeroView();
-
+    isEquipped,
+    fetchHero } = useHeroView();
+const { checkAndTriggerRegen } = useRegenCheck();
 onMounted(async () => {
     await initialise();
+    const response = await checkAndTriggerRegen(hero.value);
+
+    if (response?.regenerated) {
+        await fetchHero();
+    }
 })
 </script>
 
@@ -61,17 +67,17 @@ onMounted(async () => {
                 <div class="equippedItem">
                     <p>Main hand: {{ equippedItems?.mainHand?.name || "- empty -" }}</p>
                     <button v-if="equippedItems?.mainHand?.name" @click="unequipItem('main_hand')"
-                        :disabled="actionLoading">Unequip</button>
+                        :disabled="actionLoading" class="inspectViewBtn closeBtn bold">Unequip</button>
                 </div>
                 <div class="equippedItem">
                     <p>Off-hand: {{ equippedItems?.offHand?.name || "- empty -" }}</p>
                     <button v-if="equippedItems?.offHand?.name" @click="unequipItem('off_hand')"
-                        :disabled="actionLoading">Unequip</button>
+                        :disabled="actionLoading" class="inspectViewBtn closeBtn bold">Unequip</button>
                 </div>
                 <div class="equippedItem">
                     <p>Armour: {{ equippedItems?.armour?.name || "- empty -" }}</p>
-                    <button v-if="equippedItems?.armour?.name" @click="unequipItem('armour')"
-                        :disabled="actionLoading">Unequip</button>
+                    <button v-if="equippedItems?.armour?.name" @click="unequipItem('armour')" :disabled="actionLoading"
+                        class="inspectViewBtn closeBtn bold">Unequip</button>
                 </div>
                 <h4>Trinkets:</h4>
                 <p v-if="equippedItems?.trinkets.length === 0">- none -</p>
@@ -89,7 +95,7 @@ onMounted(async () => {
                 <div class="equippedItem" v-for="entry in inventoryWithItems" :key="entry.item_id">
                     <p v-if="!isEquipped(entry.item_id)">{{ entry.item.name }}</p>
                     <button v-if="!isEquipped(entry.item_id)" @click="equipItem(entry.item_id, entry.item.slot)"
-                        :disabled="actionLoading || !canEquip(entry.item)" class="equip-btn"
+                        :disabled="actionLoading || !canEquip(entry.item)" class="inspectViewBtn bold"
                         :class="{ 'disabled': !canEquip(entry.item) }">
                         {{ canEquip(entry.item) ? 'Equip' : 'Requirements not met' }}
                     </button>
@@ -143,6 +149,12 @@ onMounted(async () => {
     border: 2px solid var(--dark-green);
     padding: 0.5rem;
     gap: 0.5rem;
+}
+
+.part {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
 }
 
 .equippedItem {

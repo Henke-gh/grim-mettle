@@ -28,7 +28,6 @@ export const useEquipment = () => {
       }
 
       equipment.value = data;
-      console.log("Equipment fetched:", equipment.value);
     } catch (err) {
       equipError.value = err.message;
     }

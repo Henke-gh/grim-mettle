@@ -10,7 +10,7 @@
             <ul class="monsterList" v-if="monsters">
                 <li class="listItem" v-for="monster in monsters" :key="monster.id">
                     <p>{{ monster.name }} - Level: {{ monster.level }}</p>
-                    <button @click="showDetailedInfo(monster)">[ View ]</button>
+                    <button class="inspectViewBtn bold" @click="showDetailedInfo(monster)">View</button>
                 </li>
             </ul>
             <p v-else>Loading monsters..</p>
@@ -33,8 +33,9 @@
                         </option>
                     </select>
                 </div>
-                <button @click="initiateFight(selectedMonster, selectedStance, retreatPercent)">Fight</button>
-                <button @click="regretChallenge">Back</button>
+                <p v-if="errorMsg">{{ errorMsg }}</p>
+                <button class="inspectViewBtn biggerBtn bold" @click="initiateFight()">Fight</button>
+                <button class="inspectViewBtn biggerBtn bold closeBtn" @click="regretChallenge">Back</button>
             </section>
         </div>
     </div>
@@ -45,10 +46,12 @@
                     <div class="swordlineContainer spacing"><img :src="swordLine" alt="A line of four swords" /></div>
                     <h3>[ {{ selectedMonster.name }} ] - level {{ selectedMonster.level }}</h3>
                     <p>Weapon: {{ selectedMonster.weapon.name }}</p>
+                    <p>Armour: {{ selectedMonster.armour.name }}</p>
                     <p class="italic">{{ selectedMonster.description }}</p>
                     <div class="monsterModalControls">
-                        <button @click="closeDetailedInfo">Close</button>
-                        <button @click="challengeMonster(selectedMonster)">Challenge</button>
+                        <button class="inspectViewBtn biggerBtn bold closeBtn" @click="closeDetailedInfo">Close</button>
+                        <button class="inspectViewBtn biggerBtn bold"
+                            @click="challengeMonster(selectedMonster)">Challenge</button>
                     </div>
                 </section>
             </div>
@@ -70,10 +73,13 @@ const selectedMonster = ref('');
 const showCombatSettings = ref(false);
 const retreatPercent = ref(50);
 const selectedStance = ref("balanced");
+const combatResult = useCombatResult();
 const { data: monsters, error } = await useAsyncData('monsters', () => $fetch('/api/monster/monsterCollection'));
 const { hero, initialise } = useHeroView();
+const errorMsg = ref('');
 
-const retreatOptions = Array.from({ length: 11 }, (_, index) => 100 - index * 10);
+//Creates an array with the selectable retreat values.
+const retreatOptions = Array.from({ length: 11 }, (_, hp) => 100 - hp * 10);
 const stances = ["balanced", "offensive", "defensive"];
 
 if (error.value) {
@@ -107,9 +113,24 @@ function regretChallenge() {
     showCombatSettings.value = false;
 }
 
-function initiateFight(monster, stance, retreatValue) {
-    console.log("Initiating fight:");
-    console.log(stance);
+//Makes some provisional checks before routing to the combat api for final validation and execution of combat.
+async function initiateFight() {
+    const desiredRetreatValue = Math.ceil((retreatPercent.value / 100) * hero.value.hp_max);
+
+    if (hero.value.hp_current < desiredRetreatValue) {
+        errorMsg.value = "You don't have enough HP. Recover a bit or adjust your retreat value."
+    } else {
+        try {
+            const payload = { monsterID: selectedMonster.value.id, stance: selectedStance.value, retreatValue: retreatPercent.value };
+            const result = await $fetch('/api/combat/fightMonster', { method: 'POST', body: payload })
+            if (result) {
+                combatResult.combatLog.value = result;
+                navigateTo('/combat');
+            }
+        } catch (err) {
+            throw err;
+        }
+    }
 }
 
 function onKeydown(e) {
@@ -139,7 +160,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
 .monsterList {
     display: flex;
     flex-direction: column;
-    gap: 0.2rem;
+    gap: 0.4rem;
     width: 20rem;
     list-style: none;
 }

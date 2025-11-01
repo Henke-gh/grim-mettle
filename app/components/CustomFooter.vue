@@ -20,5 +20,6 @@ footer {
     background-color: var(--dark-purple);
     color: var(--yellow);
     text-align: center;
+    border-top: 4px double var(--bone-white);
 }
 </style>
