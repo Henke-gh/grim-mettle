@@ -96,18 +96,34 @@ export default defineEventHandler(async (event) => {
       }
     }
 
-    console.log("Updates:", updates);
-
     //Re-calculate max HP
     const maxHP = computeHeroHP(
       updates.strength ?? hero.strength,
       updates.vitality ?? hero.vitality
     );
 
-    console.log("New hp: ", maxHP);
-
     //get XP to next level
     const newXpThreshold = getXpForNextLevel(hero.level);
+    //increase hero level
+    updates.level = hero.level + 1;
+    updates.xp_next_lvl = newXpThreshold;
+    //Set full hp and grit on lvl up!
+    updates.hp_current = maxHP;
+    updates.hp_max = maxHP;
+    updates.grit_current = 125; //This is not amazing, but a lazy fix.
+    updates.updated_at = new Date().toISOString();
+
+    const { error: updateError } = await supabaseAdmin
+      .from("heroes")
+      .update(updates)
+      .eq("id", hero.id);
+
+    if (updateError) {
+      console.log(updateError);
+      throw createError({ statusCode: 500, message: updateError.message });
+    }
+
+    return { update: "success" };
   } catch (err) {
     throw err;
   }

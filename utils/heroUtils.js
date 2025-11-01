@@ -2,15 +2,15 @@
 export function computeDerivedStatBonus(baseStats) {
   const { speed, block, evasion, initiative } = baseStats;
 
-  const trueBlock = Math.round(block + speed * 0.25);
-  const trueEvasion = Math.round(evasion + speed * 0.25);
-  const trueInitiative = Math.round(initiative + speed * 0.25);
+  const trueBlock = Math.floor(block + speed * 0.25);
+  const trueEvasion = Math.floor(evasion + speed * 0.25);
+  const trueInitiative = Math.floor(initiative + speed * 0.25);
 
   return { trueBlock, trueEvasion, trueInitiative };
 }
 
 export function computeHeroHP(strength, vitality) {
-  const maxHP = Math.round(vitality * 1.25 + strength * 0.2);
+  const maxHP = Math.floor(vitality * 1.25 + strength * 0.2);
 
   return maxHP;
 }
