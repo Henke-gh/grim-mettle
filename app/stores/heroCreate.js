@@ -20,7 +20,7 @@ export const useHeroCreateStore = defineStore("heroCreate", {
       evasion: 0,
       initiative: 0,
     },
-    statPointsRemaining: 75,
+    statPointsRemaining: 50,
   }),
 
   getters: {

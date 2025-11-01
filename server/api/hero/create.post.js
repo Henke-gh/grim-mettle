@@ -7,7 +7,7 @@ import {
   computeHeroHP,
 } from "~~/utils/heroUtils";
 
-const startingPoints = 75;
+const startingPoints = 50;
 
 const heroSchema = z.object({
   name: z
@@ -106,8 +106,8 @@ export default defineEventHandler(async (event) => {
       avatar: hero.avatar,
       level: 1,
       xp: 0,
-      xp_next_lvl: 200,
-      gold: 200,
+      xp_next_lvl: 75,
+      gold: 100,
       hp_max: maxHP,
       hp_current: maxHP,
       grit_max: 125,
