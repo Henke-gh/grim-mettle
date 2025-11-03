@@ -4,6 +4,7 @@
             <img :src="grimLogo" alt="Grim Mettle" class="logo" />
             <p class="tagline">- Where heroes live forever -</p>
             <p class="tagline">Until they die.</p>
+            <Navigation />
         </header>
     </NuxtLink>
 </template>

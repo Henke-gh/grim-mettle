@@ -1,6 +1,7 @@
 <template>
+    <CustomHeader v-if="!user" />
     <div class="recordsWrapper">
-
+        <h1>Hall of Records</h1>
         <section class="recordsContainer">
             <h2>The Favoured living</h2>
             <h3>Those who have clawed their way to the top.</h3>
@@ -13,11 +14,12 @@
                     </tr>
                     <tr v-for="hero in leaderboard" :key="hero.id">
                         <th scope="row">{{ hero.hero_name }}</th>
-                        <td>{{ hero.hero_lvl }}</td>
-                        <td>{{ hero.hero_xp }}</td>
+                        <td>{{ hero.level }}</td>
+                        <td>{{ hero.xp }}</td>
                     </tr>
                 </thead>
             </table>
+            <div class="swordlineContainer spacing"><img :src="swordLine" alt="A line of four swords" /></div>
             <h2>The Graveyard</h2>
             <h3>Where the fallen are remembered.</h3>
             <table class="recordTable" v-if="fallenHeroes">
@@ -44,7 +46,9 @@
 <script setup>
 import { useHeroView } from '#imports';
 import CustomFooter from '~/components/CustomFooter.vue';
+import swordLine from "../assets/images/swordLine.svg"
 
+const user = useSupabaseUser();
 const hero = useHeroView();
 const fallenHeroes = ref([]);
 const leaderboard = ref([]);
