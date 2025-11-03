@@ -31,6 +31,18 @@ section {
   padding: 0.5rem;
 }
 
+.bold {
+  font-weight: 600;
+}
+
+.italic {
+  font-style: italic;
+}
+
+.headline {
+  padding: 0.5rem 0;
+}
+
 .heroPortrait {
   border-radius: 50%;
   border: 5px double var(--dark-green);
@@ -51,18 +63,14 @@ section {
   border-radius: 5px;
 }
 
-.italic {
-  font-style: italic;
-}
-
-.bold {
-  font-weight: 600;
-}
-
 .swordlineContainer {
   display: flex;
   flex-direction: row;
   justify-content: center;
+}
+
+.spacing {
+  margin: 0.5rem;
 }
 
 .fitContent {
