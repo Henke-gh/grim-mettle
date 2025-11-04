@@ -1,5 +1,11 @@
 <template>
-    <div class="gameNavModalWrapper" @click.self="closeGameMenu" role="presentation">
+    <div class="linksMenu" v-if="!showGameMenu">
+        <button class="burgerBtn" @click="toggleGameMenu">
+            <img src="/menuIcon_twist.svg" />
+        </button>
+        <p>Menu</p>
+    </div>
+    <div class="gameNavModalWrapper" @click.self="closeGameMenu" role="presentation" v-if="showGameMenu">
         <nav class="gameNav" role="dialog" aria-modal="true" aria-label="Game Menu">
             <img src="/smallDivider.svg" alt="Two swords on a horizontal line" />
             <div class="links">
@@ -18,7 +24,15 @@
 </template>
 
 <script setup>
-const { closeGameMenu } = defineProps(['closeGameMenu']);
+const showGameMenu = ref(false);
+
+function toggleGameMenu() {
+    showGameMenu.value = true;
+}
+
+function closeGameMenu() {
+    showGameMenu.value = false;
+}
 
 function onEscape(e) {
     if (e.key === 'Escape') {
@@ -31,6 +45,20 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onEscape));
 </script>
 
 <style scoped>
+.linksMenu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: fixed;
+    top: 0.5rem;
+    right: 0.5rem;
+}
+
+.burgerBtn {
+    border: none;
+    background: none;
+}
+
 .gameNavModalWrapper {
     position: fixed;
     inset: 0;

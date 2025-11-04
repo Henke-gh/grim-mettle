@@ -1,15 +1,6 @@
 <script setup>
 const { hero, heroAvatar, loading, error, fetchHero, canLevelUp } = useHero();
 const { checkAndTriggerRegen } = useRegenCheck();
-const showGameMenu = ref(false);
-
-function toggleGameMenu() {
-  showGameMenu.value = true;
-}
-
-function closeGameMenu() {
-  showGameMenu.value = false;
-}
 
 onMounted(async () => {
   await fetchHero();
@@ -37,13 +28,7 @@ onMounted(async () => {
       <p class="noMargin">Grit: {{ hero.grit_current }} / {{ hero.grit_max }}</p>
       <p class="noMargin">Gold: {{ hero.gold }}</p>
     </div>
-    <div class="linksMenu" v-if="!showGameMenu">
-      <button class="burgerBtn" @click="toggleGameMenu">
-        <img src="/menuIcon_twist.svg" />
-      </button>
-      <p>Menu</p>
-    </div>
-    <GameNav :closeGameMenu="closeGameMenu" v-if="showGameMenu" />
+    <GameNav />
   </div>
 </template>
 
@@ -85,19 +70,5 @@ onMounted(async () => {
   justify-content: center;
   font-weight: 600;
   gap: 0.3rem;
-}
-
-.linksMenu {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: fixed;
-  top: 0.5rem;
-  right: 0.5rem;
-}
-
-.burgerBtn {
-  border: none;
-  background: none;
 }
 </style>
