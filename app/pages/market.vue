@@ -58,9 +58,17 @@
                 </div>
             </div>
         </section>
-        <section class="storeHeroSales">
-            <h2>Your items:</h2>
-            <p>You have nothing to sell.</p>
+        <section class="storeContainer">
+            <div class="category">
+                <h2>Your items:</h2>
+                <div class="item" v-for="entry in inventoryWithItems" :key="entry.item_id">
+                    <p v-if="!isEquipped(entry.item_id)">{{ entry.item.name }}</p>
+                    <div class="part">
+                        <p>Cost: {{ getResellValue(entry.item.goldCost) }} gold</p>
+                        <button class="inspectViewBtn bold closeBtn">Sell</button>
+                    </div>
+                </div>
+            </div>
         </section>
     </div>
     <teleport to="body">
@@ -83,7 +91,7 @@
                     </p>
                     <p v-if="selectedItem.weight"><strong>Weight:</strong> {{ selectedItem.weight ?? '—' }}</p>
                     <p v-if="selectedItem.strengthReq"><strong>Strength Req:</strong> {{ selectedItem.strengthReq ?? '—'
-                    }}</p>
+                        }}</p>
                     <p v-if="selectedItem.skillReq"><strong>Skill Req:</strong> <span
                             v-for="value, key in selectedItem.skillReq" :key="key"> {{ capitalise(key) }}: {{ value
                             }}</span></p>
@@ -120,7 +128,7 @@ definePageMeta({
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { capitalise } from '~~/utils/general';
 
-const { data } = await useFetch('/api/items/itemCatalog')
+const { data } = await useFetch('/api/items/itemCatalog');
 
 const showModal = ref(false);
 const selectedItem = ref({});
@@ -176,6 +184,21 @@ function onKeydown(e) {
 
 onMounted(() => window.addEventListener('keydown', onKeydown));
 onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
+
+/* ==== Selling Inventory ==== */
+const { fetchInventory, inventoryWithItems, isEquipped } = useHeroView();
+
+onMounted(async () => {
+    await fetchInventory();
+})
+
+//Only for display purpose, actual value is set server-side.
+function getResellValue(goldCost) {
+    return Math.floor(goldCost * 0.65);
+}
+
+//Add sell-API route
+
 </script>
 
 <style scoped>
@@ -223,10 +246,6 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
     flex-direction: column;
     gap: 0.4rem;
     width: 20rem;
-}
-
-.storeHeroSales {
-    padding: 0.5rem;
 }
 
 /* MODAL STYLING */

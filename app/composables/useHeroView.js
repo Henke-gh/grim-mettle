@@ -188,5 +188,7 @@ export const useHeroView = () => {
     isEquipped,
     canEquip,
     fetchHero,
+    fetchInventory,
+    fetchEquipment,
   };
 };
