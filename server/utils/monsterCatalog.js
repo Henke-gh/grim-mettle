@@ -22,7 +22,7 @@ export const monsterCatalog = [
       skillReq: 0,
       category: "attack",
     },
-    armour: { name: "Dirty Fur", damageReduction: 1 },
+    armour: { name: "Dirty Fur", damageReduction: 0 },
     description: "This lil' guy carries all the diseases.",
   },
   {
