@@ -15,8 +15,11 @@
                 <NuxtLink to="/game-guide" style="text-decoration: none; color: var(--bone-white);">Game Guide
                 </NuxtLink>
                 <div class="links separation">
-                    <button class="menuButton" @click="logoutUser">Log Out</button>
-                    <button class="menuButton" @click="closeGameMenu">Close</button>
+                    <button class="menuButton" @click="logoutUser" v-if="user">Log Out</button>
+                    <NuxtLink to="/login" v-if="!user" style="text-decoration: none; color: var(--bone-white);">Login
+                    </NuxtLink>
+                    <NuxtLink to="/register" v-if="!user" style="text-decoration: none; color: var(--bone-white);">
+                        Register</NuxtLink>
                 </div>
             </div>
         </nav>
@@ -24,6 +27,7 @@
 </template>
 
 <script setup>
+const user = useSupabaseUser();
 const showGameMenu = ref(false);
 
 function toggleGameMenu() {
@@ -49,9 +53,6 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onEscape));
     display: flex;
     flex-direction: column;
     align-items: center;
-    position: fixed;
-    top: 0.5rem;
-    right: 0.5rem;
 }
 
 .burgerBtn {

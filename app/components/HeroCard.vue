@@ -28,7 +28,9 @@ onMounted(async () => {
       <p class="noMargin">Grit: {{ hero.grit_current }} / {{ hero.grit_max }}</p>
       <p class="noMargin">Gold: {{ hero.gold }}</p>
     </div>
-    <GameNav />
+    <div class="fixedMenu">
+      <GameNav />
+    </div>
   </div>
 </template>
 
@@ -70,5 +72,11 @@ onMounted(async () => {
   justify-content: center;
   font-weight: 600;
   gap: 0.3rem;
+}
+
+.fixedMenu {
+  position: fixed;
+  top: 0.5rem;
+  right: 0.5rem;
 }
 </style>
