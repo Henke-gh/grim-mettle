@@ -1,6 +1,5 @@
 <script setup>
 import swords from "../assets/images/crossedSwords.png"
-import swordLine from "../assets/images/swordLine.svg"
 import guard from "../assets/images/scout_sharp.png"
 import CustomHeader from "~/components/CustomHeader.vue"
 import CustomFooter from "~/components/CustomFooter.vue"

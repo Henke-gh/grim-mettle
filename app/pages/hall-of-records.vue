@@ -47,9 +47,7 @@
 <script setup>
 import { useHeroView } from '#imports';
 import CustomFooter from '~/components/CustomFooter.vue';
-import swordLine from "../assets/images/swordLine.svg"
 
-const user = useSupabaseUser();
 const hero = useHeroView();
 const fallenHeroes = ref([]);
 const leaderboard = ref([]);
