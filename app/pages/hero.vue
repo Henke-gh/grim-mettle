@@ -116,7 +116,6 @@ onMounted(async () => {
                 </div>
             </div>
         </section>
-        <button @click="logoutUser" style="width: fit-content;">Sign Out</button>
     </div>
     <HeroNav />
 </template>
