@@ -4,6 +4,7 @@ import swordLine from "../assets/images/swordLine.svg"
 import guard from "../assets/images/scout_sharp.png"
 import CustomHeader from "~/components/CustomHeader.vue"
 import CustomFooter from "~/components/CustomFooter.vue"
+const user = useSupabaseUser();
 
 </script>
 
@@ -24,20 +25,26 @@ import CustomFooter from "~/components/CustomFooter.vue"
                     the dangers that lie ahead.</p>
             </article>
         </section>
-        <div class="swordlineContainer spacing"><img :src="swordLine" alt="A line of four swords" /></div>
+        <div class="swordlineContainer spacing"><img src="/divider.svg"
+                alt="A line of four swords, with a shield in the middle" /></div>
         <div class="gradientBorder fitContent">
             <section class="loginWrapper">
                 <div class="swordsContainer">
                     <img :src="swords" alt="Two crossed swords" class="swordsImg" />
                 </div>
-                <div class="loginContainer">
+                <div class="loginContainer" v-if="!user">
                     <DefaultButton text="Login" routeTo="/login" theme="default" class="" />
                     <p class="customP">Log in and start playing</p>
                 </div>
+                <div class="loginContainer" v-if="user">
+                    <DefaultButton text="To Game" routeTo="/hero" theme="default" class="" />
+                    <p class="customP">Test your Mettle!</p>
+                </div>
             </section>
         </div>
-        <div class="swordlineContainer spacing"><img :src="swordLine" alt="A line of four swords" /></div>
-        <div class="ctaRegister">
+        <div class="swordlineContainer spacing"><img src="/divider.svg"
+                alt="A line of four swords, with a shield in the middle" /></div>
+        <div class="ctaRegister" v-if="!user">
             <p class="customP">Don't have an account? It only takes a moment to set up.</p>
             <DefaultButton text="Register new user" routeTo="/register" theme="light" type="button" />
         </div>

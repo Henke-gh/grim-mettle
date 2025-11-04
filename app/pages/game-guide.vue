@@ -1,10 +1,11 @@
 <template>
-    <CustomHeader v-if="!user" />
+    <CustomHeader />
     <div class="guideWrapper">
         <h2>Game Guide</h2>
         <article class="gameGuide">
             <p>This guide provides a quick run down of the skills and mechanics of Grim Mettle.</p>
-            <div class="swordlineContainer spacing"><img :src="swordLine" alt="A line of four swords" /></div>
+            <div class="swordlineContainer spacing"><img src="/divider.svg"
+                    alt="A line of four swords, with a shield in the middle" /></div>
             <h4 class="headline">- Character Stats -</h4>
             <p class="bold headline">[Hitpoints]</p>
             <p>Everyone knows what these are, they represent your life total. The beating heart.
@@ -74,7 +75,8 @@
             <p class="bold headline">[Critical hits]</p>
             <p>Just thought I'd throw this in here aswell. Both the player and the monsters you fight have a chance to
                 critically strike, dealing increased damage. You have been warned!</p> -->
-            <div class="swordlineContainer spacing"><img :src="swordLine" alt="A line of four swords" /></div>
+            <div class="swordlineContainer spacing"><img src="/divider.svg"
+                    alt="A line of four swords, with a shield in the middle" /></div>
             <p class="italic">Last updated: 03/11-25</p>
         </article>
     </div>

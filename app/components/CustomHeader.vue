@@ -1,12 +1,10 @@
 <template>
-    <NuxtLink to="/" style="text-decoration: none; color: var(--warm-black); cursor: pointer;">
-        <header>
-            <img :src="grimLogo" alt="Grim Mettle" class="logo" />
-            <p class="tagline">- Where heroes live forever -</p>
-            <p class="tagline">Until they die.</p>
-            <Navigation />
-        </header>
-    </NuxtLink>
+    <header>
+        <img :src="grimLogo" alt="Grim Mettle" class="logo" />
+        <p class="tagline">- Where heroes live forever -</p>
+        <!--   <p class="tagline">Until they die.</p> -->
+        <Navigation />
+    </header>
 </template>
 
 <script setup>

@@ -1,5 +1,5 @@
 <template>
-    <CustomHeader v-if="!user" />
+    <CustomHeader />
     <div class="recordsWrapper">
         <h1>Hall of Records</h1>
         <section class="recordsContainer">
@@ -19,7 +19,8 @@
                     </tr>
                 </thead>
             </table>
-            <div class="swordlineContainer spacing"><img :src="swordLine" alt="A line of four swords" /></div>
+            <div class="swordlineContainer spacing"><img src="/divider.svg"
+                    alt="A line of four swords, with a shield in the middle" /></div>
             <h2>The Graveyard</h2>
             <h3>Where the fallen are remembered.</h3>
             <table class="recordTable" v-if="fallenHeroes">
