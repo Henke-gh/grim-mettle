@@ -33,6 +33,16 @@ function doDamage(weapon, strength) {
   return damage;
 }
 
+//Apply damage reduction from armour, return modified damage value
+function applyDamageReduction(damage, dmgRed) {
+  let finalDamage = damage - dmgRed;
+  if (finalDamage < 0) {
+    finalDamage = 0;
+  }
+
+  return finalDamage;
+}
+
 //Give combatants a small chance for critical attack or miss.
 function isCritical() {
   const rollCritical = Math.random() * 101;
@@ -216,6 +226,10 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
     if (heroGoesFirst) {
       //Player hero won initiative and attacks first.
       const outcome = combatAction(hero, monster, heroEquipment.main_hand);
+      const attackerDamage = applyDamageReduction(
+        outcome.damage,
+        monster.armour.damageReduction
+      );
 
       turn.actions.push(
         addLogEntry("attack", {
@@ -225,12 +239,14 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
           defenderType: "monster",
           weapon: heroEquipment.main_hand.name,
           hit: outcome.attackHits,
-          damage: outcome.damage,
+          damage: attackerDamage,
+          dmgReduction: monster.armour.damageReduction,
           critical: outcome.criticalHit,
         })
       );
       if (outcome.attackHits) {
-        monsterHP -= outcome.damage;
+        //Handle damage, reduced by wearing armour
+        monsterHP -= attackerDamage;
         if (monsterHP <= 0) {
           const getReward = giveRewards(monster, hero);
           rewards.gold = getReward.gold;
@@ -261,6 +277,10 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
 
       //If not dead, monster counter-attacks.
       const counterAttackOutcome = combatAction(monster, hero, monster.weapon);
+      const counterAttackDamage = applyDamageReduction(
+        counterAttackOutcome.damage,
+        heroEquipment.armour.damageReduction
+      );
 
       turn.actions.push(
         addLogEntry("attack", {
@@ -270,12 +290,13 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
           defenderType: "hero",
           weapon: monster.weapon.name,
           hit: counterAttackOutcome.attackHits,
-          damage: counterAttackOutcome.damage,
+          damage: counterAttackDamage,
+          dmgReduction: heroEquipment.armour.damageReduction,
           critical: counterAttackOutcome.criticalHit,
         })
       );
       if (counterAttackOutcome.attackHits) {
-        heroHP -= counterAttackOutcome.damage;
+        heroHP -= counterAttackDamage;
 
         if (heroHP <= heroRetreatsAt) {
           turn.actions.push(
@@ -302,7 +323,10 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
     } else {
       //Monster won the initiative and attacks first.
       const outcome = combatAction(monster, hero, monster.weapon);
-
+      const attackerDamage = applyDamageReduction(
+        outcome.damage,
+        heroEquipment.armour.damageReduction
+      );
       turn.actions.push(
         addLogEntry("attack", {
           attacker: monster.name,
@@ -311,12 +335,13 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
           defenderType: "hero",
           weapon: monster.weapon.name,
           hit: outcome.attackHits,
-          damage: outcome.damage,
+          damage: attackerDamage,
+          dmgReduction: heroEquipment.armour.damageReduction,
           critical: outcome.criticalHit,
         })
       );
       if (outcome.attackHits) {
-        heroHP -= outcome.damage;
+        heroHP -= attackerDamage;
 
         if (heroHP <= heroRetreatsAt) {
           turn.actions.push(
@@ -346,6 +371,10 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
         monster,
         heroEquipment.main_hand
       );
+      const counterAttackDamage = applyDamageReduction(
+        counterAttackOutcome.damage,
+        monster.armour.damageReduction
+      );
 
       turn.actions.push(
         addLogEntry("attack", {
@@ -355,13 +384,14 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
           defenderType: "monster",
           weapon: heroEquipment.main_hand.name,
           hit: counterAttackOutcome.attackHits,
-          damage: counterAttackOutcome.damage,
+          damage: counterAttackDamage,
+          dmgReduction: monster.armour.damageReduction,
           critical: counterAttackOutcome.criticalHit,
         })
       );
 
       if (counterAttackOutcome.attackHits) {
-        monsterHP -= counterAttackOutcome.damage;
+        monsterHP -= counterAttackDamage;
       }
 
       if (monsterHP <= 0) {

@@ -10,10 +10,17 @@
                     <p v-if="action.type === 'initiative'">{{ action.data.fighter }} gets the upper hand!</p>
                     <!-- Attack phase -->
                     <p v-else-if="action.type === 'attack'">
-                        <template v-if="action.data.hit">
+                        <template v-if="action.data.hit && action.data.damage > 0">
                             {{ action.data.attacker }} charges towards {{ action.data.defender }} with {{
                                 action.data.weapon }}. {{ action.data.attacker }} strikes a clean blow dealing {{
-                                action.data.damage }} damage!
+                                action.data.damage }}<span v-if="action.data.dmgReduction > 0" class="italic"> ({{
+                                action.data.dmgReduction
+                            }})</span> damage!
+                        </template>
+                        <template v-else-if="action.data.hit && action.data.damage <= 0">
+                            {{ action.data.attacker }} charges towards {{ action.data.defender }} with {{
+                                action.data.weapon }}. {{ action.data.attacker }}'s hit was absored by the armour of {{
+                                action.data.defender }}.
                         </template>
                         <template v-else>
                             {{ action.data.attacker }} lets out a growl and swings {{ action.data.weapon }} in a wide
