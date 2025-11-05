@@ -4,8 +4,15 @@ import { useInventory } from "#imports";
 import { useItems } from "#imports";
 
 export const useHeroView = () => {
-  const { hero, fetchHero, loading, error, heroAvatar, derivedStats } =
-    useHero();
+  const {
+    hero,
+    fetchHero,
+    loading,
+    error,
+    heroAvatar,
+    derivedStats,
+    canLevelUp,
+  } = useHero();
   const { inventory, fetchInventory, error: inventoryError } = useInventory();
   const { equipment, fetchEquipment, equipError } = useEquipment();
   const { getItemById } = useItems();
@@ -190,5 +197,6 @@ export const useHeroView = () => {
     fetchHero,
     fetchInventory,
     fetchEquipment,
+    canLevelUp,
   };
 };

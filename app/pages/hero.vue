@@ -63,11 +63,11 @@ const unEquippedItems = computed(() => {
                 <div class="part">
                     <img :src="heroAvatar.src" :alt="heroAvatar.alt" class="heroPortrait" />
                 </div>
-                <div class="levelUp" v-if="canLevelUp">
+                <div class="levelUp bold" v-if="canLevelUp">
                     <p>You&apos;ve gained a level!</p>
                     <DefaultButton theme="default" text="Level Up" routeTo="/level-up" />
                 </div>
-                <div class="part" v-else>
+                <div class="part" v-if="!canLevelUp">
                     <p>HP: {{ hero.hp_current }}/{{ hero.hp_max }}</p>
                     <p>Grit: {{ hero.grit_current }}/{{ hero.grit_max }}</p>
                     <p>XP: {{ hero.xp }}/{{ hero.xp_next_lvl }}</p>
@@ -203,5 +203,12 @@ const unEquippedItems = computed(() => {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+}
+
+.levelUp {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
 }
 </style>

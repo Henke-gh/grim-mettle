@@ -19,7 +19,7 @@ onMounted(async () => {
     </div>
     <div class="levelUp" v-if="canLevelUp">
       <p>You&apos;ve gained a level!</p>
-      <DefaultButton theme="light" text="Level Up" routeTo="/level-up" />
+      <DefaultButton theme="light" text="Level Up" routeTo="/level-up" class="fitContent" />
     </div>
     <div class="stats" v-if="!canLevelUp">
       <p class="noMargin">Name: {{ hero.hero_name }}</p>
@@ -70,8 +70,9 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   font-weight: 600;
-  gap: 0.3rem;
+  gap: 0.5rem;
 }
 
 .fixedMenu {

@@ -58,11 +58,15 @@
                 </div>
             </div>
         </section>
+        <!-- Selling of items in Hero Inventory -->
         <section class="storeContainer">
-            <div class="category">
+            <div class="category" v-if="!hasInventory || unEquippedItems.length === 0">
                 <h2>Your items:</h2>
-                <div class="item" v-for="entry in inventoryWithItems" :key="entry.item_id">
-                    <p v-if="!isEquipped(entry.item_id)">{{ entry.item.name }}</p>
+                <p>No items to sell.</p>
+            </div>
+            <div class="category" v-else>
+                <div class="item" v-for="entry in unEquippedItems" :key="entry.item_id">
+                    <p>{{ entry.item.name }}</p>
                     <div class="part">
                         <p>Cost: {{ getResellValue(entry.item.goldCost) }} gold</p>
                         <button class="inspectViewBtn bold closeBtn">Sell</button>
@@ -135,6 +139,7 @@ const selectedItem = ref({});
 const selectedItemType = ref('');
 const modalRef = ref(null);
 const buyingItem = ref(false);
+const sellingItem = ref(false);
 const errorMessage = ref('');
 const successMessage = ref('');
 
@@ -186,10 +191,17 @@ onMounted(() => window.addEventListener('keydown', onKeydown));
 onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
 
 /* ==== Selling Inventory ==== */
-const { fetchInventory, inventoryWithItems, isEquipped } = useHeroView();
+const { fetchInventory, fetchEquipment, inventoryWithItems, isEquipped, hasInventory } = useHeroView();
 
 onMounted(async () => {
     await fetchInventory();
+    await fetchEquipment();
+})
+
+//Sell item-section only shows currently unequipped items
+const unEquippedItems = computed(() => {
+    const items = unref(inventoryWithItems) || [];
+    return items.filter(e => !isEquipped(e.item_id))
 })
 
 //Only for display purpose, actual value is set server-side.
@@ -198,6 +210,12 @@ function getResellValue(goldCost) {
 }
 
 //Add sell-API route
+async function sellItem() {
+    if (sellingItem.value) return
+    sellingItem.value = true;
+    errorMessage.value = '';
+    successMessage.value = '';
+}
 
 </script>
 
