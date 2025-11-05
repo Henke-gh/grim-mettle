@@ -12,7 +12,7 @@ export const useInventory = () => {
     try {
       const { data, error: fetchError } = await supabase
         .from("hero_inventory")
-        .select("item_id, hero_id, quantity, item_type")
+        .select("id, item_id, hero_id, item_type")
         .eq("user_id", user.value.sub);
 
       if (fetchError) {

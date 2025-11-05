@@ -41,7 +41,7 @@ onMounted(async () => {
 //Inventory only shows currently unequipped items
 const unEquippedItems = computed(() => {
     const items = unref(inventoryWithItems) || [];
-    return items.filter(e => !isEquipped(e.item_id))
+    return items.filter(e => !isEquipped(e.id))
 })
 </script>
 
@@ -107,9 +107,10 @@ const unEquippedItems = computed(() => {
             </div>
             <div class="part heroInventory" v-else>
                 <h4>Inventory</h4>
-                <div class="equippedItem" v-for="entry in inventoryWithItems" :key="entry.item_id">
-                    <p v-if="!isEquipped(entry.item_id)">{{ entry.item.name }}</p>
-                    <button v-if="!isEquipped(entry.item_id)" @click="equipItem(entry.item_id, entry.item.slot)"
+                <div class="equippedItem" v-for="entry in inventoryWithItems" :key="entry.inventory_id">
+                    <p v-if="!isEquipped(entry.inventory_id)">{{ entry.item.name }}</p>
+                    <button v-if="!isEquipped(entry.inventory_id)"
+                        @click="equipItem(entry.item_id, entry.inventory_id, entry.item.slot)"
                         :disabled="actionLoading || !canEquip(entry.item)" class="inspectViewBtn bold"
                         :class="{ 'disabled': !canEquip(entry.item) }">
                         {{ canEquip(entry.item) ? 'Equip' : 'Requirements not met' }}

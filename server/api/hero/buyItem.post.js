@@ -87,7 +87,6 @@ export default defineEventHandler(async (event) => {
         hero_id: hero.id,
         item_id: item.id,
         user_id: user.id,
-        quantity: 1,
         item_type: itemType,
       })
       .select()
