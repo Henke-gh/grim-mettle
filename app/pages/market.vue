@@ -65,6 +65,7 @@
                 <p>No items to sell.</p>
             </div>
             <div class="category" v-else>
+                <h2>Your items:</h2>
                 <div class="item" v-for="entry in unEquippedItems" :key="entry.item_id">
                     <p>{{ entry.item.name }}</p>
                     <div class="part">
@@ -201,7 +202,7 @@ onMounted(async () => {
 //Sell item-section only shows currently unequipped items
 const unEquippedItems = computed(() => {
     const items = unref(inventoryWithItems) || [];
-    return items.filter(e => !isEquipped(e.item_id))
+    return items.filter(e => !isEquipped(e.inventory_id))
 })
 
 //Only for display purpose, actual value is set server-side.

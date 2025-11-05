@@ -41,7 +41,7 @@ onMounted(async () => {
 //Inventory only shows currently unequipped items
 const unEquippedItems = computed(() => {
     const items = unref(inventoryWithItems) || [];
-    return items.filter(e => !isEquipped(e.id))
+    return items.filter(e => !isEquipped(e.inventory_id))
 })
 </script>
 
