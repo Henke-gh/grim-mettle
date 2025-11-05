@@ -66,7 +66,7 @@
             </div>
             <div class="category" v-else>
                 <h2>Your items:</h2>
-                <div class="item" v-for="entry in unEquippedItems" :key="entry.item_id">
+                <div class="item" v-for="entry in unEquippedItems" :key="entry.inventory_id">
                     <p>{{ entry.item.name }}</p>
                     <div class="part">
                         <p>Cost: {{ getResellValue(entry.item.goldCost) }} gold</p>
@@ -92,11 +92,11 @@
                         selectedItem.damageReduction }}</p>
                     <p v-if="selectedItem.blockValue !== undefined"><strong>Block Value:</strong> {{
                         selectedItem.blockValue
-                        }}
+                    }}
                     </p>
                     <p v-if="selectedItem.weight"><strong>Weight:</strong> {{ selectedItem.weight ?? '—' }}</p>
                     <p v-if="selectedItem.strengthReq"><strong>Strength Req:</strong> {{ selectedItem.strengthReq ?? '—'
-                        }}</p>
+                    }}</p>
                     <p v-if="selectedItem.skillReq"><strong>Skill Req:</strong> <span
                             v-for="value, key in selectedItem.skillReq" :key="key"> {{ capitalise(key) }}: {{ value
                             }}</span></p>
