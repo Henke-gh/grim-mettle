@@ -4,7 +4,7 @@ import { supabaseAdmin } from "~~/server/utils/supabaseAdmin";
 import { monsterCatalog } from "#imports";
 import { computeDerivedStatBonus } from "~~/utils/heroUtils";
 import { doCombat } from "~~/server/utils/combat";
-import { getItemByInventoryId } from "~~/utils/itemCatalog";
+import { getItemByInventoryId, getItemById } from "~~/utils/itemCatalog";
 
 const combatSubmitSchema = z.object({
   monsterID: z.number(),
@@ -110,6 +110,12 @@ export default defineEventHandler(async (event) => {
       trinket_2: getItemByInventoryId(equipment.trinket_2, inventory),
       trinket_3: getItemByInventoryId(equipment.trinket_3, inventory),
     };
+
+    //If hero does not have a weapon equipped set main_hand to use a fallback weapon, their fists.
+    if (heroEquipment.main_hand === null) {
+      const fists = getItemById(400);
+      heroEquipment.main_hand = fists;
+    }
 
     //Set hp value at which the player hero will retreat/ give up the fight.
     const retreatValue = Math.ceil(

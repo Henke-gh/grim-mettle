@@ -171,10 +171,10 @@ export const trinkets = [
 export const starterGear = [
   {
     id: 400,
-    category: "default",
+    category: "strength",
     slot: "main_hand",
     twoHanded: false,
-    name: "Unarmed",
+    name: "Fists",
     minDmg: 1,
     maxDmg: 2,
     skillReq: 0,
