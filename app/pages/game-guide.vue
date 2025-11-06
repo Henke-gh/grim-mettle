@@ -1,9 +1,9 @@
 <template>
     <CustomHeader />
     <div class="guideWrapper">
-        <h2>Game Guide</h2>
+        <h1 class="centerText">Game Guide</h1>
         <article class="gameGuide">
-            <p>This guide provides a quick run down of the skills and mechanics of Grim Mettle.</p>
+            <p class="centerText">This guide provides a quick run down of the skills and mechanics of Grim Mettle.</p>
             <div class="swordlineContainer spacing"><img src="/divider.svg"
                     alt="A line of four swords, with a shield in the middle" /></div>
             <h4 class="headline">- Character Stats -</h4>
@@ -95,6 +95,6 @@ const hero = useHeroView();
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    padding: 0.5rem;
+    padding: 1rem;
 }
 </style>

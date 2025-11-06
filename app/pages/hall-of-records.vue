@@ -2,43 +2,50 @@
     <CustomHeader />
     <div class="recordsWrapper">
         <h1>Hall of Records</h1>
+        <p class="textLeft">The bureaucrats of this world need to make a living somehow. Thus records are kept, of those
+            still fighting
+            and of those who are not.</p>
+        <div class="swordlineContainer spacing"><img src="/divider.svg"
+                alt="A line of four swords, with a shield in the middle" /></div>
         <section class="recordsContainer">
-            <h2>The Favoured living</h2>
-            <h3>Those who have clawed their way to the top.</h3>
+            <h2>The Favoured Living</h2>
+            <h3 class="italic">Champions and absolute tossers.</h3>
             <table class="recordTable" v-if="leaderboard">
                 <thead>
-                    <tr>
+                    <tr class="recordHeader">
                         <th scope="col">Name</th>
                         <th scope="col">Level</th>
                         <th scope="col">Total XP</th>
                     </tr>
-                    <tr v-for="hero in leaderboard" :key="hero.id">
-                        <th scope="row">{{ hero.hero_name }}</th>
-                        <td>{{ hero.level }}</td>
-                        <td>{{ hero.xp }}</td>
-                    </tr>
                 </thead>
+                <tr v-for="hero in leaderboard" :key="hero.id">
+                    <th scope="row">{{ hero.hero_name }}</th>
+                    <td>{{ hero.level }}</td>
+                    <td>{{ hero.xp }}</td>
+                </tr>
             </table>
             <div class="swordlineContainer spacing"><img src="/divider.svg"
                     alt="A line of four swords, with a shield in the middle" /></div>
             <h2>The Graveyard</h2>
-            <h3>Where the fallen are remembered.</h3>
+            <h3 class="italic">Where the fallen are remembered.</h3>
             <table class="recordTable" v-if="fallenHeroes">
-                <thead>
+                <thead class="recordHeader">
                     <tr>
                         <th scope="col">Name</th>
                         <th scope="col">Level</th>
                         <th scope="col">Total XP</th>
                     </tr>
-                    <tr v-for="rip in fallenHeroes" :key="rip.id">
-                        <th scope="row">{{ rip.hero_name }}</th>
-                        <td>{{ rip.hero_lvl }}</td>
-                        <td>{{ rip.hero_xp }}</td>
-                    </tr>
                 </thead>
+                <tr v-for="rip in fallenHeroes" :key="rip.id">
+                    <th scope="row">{{ rip.hero_name }}</th>
+                    <td>{{ rip.hero_lvl }}</td>
+                    <td>{{ rip.hero_xp }}</td>
+                </tr>
             </table>
             <p v-if="errorMsg">{{ errorMsg }}</p>
         </section>
+        <div class="swordlineContainer spacing"><img src="/divider.svg"
+                alt="A line of four swords, with a shield in the middle" /></div>
     </div>
     <HeroNav v-if="hero.id" />
     <CustomFooter v-else />
@@ -89,13 +96,34 @@ onMounted(async () => {
 
 <style scoped>
 .recordsWrapper {
-    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    padding: 1rem;
+    gap: 0.5rem;
 }
 
 .recordsContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
+    text-align: center;
     padding: 0;
+    gap: 0.5rem;
+}
+
+.recordTable {
+    width: 20rem;
+    border-collapse: separate;
+    border-spacing: 0 0.5rem;
+}
+
+.recordTable thead th {
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid var(--warm-black);
+}
+
+.textLeft {
+    text-align: left;
 }
 </style>

@@ -119,6 +119,12 @@ const submitHero = async () => {
                 </div>
             </div>
             <p class="centerText">{{ hero.statPointsRemaining }} points remaining.</p>
+            <div class="gradientBorder">
+                <div class="tipsContainer">
+                    <p><span class="bold">Almost done! </span>Once your hero is created your main priority is probably
+                        to buy a weapon in the Market. This is a game about fightning monsters after all.</p>
+                </div>
+            </div>
             <div class="creationControls">
                 <DefaultButton text="Create Hero" type="submit" :disabled="hero.statPointsRemaining !== 0" />
             </div>
