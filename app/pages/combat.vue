@@ -1,6 +1,8 @@
 <template>
-    <div class="combatWrapper">
+    <header class="combatHeader">
         <h1>- Combat Log -</h1>
+    </header>
+    <div class="combatWrapper">
         <section class="logEntry" v-for="(entry, index) in log" :key="index">
             <h2 v-if="entry.type === 'combat_start'">{{ entry.data.hero }} vs {{ entry.data.monster }}</h2>
             <div class="turnBlock" v-if="entry.type === 'turn'">
@@ -47,7 +49,7 @@
                 <p v-else>You live to fight another day, tend to your wounds.</p>
             </div>
         </section>
-        <button @click="exitCombatLog">Continue</button>
+        <button class="defaultButton default" @click="exitCombatLog">Continue</button>
     </div>
     <HeroNav />
 </template>
@@ -71,10 +73,36 @@ function exitCombatLog() {
 </script>
 
 <style scoped>
+.combatHeader {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 0.5rem;
+    background-color: var(--yellow);
+    border-bottom: 5px double var(--bone-white);
+}
+
 .combatWrapper {
     padding: 0.5rem;
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.defaultButton {
+    border: none;
+    font-family: monospace;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 0.5rem 0.8rem 0.5rem;
+    box-shadow: 3px 3px var(--warm-black);
+    cursor: pointer;
+}
+
+.default {
+    background-color: var(--dark-green);
+    color: var(--bone-white);
 }
 </style>
