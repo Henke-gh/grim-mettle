@@ -3,6 +3,7 @@ definePageMeta({
     middleware: ["auth",],
 });
 import { capitalise } from "../../utils/general"
+import { computed, unref } from "vue";
 
 const { hero,
     heroAvatar,
@@ -23,8 +24,11 @@ const { hero,
     equipItem,
     canEquip,
     isEquipped,
-    fetchHero } = useHeroView();
+    fetchHero,
+    canLevelUp, totalFights, winRatio } = useHeroView();
+
 const { checkAndTriggerRegen } = useRegenCheck();
+
 onMounted(async () => {
     await initialise();
     const response = await checkAndTriggerRegen(hero.value);
@@ -32,6 +36,12 @@ onMounted(async () => {
     if (response?.regenerated) {
         await fetchHero();
     }
+})
+
+//Inventory only shows currently unequipped items
+const unEquippedItems = computed(() => {
+    const items = unref(inventoryWithItems) || [];
+    return items.filter(e => !isEquipped(e.inventory_id))
 })
 </script>
 
@@ -43,16 +53,21 @@ onMounted(async () => {
     <div v-else-if="error" class="heroWrapper">
         <p>{{ error }}</p>
     </div>
-    <div v-else-if="hero" class="heroWrapper">
-        <div class="heroHead">
-            <h1>{{ hero.hero_name }} - Level: {{ hero.level }}</h1>
-        </div>
+    <div v-if="hero" class="heroHead">
+        <h1>{{ hero.hero_name }} - Level: {{ hero.level }}</h1>
+        <GameNav />
+    </div>
+    <div v-if="hero" class="heroWrapper">
         <div class="gradientBorder">
             <section class="overviewContainer">
                 <div class="part">
                     <img :src="heroAvatar.src" :alt="heroAvatar.alt" class="heroPortrait" />
                 </div>
-                <div class="part">
+                <div class="levelUp bold" v-if="canLevelUp">
+                    <p>You&apos;ve gained a level!</p>
+                    <DefaultButton theme="default" text="Level Up" routeTo="/level-up" />
+                </div>
+                <div class="part" v-if="!canLevelUp">
                     <p>HP: {{ hero.hp_current }}/{{ hero.hp_max }}</p>
                     <p>Grit: {{ hero.grit_current }}/{{ hero.grit_max }}</p>
                     <p>XP: {{ hero.xp }}/{{ hero.xp_next_lvl }}</p>
@@ -85,16 +100,17 @@ onMounted(async () => {
                     <p>{{ trinket.name }}</p>
                 </div>
             </div>
-            <div class="part" v-if="!hasInventory">
+            <div class="part" v-if="!hasInventory || unEquippedItems.length === 0">
                 <h4>Inventory</h4>
                 <p>-- Inventory empty --</p>
                 <p v-if="inventoryError">{{ inventoryError }}</p>
             </div>
             <div class="part heroInventory" v-else>
                 <h4>Inventory</h4>
-                <div class="equippedItem" v-for="entry in inventoryWithItems" :key="entry.item_id">
-                    <p v-if="!isEquipped(entry.item_id)">{{ entry.item.name }}</p>
-                    <button v-if="!isEquipped(entry.item_id)" @click="equipItem(entry.item_id, entry.item.slot)"
+                <div class="equippedItem" v-for="entry in inventoryWithItems" :key="entry.inventory_id">
+                    <p v-if="!isEquipped(entry.inventory_id)">{{ entry.item.name }}</p>
+                    <button v-if="!isEquipped(entry.inventory_id)"
+                        @click="equipItem(entry.item_id, entry.inventory_id, entry.item.slot)"
                         :disabled="actionLoading || !canEquip(entry.item)" class="inspectViewBtn bold"
                         :class="{ 'disabled': !canEquip(entry.item) }">
                         {{ canEquip(entry.item) ? 'Equip' : 'Requirements not met' }}
@@ -116,7 +132,27 @@ onMounted(async () => {
                 </div>
             </div>
         </section>
-        <button @click="logoutUser" style="width: fit-content;">Sign Out</button>
+        <section class="skillWrapper">
+            <h3>Combat Stats</h3>
+            <div class="skillContainer">
+                <div class="part alignedCenter">
+                    <h4>Wins</h4>
+                    <p>{{ hero.wins }}</p>
+                </div>
+                <div class="part alignedCenter">
+                    <h4>Losses</h4>
+                    <p>{{ hero.losses }}</p>
+                </div>
+                <div class="part alignedCenter">
+                    <h4>Total</h4>
+                    <p>{{ totalFights }}</p>
+                </div>
+                <div class="part alignedCenter">
+                    <h4>Win Ratio</h4>
+                    <p>{{ winRatio }}%</p>
+                </div>
+            </div>
+        </section>
     </div>
     <HeroNav />
 </template>
@@ -127,6 +163,17 @@ onMounted(async () => {
     flex-direction: column;
     padding: 0.5rem;
     gap: 0.5rem;
+}
+
+.heroHead {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0.5rem;
+    background-color: var(--yellow);
+    border-bottom: 5px double var(--bone-white);
 }
 
 .heroContainer {
@@ -141,6 +188,7 @@ onMounted(async () => {
     align-items: center;
     background-color: var(--bone-white);
     border-radius: 5px;
+    gap: 3rem;
 }
 
 .itemContainer {
@@ -155,6 +203,10 @@ onMounted(async () => {
     display: flex;
     flex-direction: column;
     gap: 0.4rem;
+}
+
+.alignedCenter {
+    align-items: center;
 }
 
 .equippedItem {
@@ -179,9 +231,10 @@ onMounted(async () => {
     justify-content: space-between;
 }
 
-.heroHead {
-    width: 100%;
-    padding: 0.5rem;
-    background-color: var(--yellow);
+.levelUp {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
 }
 </style>

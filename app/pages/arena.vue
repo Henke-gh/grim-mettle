@@ -143,7 +143,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
 
 <style scoped>
 .arenaWrapper {
-    margin-top: 6.5rem;
+    margin-top: 7rem;
     padding: 0.5rem;
     display: flex;
     flex-direction: column;

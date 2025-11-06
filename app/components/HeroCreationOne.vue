@@ -18,26 +18,39 @@ const hero = useHeroCreateStore();
                 </div>
             </div>
         </div>
-        <div div class=" labelInput">
+        <div class="labelInput">
             <label for="heroName">
                 <h3>Name your champion:</h3>
             </label>
-            <input type="text" id="heroName" min="3" max="16" placeholder="Give your hero a name" :value="hero.name"
-                v-on:input="event => hero.setHeroName(event.target.value)"></input>
+            <input class="nameInput" type="text" id="heroName" min="3" max="16" placeholder="Give your hero a name"
+                :value="hero.name" v-on:input="event => hero.setHeroName(event.target.value)"></input>
         </div>
-        <DefaultButton text="Continue" type="button" :disabled="hero.name.length < 3" @click="hero.nextStep()" />
+        <div class="nextStep">
+            <DefaultButton text="Continue" type="button" :disabled="hero.name.length < 3" @click="hero.nextStep()" />
+        </div>
     </section>
+    <div class="swordlineContainer spacing"><img src="/divider.svg"
+            alt="A line of four swords, with a shield in the middle" /></div>
 </template>
 
 <style lang="css" scoped>
+.heroCreation {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+}
+
 .portraitSelection {
     display: flex;
     flex-direction: column;
+    gap: 0.5rem;
 }
 
 .portraitCollection {
     display: grid;
     grid-template-columns: 50% 50%;
+    gap: 1rem;
     justify-items: center;
     align-items: center;
 }
@@ -56,12 +69,25 @@ const hero = useHeroCreateStore();
 }
 
 .selected {
-    border: 4px dotted var(--purple);
+    border: 6px double var(--purple);
 }
 
 .labelInput {
     display: flex;
     flex-direction: column;
     width: fit-content;
+    text-align: center;
+    gap: 0.5rem;
+}
+
+.nextStep {
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.nameInput {
+    font-family: monospace;
+    padding: 0.5rem;
+    border: 1px solid var(--dark-green);
 }
 </style>

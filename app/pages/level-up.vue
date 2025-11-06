@@ -92,7 +92,6 @@ definePageMeta({
     middleware: ["auth",],
 });
 
-import { success } from "zod";
 import { useLevelUpStore } from "../stores/heroLevelUp"
 import { ref } from "vue";
 const levelUpHero = useLevelUpStore();
@@ -108,7 +107,6 @@ onMounted(async () => {
 })
 
 async function submitLevelUp() {
-    console.log("level up now");
     errorMsg.value = '';
     successMsg.value = '';
     if (levelUpHero.statPointsRemaining !== 0) {

@@ -1,6 +1,14 @@
 import { itemCatalog } from "~~/utils/itemCatalog";
 
 export const useItems = () => {
+  // First takes an items hero_inventory id (stored in hero_equipment table) and matches that id with the item_id of selected item.
+  //It's been a bit of a nightmare. A huge part of handling multiple entries of the same item, for example two "Short Swords".
+  const getItemByInventoryId = (inventoryId, inventory) => {
+    const invEntry = inventory.find((inv) => inv.id === inventoryId);
+    if (!invEntry) return null;
+    return getItemById(invEntry.item_id);
+  };
+
   const getItemById = (itemId) => {
     if (itemId >= 0 && itemId <= 99) {
       return itemCatalog.weapons.find((w) => w.id === itemId);
@@ -20,5 +28,5 @@ export const useItems = () => {
     return null;
   };
 
-  return { getItemById };
+  return { getItemById, getItemByInventoryId };
 };

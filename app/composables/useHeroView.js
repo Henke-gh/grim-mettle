@@ -4,11 +4,20 @@ import { useInventory } from "#imports";
 import { useItems } from "#imports";
 
 export const useHeroView = () => {
-  const { hero, fetchHero, loading, error, heroAvatar, derivedStats } =
-    useHero();
+  const {
+    hero,
+    fetchHero,
+    loading,
+    error,
+    heroAvatar,
+    derivedStats,
+    canLevelUp,
+    totalFights,
+    winRatio,
+  } = useHero();
   const { inventory, fetchInventory, error: inventoryError } = useInventory();
   const { equipment, fetchEquipment, equipError } = useEquipment();
-  const { getItemById } = useItems();
+  const { getItemById, getItemByInventoryId } = useItems();
 
   const actionSuccess = ref(false);
   const actionError = ref(null);
@@ -50,33 +59,35 @@ export const useHeroView = () => {
   const inventoryWithItems = computed(() => {
     if (!inventory.value) return [];
     return inventory.value.map((inv) => ({
-      ...inv,
+      /*   ...inv, */
+      inventory_id: inv.id, // ← Include unique ID
+      item_id: inv.item_id,
       item: getItemById(inv.item_id),
     }));
   });
 
   //Matches IDs in hero_equipment table with their respective item entries
   const equippedItems = computed(() => {
-    if (!equipment.value) return null;
+    if (!equipment.value || !inventory.value) return null;
     return {
       mainHand: equipment.value.main_hand
-        ? getItemById(equipment.value.main_hand)
+        ? getItemByInventoryId(equipment.value.main_hand, inventory.value)
         : null,
       offHand: equipment.value.off_hand
-        ? getItemById(equipment.value.off_hand)
+        ? getItemByInventoryId(equipment.value.off_hand, inventory.value)
         : null,
       armour: equipment.value.armour
-        ? getItemById(equipment.value.armour)
+        ? getItemByInventoryId(equipment.value.armour, inventory.value)
         : null,
       trinkets: [
         equipment.value.trinket_1
-          ? getItemById(equipment.value.trinket_1)
+          ? getItemByInventoryId(equipment.value.trinket_1, inventory.value)
           : null,
         equipment.value.trinket_2
-          ? getItemById(equipment.value.trinket_2)
+          ? getItemByInventoryId(equipment.value.trinket_2, inventory.value)
           : null,
         equipment.value.trinket_3
-          ? getItemById(equipment.value.trinket_3)
+          ? getItemByInventoryId(equipment.value.trinket_3, inventory.value)
           : null,
       ].filter((trinket) => trinket !== null),
     };
@@ -88,7 +99,7 @@ export const useHeroView = () => {
 
   /* === Equip and Unequip === */
   // Check if item is currently equipped
-  const isEquipped = (itemId) => {
+  const isEquipped = (inventory_id) => {
     if (!equipment.value) return false;
     const slots = [
       "main_hand",
@@ -98,7 +109,7 @@ export const useHeroView = () => {
       "trinket_2",
       "trinket_3",
     ];
-    return slots.some((slot) => equipment.value[slot] === itemId);
+    return slots.some((slot) => equipment.value[slot] === inventory_id);
   };
 
   //Check if hero has enough strength to equip selected item (applies to shields and weapons)
@@ -111,7 +122,7 @@ export const useHeroView = () => {
     return true;
   };
 
-  const equipItem = async (item_id, item_slot) => {
+  const equipItem = async (item_id, inventory_id, item_slot) => {
     actionLoading.value = true;
     actionError.value = null;
     actionSuccess.value = null;
@@ -119,7 +130,7 @@ export const useHeroView = () => {
     try {
       const response = await $fetch("/api/items/equip", {
         method: "POST",
-        body: { item_slot, item_id },
+        body: { item_slot, inventory_id, item_id },
       });
 
       actionSuccess.value = response.message;
@@ -188,5 +199,10 @@ export const useHeroView = () => {
     isEquipped,
     canEquip,
     fetchHero,
+    fetchInventory,
+    fetchEquipment,
+    canLevelUp,
+    totalFights,
+    winRatio,
   };
 };

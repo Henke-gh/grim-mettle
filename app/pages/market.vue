@@ -7,7 +7,7 @@
                 <div class="headerStoreContainer">
                     <article>
                         <p>Browse around, have a look! I'm sure you'll find something you can afford.</p>
-                        <p>A new trinket, perhaps?</p>
+                        <p>A new trinket, perhaps? Or some protection?</p>
                     </article>
                     <img src="../assets/images/vendor.png" alt="The goblin vendor welcomes you." class="vendorImg" />
                 </div>
@@ -58,11 +58,28 @@
                 </div>
             </div>
         </section>
-        <section class="storeHeroSales">
-            <h2>Your items:</h2>
-            <p>You have nothing to sell.</p>
+        <!-- Selling of items in Hero Inventory -->
+        <section class="storeContainer">
+            <div class="category" v-if="!hasInventory || unEquippedItems.length === 0">
+                <h2>Your items:</h2>
+                <p>No items to sell.</p>
+            </div>
+            <div class="category" v-else>
+                <h2>Your items:</h2>
+                <div class="item" v-for="entry in unEquippedItems" :key="entry.inventory_id">
+                    <p>{{ entry.item.name }}</p>
+                    <div class="part">
+                        <p>Sell: {{ getResellValue(entry.item.goldCost) }} gold</p>
+                        <button class="inspectViewBtn bold closeBtn" @click="sellItem(entry.inventory_id)"
+                            :disabled="sellingItem">Sell</button>
+                    </div>
+                </div>
+                <p v-if="sellingItem">Selling item..</p>
+                <p v-if="successSaleMessage">{{ successSaleMessage }}</p>
+            </div>
         </section>
     </div>
+    <!-- === Buy Item Modal === -->
     <teleport to="body">
         <div v-if="showModal" class="modalOverlay" @click.self="closeModal" role="dialog" aria-modal="true"
             :aria-label="selectedItem?.name || 'Item details'">
@@ -72,20 +89,27 @@
                     <button class="closeByXBtn" @click="closeModal" aria-label="Close">&times;</button>
                 </header>
                 <section class="modalBody">
-                    <p><strong>Category:</strong> {{ selectedItem.category || '—' }}</p>
+                    <p><strong>Category:</strong> {{ capitalise(selectedItem.category) || '—' }}</p>
                     <p v-if="selectedItem.minDmg !== undefined"><strong>Damage:</strong> {{ selectedItem.minDmg }} - {{
                         selectedItem.maxDmg }}</p>
-                    <p v-if="selectedItem.damageReduction !== undefined"><strong>DR:</strong> {{
+                    <p v-if="selectedItem.damageReduction !== undefined"><strong>Damage Reduction:</strong> {{
                         selectedItem.damageReduction }}</p>
-                    <p v-if="selectedItem.blockValue !== undefined"><strong>Block:</strong> {{ selectedItem.blockValue
-                        }}
+                    <p v-if="selectedItem.blockValue !== undefined"><strong>Block Value:</strong> {{
+                        selectedItem.blockValue
+                    }}
                     </p>
-                    <p><strong>Weight:</strong> {{ selectedItem.weight ?? '—' }}</p>
-                    <p><strong>Skill Req:</strong> {{ selectedItem.skillReq ?? '—' }}</p>
+                    <p v-if="selectedItem.weight"><strong>Weight:</strong> {{ selectedItem.weight ?? '—' }}</p>
+                    <p v-if="selectedItem.strengthReq"><strong>Strength Req:</strong> {{ selectedItem.strengthReq ?? '—'
+                    }}</p>
+                    <p v-if="selectedItem.skillReq"><strong>Skill Req:</strong> <span
+                            v-for="value, key in selectedItem.skillReq" :key="key"> {{ capitalise(key) }}: {{ value
+                            }}</span></p>
+                    <p v-if="Object.keys(selectedItem.bonus ?? {}).length"><strong>Bonus: </strong><span
+                            v-for="value, key in selectedItem.bonus" :key="key"> {{ capitalise(key) }}: {{ value
+                            }}</span>
+                    </p>
                     <p><strong>Cost:</strong> {{ selectedItem.goldCost }} gold</p>
-                    <p v-if="Object.keys(selectedItem.bonus ?? {}).length"><strong>Bonus:</strong> {{
-                        JSON.stringify(selectedItem.bonus) }}</p>
-                    <p class="desc">{{ selectedItem.description }}</p>
+                    <p class="descriptionLine">{{ selectedItem.description }}</p>
                 </section>
                 <footer class="modalFooter">
                     <div class="modalFooterBtnContainer">
@@ -111,16 +135,19 @@ definePageMeta({
     middleware: ["auth",],
 });
 import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { capitalise } from '~~/utils/general';
 
-const { data } = await useFetch('/api/items/itemCatalog')
+const { data } = await useFetch('/api/items/itemCatalog');
 
 const showModal = ref(false);
 const selectedItem = ref({});
 const selectedItemType = ref('');
 const modalRef = ref(null);
 const buyingItem = ref(false);
+const sellingItem = ref(false);
 const errorMessage = ref('');
 const successMessage = ref('');
+const successSaleMessage = ref('');
 
 function openModal(item, itemType) {
     selectedItem.value = item || {}
@@ -148,7 +175,7 @@ async function buyItem() {
     successMessage.value = '';
     try {
         const payload = { id: selectedItem.value.id, itemType: selectedItemType.value };
-        const response = await $fetch('/api/hero/buyItem', { method: 'POST', body: payload })
+        await $fetch('/api/hero/buyItem', { method: 'POST', body: payload })
         successMessage.value = 'Purchase Succesful'
 
         setTimeout(() => {
@@ -168,6 +195,48 @@ function onKeydown(e) {
 
 onMounted(() => window.addEventListener('keydown', onKeydown));
 onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
+
+/* ==== Selling Inventory ==== */
+const { fetchInventory, fetchEquipment, inventoryWithItems, isEquipped, hasInventory } = useHeroView();
+
+onMounted(async () => {
+    await fetchInventory();
+    await fetchEquipment();
+})
+
+//Sell item-section only shows currently unequipped items
+const unEquippedItems = computed(() => {
+    const items = unref(inventoryWithItems) || [];
+    return items.filter(e => !isEquipped(e.inventory_id))
+})
+
+//Only for display purpose, actual value is set server-side.
+function getResellValue(goldCost) {
+    return Math.floor(goldCost * 0.55);
+}
+
+//Add sell-API route
+async function sellItem(inventory_id) {
+    if (sellingItem.value) return
+    sellingItem.value = true;
+    errorMessage.value = '';
+    successSaleMessage.value = '';
+
+    try {
+        const payload = { inventory_id };
+        await $fetch('/api/hero/sellItem', { method: 'POST', body: payload })
+        successSaleMessage.value = 'Sale Succesful'
+
+        setTimeout(() => {
+            window.location.reload();
+        }, 700)
+
+    } catch (err) {
+        errorMessage.value = (err?.data?.message || err?.message || 'Purchase Failed')
+    } finally { sellingItem.value = false; }
+
+}
+
 </script>
 
 <style scoped>
@@ -217,10 +286,6 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
     width: 20rem;
 }
 
-.storeHeroSales {
-    padding: 0.5rem;
-}
-
 /* MODAL STYLING */
 .modalOverlay {
     position: fixed;
@@ -261,6 +326,10 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
 
 .modalBody p {
     margin: 0.4rem 0;
+}
+
+.descriptionLine {
+    font-style: italic;
 }
 
 .modalFooter {

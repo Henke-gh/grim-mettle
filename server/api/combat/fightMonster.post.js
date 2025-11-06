@@ -4,7 +4,7 @@ import { supabaseAdmin } from "~~/server/utils/supabaseAdmin";
 import { monsterCatalog } from "#imports";
 import { computeDerivedStatBonus } from "~~/utils/heroUtils";
 import { doCombat } from "~~/server/utils/combat";
-import { getItemById } from "~~/utils/itemCatalog";
+import { getItemByInventoryId, getItemById } from "~~/utils/itemCatalog";
 
 const combatSubmitSchema = z.object({
   monsterID: z.number(),
@@ -71,7 +71,7 @@ export default defineEventHandler(async (event) => {
     hero.block = statBonuses.trueBlock;
     hero.initiative = statBonuses.trueInitiative;
 
-    //Get hero equipped items (gets item IDs)
+    //Get hero equipped items (gets inventory IDs, which have to get matched with correct item id from hero_inventory)
     const { data: equipment, error: equipError } = await supabase
       .from("hero_equipment")
       .select("*")
@@ -86,15 +86,36 @@ export default defineEventHandler(async (event) => {
       throw createError({ statusCode: 400, message: "No equipment found." });
     }
 
+    //Get hero inventory
+    const { data: inventory, error: inventoryError } = await supabase
+      .from("hero_inventory")
+      .select("*")
+      .eq("hero_id", hero.id);
+    if (inventoryError) {
+      throw createError({ statusCode: 500, message: inventoryError.message });
+    }
+
+    if (!inventory) {
+      throw createError({
+        statusCode: 400,
+        message: "No inventory found.",
+      });
+    }
     //Get all equipped items
     const heroEquipment = {
-      main_hand: getItemById(equipment.main_hand),
-      off_hand: getItemById(equipment.off_hand),
-      armour: getItemById(equipment.armour),
-      trinket_1: getItemById(equipment.trinket_1),
-      trinket_2: getItemById(equipment.trinket_2),
-      trinket_3: getItemById(equipment.trinket_3),
+      main_hand: getItemByInventoryId(equipment.main_hand, inventory),
+      off_hand: getItemByInventoryId(equipment.off_hand, inventory),
+      armour: getItemByInventoryId(equipment.armour, inventory),
+      trinket_1: getItemByInventoryId(equipment.trinket_1, inventory),
+      trinket_2: getItemByInventoryId(equipment.trinket_2, inventory),
+      trinket_3: getItemByInventoryId(equipment.trinket_3, inventory),
     };
+
+    //If hero does not have a weapon equipped set main_hand to use a fallback weapon, their fists.
+    if (heroEquipment.main_hand === null) {
+      const fists = getItemById(400);
+      heroEquipment.main_hand = fists;
+    }
 
     //Set hp value at which the player hero will retreat/ give up the fight.
     const retreatValue = Math.ceil(
@@ -138,15 +159,28 @@ export default defineEventHandler(async (event) => {
       return combatResult.combatLog;
     }
 
+    const heroWin = combatResult.heroWon;
+    const newGrit = (hero.grit_current ?? 0) - combatResult.turnCounter;
+    const newGold = (hero.gold ?? 0) + (combatResult.rewards?.gold ?? 0);
+    const newXp = (hero.xp ?? 0) + (combatResult.rewards?.xp ?? 0);
+
+    const updatePayload = {
+      hp_current: combatResult.heroHP,
+      grit_current: newGrit,
+      gold: newGold,
+      xp: newXp,
+    };
+
+    if (heroWin) {
+      updatePayload.wins = (hero.wins ?? 0) + 1;
+    } else {
+      updatePayload.losses = (hero.losses ?? 0) + 1;
+    }
+
     //Update hero in heroes table. Hp, grit - turns in combat, gold and xp
     const { error: updateError } = await supabaseAdmin
       .from("heroes")
-      .update({
-        hp_current: combatResult.heroHP,
-        grit_current: (hero.grit_current -= combatResult.turnCounter),
-        gold: (hero.gold += combatResult.rewards.gold),
-        xp: (hero.xp += combatResult.rewards.xp),
-      })
+      .update(updatePayload)
       .eq("id", hero.id);
 
     if (updateError) {

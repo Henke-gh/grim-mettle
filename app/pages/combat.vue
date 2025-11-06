@@ -1,6 +1,8 @@
 <template>
-    <div class="combatWrapper">
+    <header class="combatHeader">
         <h1>- Combat Log -</h1>
+    </header>
+    <div class="combatWrapper">
         <section class="logEntry" v-for="(entry, index) in log" :key="index">
             <h2 v-if="entry.type === 'combat_start'">{{ entry.data.hero }} vs {{ entry.data.monster }}</h2>
             <div class="turnBlock" v-if="entry.type === 'turn'">
@@ -10,10 +12,17 @@
                     <p v-if="action.type === 'initiative'">{{ action.data.fighter }} gets the upper hand!</p>
                     <!-- Attack phase -->
                     <p v-else-if="action.type === 'attack'">
-                        <template v-if="action.data.hit">
+                        <template v-if="action.data.hit && action.data.damage > 0">
                             {{ action.data.attacker }} charges towards {{ action.data.defender }} with {{
                                 action.data.weapon }}. {{ action.data.attacker }} strikes a clean blow dealing {{
-                                action.data.damage }} damage!
+                                action.data.damage }}<span v-if="action.data.dmgReduction > 0" class="italic"> ({{
+                                action.data.dmgReduction
+                            }})</span> damage!
+                        </template>
+                        <template v-else-if="action.data.hit && action.data.damage <= 0">
+                            {{ action.data.attacker }} charges towards {{ action.data.defender }} with {{
+                                action.data.weapon }}. {{ action.data.attacker }}'s hit was absored by the armour of {{
+                                action.data.defender }}.
                         </template>
                         <template v-else>
                             {{ action.data.attacker }} lets out a growl and swings {{ action.data.weapon }} in a wide
@@ -40,7 +49,7 @@
                 <p v-else>You live to fight another day, tend to your wounds.</p>
             </div>
         </section>
-        <button @click="exitCombatLog">Continue</button>
+        <button class="defaultButton default" @click="exitCombatLog">Continue</button>
     </div>
     <HeroNav />
 </template>
@@ -64,10 +73,36 @@ function exitCombatLog() {
 </script>
 
 <style scoped>
+.combatHeader {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 0.5rem;
+    background-color: var(--yellow);
+    border-bottom: 5px double var(--bone-white);
+}
+
 .combatWrapper {
     padding: 0.5rem;
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.defaultButton {
+    border: none;
+    font-family: monospace;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 0.5rem 0.8rem 0.5rem;
+    box-shadow: 3px 3px var(--warm-black);
+    cursor: pointer;
+}
+
+.default {
+    background-color: var(--dark-green);
+    color: var(--bone-white);
 }
 </style>

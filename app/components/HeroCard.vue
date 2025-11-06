@@ -19,7 +19,7 @@ onMounted(async () => {
     </div>
     <div class="levelUp" v-if="canLevelUp">
       <p>You&apos;ve gained a level!</p>
-      <DefaultButton theme="light" text="Level Up" routeTo="/level-up" />
+      <DefaultButton theme="light" text="Level Up" routeTo="/level-up" class="fitContent" />
     </div>
     <div class="stats" v-if="!canLevelUp">
       <p class="noMargin">Name: {{ hero.hero_name }}</p>
@@ -27,6 +27,9 @@ onMounted(async () => {
       <p class="noMargin">HP: {{ hero.hp_current }} / {{ hero.hp_max }}</p>
       <p class="noMargin">Grit: {{ hero.grit_current }} / {{ hero.grit_max }}</p>
       <p class="noMargin">Gold: {{ hero.gold }}</p>
+    </div>
+    <div class="fixedMenu">
+      <GameNav />
     </div>
   </div>
 </template>
@@ -41,6 +44,7 @@ onMounted(async () => {
   top: 0;
   width: 100%;
   height: 6.5rem;
+  padding-right: 3.5rem;
   background-color: var(--yellow);
   border-bottom: 5px double var(--bone-white);
 }
@@ -66,7 +70,14 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   font-weight: 600;
-  gap: 0.3rem;
+  gap: 0.5rem;
+}
+
+.fixedMenu {
+  position: fixed;
+  top: 0.5rem;
+  right: 0.5rem;
 }
 </style>
