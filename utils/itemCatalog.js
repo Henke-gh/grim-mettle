@@ -196,6 +196,12 @@ export const starterGear = [
   },
 ];
 
+export const getItemByInventoryId = (inventoryId, inventory) => {
+  const invEntry = inventory.find((inv) => inv.id === inventoryId);
+  if (!invEntry) return null;
+  return getItemById(invEntry.item_id);
+};
+
 // Helper function to get item by ID
 export const getItemById = (itemId) => {
   const id = Number(itemId);

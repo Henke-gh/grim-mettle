@@ -85,6 +85,7 @@ function makeAttack(attacker, defender, weapon) {
   }
 }
 //Determine if defender blocks if a shield is present in the off hand.
+//Has to handle hero off-hand empty/ null!
 function attemptBlock() {}
 
 //One full turn consists of two combatActions, each participant (hero and monster) gets to act and respond to attack.
@@ -137,11 +138,17 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
   const heroFatigue = setHeroFatigue(hero.speed);
   const heroRetreatsAt = retreatValue;
   const combatLog = [];
+  let heroWon;
   let rewards = { gold: 0, xp: 0 };
   let heroHP = hero.hp_current;
   let monsterHP = monster.hp;
   let turnCounter = 1;
+  let heroDmgReduction = 0;
 
+  //Set dmg reduction if hero wears armour.
+  if (heroEquipment.armour) {
+    heroDmgReduction = heroEquipment.armour.damageReduction;
+  }
   //Push combat start to log
   combatLog.push(
     addLogEntry("combat_start", { hero: hero.hero_name, monster: monster.name })
@@ -182,6 +189,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
           rewards: { gold: rewards.gold, xp: rewards.xp },
         })
       );
+      heroWon = true;
       break;
     }
     if (heroFatigue < turnCounter) {
@@ -208,6 +216,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
           monster: monster.name,
         })
       );
+      heroWon = false;
       break;
     }
 
@@ -270,7 +279,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
               rewards: { gold: rewards.gold, xp: rewards.xp },
             })
           );
-
+          heroWon = true;
           break;
         }
       }
@@ -279,7 +288,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
       const counterAttackOutcome = combatAction(monster, hero, monster.weapon);
       const counterAttackDamage = applyDamageReduction(
         counterAttackOutcome.damage,
-        heroEquipment.armour.damageReduction
+        heroDmgReduction
       );
 
       turn.actions.push(
@@ -291,7 +300,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
           weapon: monster.weapon.name,
           hit: counterAttackOutcome.attackHits,
           damage: counterAttackDamage,
-          dmgReduction: heroEquipment.armour.damageReduction,
+          dmgReduction: heroDmgReduction,
           critical: counterAttackOutcome.criticalHit,
         })
       );
@@ -317,6 +326,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
               monster: monster.name,
             })
           );
+          heroWon = false;
           break;
         }
       }
@@ -325,7 +335,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
       const outcome = combatAction(monster, hero, monster.weapon);
       const attackerDamage = applyDamageReduction(
         outcome.damage,
-        heroEquipment.armour.damageReduction
+        heroDmgReduction
       );
       turn.actions.push(
         addLogEntry("attack", {
@@ -336,7 +346,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
           weapon: monster.weapon.name,
           hit: outcome.attackHits,
           damage: attackerDamage,
-          dmgReduction: heroEquipment.armour.damageReduction,
+          dmgReduction: heroDmgReduction,
           critical: outcome.criticalHit,
         })
       );
@@ -362,6 +372,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
               monster: monster.name,
             })
           );
+          heroWon = false;
           break;
         }
       }
@@ -417,6 +428,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
             rewards: { gold: rewards.gold, xp: rewards.xp },
           })
         );
+        heroWon = true;
         break;
       }
     }
@@ -424,6 +436,6 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
     turnCounter++;
   }
 
-  const result = { combatLog, heroHP, turnCounter, rewards };
+  const result = { combatLog, heroHP, turnCounter, rewards, heroWon };
   return result;
 }
