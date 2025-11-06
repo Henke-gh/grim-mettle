@@ -61,6 +61,18 @@ export const useHero = () => {
     return hero.value.xp >= hero.value.xp_next_lvl;
   });
 
+  //Calculate total number of fights a hero has fought.
+  const totalFights = computed(() => {
+    const total = hero.value.wins + hero.value.losses;
+    return total;
+  });
+
+  //Calculate win ratio as percentage wins
+  const winRatio = computed(() => {
+    const ratio = Math.round((hero.value.wins / totalFights.value) * 100);
+    return ratio;
+  });
+
   return {
     hero,
     heroAvatar,
@@ -69,5 +81,7 @@ export const useHero = () => {
     error,
     fetchHero,
     canLevelUp,
+    totalFights,
+    winRatio,
   };
 };

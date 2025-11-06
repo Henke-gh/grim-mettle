@@ -25,7 +25,7 @@ const { hero,
     canEquip,
     isEquipped,
     fetchHero,
-    canLevelUp, } = useHeroView();
+    canLevelUp, totalFights, winRatio } = useHeroView();
 
 const { checkAndTriggerRegen } = useRegenCheck();
 
@@ -132,6 +132,27 @@ const unEquippedItems = computed(() => {
                 </div>
             </div>
         </section>
+        <section class="skillWrapper">
+            <h3>Combat Stats</h3>
+            <div class="skillContainer">
+                <div class="part alignedCenter">
+                    <h4>Wins</h4>
+                    <p>{{ hero.wins }}</p>
+                </div>
+                <div class="part alignedCenter">
+                    <h4>Losses</h4>
+                    <p>{{ hero.losses }}</p>
+                </div>
+                <div class="part alignedCenter">
+                    <h4>Total</h4>
+                    <p>{{ totalFights }}</p>
+                </div>
+                <div class="part alignedCenter">
+                    <h4>Win Ratio</h4>
+                    <p>{{ winRatio }}%</p>
+                </div>
+            </div>
+        </section>
     </div>
     <HeroNav />
 </template>
@@ -182,6 +203,10 @@ const unEquippedItems = computed(() => {
     display: flex;
     flex-direction: column;
     gap: 0.4rem;
+}
+
+.alignedCenter {
+    align-items: center;
 }
 
 .equippedItem {

@@ -12,6 +12,8 @@ export const useHeroView = () => {
     heroAvatar,
     derivedStats,
     canLevelUp,
+    totalFights,
+    winRatio,
   } = useHero();
   const { inventory, fetchInventory, error: inventoryError } = useInventory();
   const { equipment, fetchEquipment, equipError } = useEquipment();
@@ -200,5 +202,7 @@ export const useHeroView = () => {
     fetchInventory,
     fetchEquipment,
     canLevelUp,
+    totalFights,
+    winRatio,
   };
 };
