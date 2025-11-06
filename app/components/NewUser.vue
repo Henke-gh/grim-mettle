@@ -15,13 +15,14 @@
                 <label for="passwordInput">Choose a password: </label>
                 <input type="password" id="passwordInput" v-model="password" placeholder="Choose password" min="8" />
             </div>
-            <div class="segment">
+            <div class="segment bottomSpacing">
                 <label for="repeatPasswordInput">Repeat password: </label>
                 <input type="password" id="repeatPasswordInput" v-model="repeatPassword" placeholder="Repeat password"
                     min="8" />
             </div>
-            <!-- <button class="loginBtn" :disabled="loading">{{ loading ? 'Registering...' : 'Register' }}</button> -->
-            <DefaultButton text="Register" type="submit" :disabled="loading" />
+            <div class="alignedCenter">
+                <DefaultButton text="Register" type="submit" :disabled="loading" />
+            </div>
             <p v-if="error" class="text-red-400 mt-3 text-sm">{{ error }}</p>
             <p v-if="success" class="text-green-400 mt-3 text-sm">{{ success }}</p>
         </form>
@@ -74,6 +75,7 @@ const submitForm = async () => {
     background-color: var(--bone-white);
     padding: 1rem;
     border-radius: 5px;
+    gap: 0.5rem;
 }
 
 .segment {
@@ -83,7 +85,13 @@ const submitForm = async () => {
     padding-bottom: 0.3rem;
 }
 
-.loginBtn {
-    width: fit-content;
+.bottomSpacing {
+    margin-bottom: 1rem;
+}
+
+.alignedCenter {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
 }
 </style>

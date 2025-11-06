@@ -6,7 +6,7 @@
                 <label for="emailInput">E-mail: </label>
                 <input type="email" id="emailInput" v-model="email" required />
             </div>
-            <div class="segment">
+            <div class="segment bottomSpacing">
                 <label for="passwordInput">Password: </label>
                 <input type="password" id="passwordInput" v-model="password" required />
             </div>
@@ -96,5 +96,9 @@ const submitLogin = async () => {
     flex-direction: row;
     justify-content: space-between;
     gap: 0.2rem
+}
+
+.bottomSpacing {
+    margin-bottom: 1rem;
 }
 </style>

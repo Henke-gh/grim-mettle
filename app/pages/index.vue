@@ -24,20 +24,18 @@ const user = useSupabaseUser();
                     the dangers that lie ahead.</p>
             </article>
         </section>
-        <div class="swordlineContainer spacing"><img src="/divider.svg"
-                alt="A line of four swords, with a shield in the middle" /></div>
-        <div class="gradientBorder fitContent">
+        <div class="gradientBorder fitContent gradientLogin">
             <section class="loginWrapper">
                 <div class="swordsContainer">
                     <img :src="swords" alt="Two crossed swords" class="swordsImg" />
                 </div>
                 <div class="loginContainer" v-if="!user">
+                    <p class="customP">Start playing</p>
                     <DefaultButton text="Login" routeTo="/login" theme="default" class="" />
-                    <p class="customP">Log in and start playing</p>
                 </div>
                 <div class="loginContainer" v-if="user">
-                    <DefaultButton text="To Game" routeTo="/hero" theme="default" class="" />
                     <p class="customP">Test your Mettle!</p>
+                    <DefaultButton text="To Game" routeTo="/hero" theme="default" class="" />
                 </div>
             </section>
         </div>
@@ -72,6 +70,7 @@ const user = useSupabaseUser();
     display: flex;
     flex-direction: row;
     align-items: center;
+    width: 18rem;
     padding: 0.4rem 2rem;
     gap: 2rem;
     background-color: var(--bone-white);
@@ -101,10 +100,11 @@ const user = useSupabaseUser();
     align-items: center;
     text-align: center;
     background-color: var(--dark-green);
-    padding: 0.4rem;
+    padding: 2rem 0.4rem;
+    margin-top: 1rem;
     font-weight: 600;
     color: var(--bone-white);
-    gap: 0.5rem;
+    gap: 1rem;
 }
 
 .ctaLogin {
