@@ -69,13 +69,17 @@
                 <div class="item" v-for="entry in unEquippedItems" :key="entry.inventory_id">
                     <p>{{ entry.item.name }}</p>
                     <div class="part">
-                        <p>Cost: {{ getResellValue(entry.item.goldCost) }} gold</p>
-                        <button class="inspectViewBtn bold closeBtn">Sell</button>
+                        <p>Sell: {{ getResellValue(entry.item.goldCost) }} gold</p>
+                        <button class="inspectViewBtn bold closeBtn" @click="sellItem(entry.inventory_id)"
+                            :disabled="sellingItem">Sell</button>
                     </div>
                 </div>
+                <p v-if="sellingItem">Selling item..</p>
+                <p v-if="successSaleMessage">{{ successSaleMessage }}</p>
             </div>
         </section>
     </div>
+    <!-- === Buy Item Modal === -->
     <teleport to="body">
         <div v-if="showModal" class="modalOverlay" @click.self="closeModal" role="dialog" aria-modal="true"
             :aria-label="selectedItem?.name || 'Item details'">
@@ -143,6 +147,7 @@ const buyingItem = ref(false);
 const sellingItem = ref(false);
 const errorMessage = ref('');
 const successMessage = ref('');
+const successSaleMessage = ref('');
 
 function openModal(item, itemType) {
     selectedItem.value = item || {}
@@ -170,7 +175,7 @@ async function buyItem() {
     successMessage.value = '';
     try {
         const payload = { id: selectedItem.value.id, itemType: selectedItemType.value };
-        const response = await $fetch('/api/hero/buyItem', { method: 'POST', body: payload })
+        await $fetch('/api/hero/buyItem', { method: 'POST', body: payload })
         successMessage.value = 'Purchase Succesful'
 
         setTimeout(() => {
@@ -207,15 +212,29 @@ const unEquippedItems = computed(() => {
 
 //Only for display purpose, actual value is set server-side.
 function getResellValue(goldCost) {
-    return Math.floor(goldCost * 0.65);
+    return Math.floor(goldCost * 0.55);
 }
 
 //Add sell-API route
-async function sellItem() {
+async function sellItem(inventory_id) {
     if (sellingItem.value) return
     sellingItem.value = true;
     errorMessage.value = '';
-    successMessage.value = '';
+    successSaleMessage.value = '';
+
+    try {
+        const payload = { inventory_id };
+        await $fetch('/api/hero/sellItem', { method: 'POST', body: payload })
+        successSaleMessage.value = 'Sale Succesful'
+
+        setTimeout(() => {
+            window.location.reload();
+        }, 700)
+
+    } catch (err) {
+        errorMessage.value = (err?.data?.message || err?.message || 'Purchase Failed')
+    } finally { sellingItem.value = false; }
+
 }
 
 </script>
