@@ -34,38 +34,45 @@ const submitHero = async () => {
 <template>
     <section class="wrapper">
         <h2>Create your Hero - step 2/2</h2>
+        <div class="group stepOneView">
+            <img class="avatarPreview" v-if="hero.selectedAvatar" :src="hero.selectedAvatar.src"
+                :alt="hero.selectedAvatar.alt" />
+            <h3>{{ hero.name }}</h3>
+        </div>
         <p>Distribute your starting stat-points:</p>
         <p>{{ hero.statPointsRemaining }} points remaining.</p>
-        <form @submit.prevent="submitHero">
-            <h3>Main Attributes</h3>
+        <div class="gradientBorder">
+            <div class="tipsContainer">
+                <p><span class="bold">Tip: </span>Your hero starts with a base of 5 in their attributes.</p>
+                <p>All attributes and skills have their uses but early on some extra Vitality and good investment in one
+                    of the weapon skills will be crucial.</p>
+            </div>
+        </div>
+        <form @submit.prevent="submitHero" class="createHeroForm">
+            <h3 class="createMargin">Main Attributes</h3>
             <div class="container">
                 <div class="group">
                     <div class="stat">
-                        <label for="strength">Strength: 5 +</label>
+                        <label for="strength">Strength: (5 +)</label>
                         <input id="strength" type="number" :value="hero.stats.strength" min="0" class="statInput"
                             v-on:input="event => hero.allocateStatPoints('strength', Number(event.target.value))" />
                     </div>
                     <div class="stat">
-                        <label for="speed">Speed: 5 +</label>
+                        <label for="speed">Speed: (5 +)</label>
                         <input id="speed" type="number" :value="hero.stats.speed" min="0" class="statInput"
                             v-on:input="event => hero.allocateStatPoints('speed', Number(event.target.value))" />
                     </div>
                     <div class="stat">
-                        <label for="vitality">Vitality: 5 +</label>
+                        <label for="vitality">Vitality: (5 +)</label>
                         <input id="vitality" type="number" :value="hero.stats.vitality" min="0" class="statInput"
                             v-on:input="event => hero.allocateStatPoints('vitality', Number(event.target.value))" />
                     </div>
                 </div>
-                <div class="group">
-                    <img class="avatarPreview" v-if="hero.selectedAvatar" :src="hero.selectedAvatar.src"
-                        :alt="hero.selectedAvatar.alt" />
-                    <p>{{ hero.name }}</p>
-                </div>
             </div>
-            <h3>Skills</h3>
+            <h3 class="createMargin">Skills</h3>
             <div class="container">
                 <div class="group">
-                    <h4>[Weapon Skills]</h4>
+                    <h4 class="createMargin">[Weapon Skills]</h4>
                     <div class="stat">
                         <label for="swords">Swords:</label>
                         <input id="swords" type="number" :value="hero.stats.swords" min="0" class="statInput"
@@ -93,7 +100,7 @@ const submitHero = async () => {
                     </div>
                 </div>
                 <div class="group">
-                    <h4>[Other Skills]</h4>
+                    <h4 class="createMargin">[Other Skills]</h4>
                     <div class="stat">
                         <label for="block">Block:</label>
                         <input id="block" type="number" :value="hero.stats.block" class="statInput"
@@ -111,29 +118,49 @@ const submitHero = async () => {
                     </div>
                 </div>
             </div>
-            <DefaultButton text="Create Hero" type="submit" :disabled="hero.statPointsRemaining !== 0" />
+            <p class="centerText">{{ hero.statPointsRemaining }} points remaining.</p>
+            <div class="creationControls">
+                <DefaultButton text="Create Hero" type="submit" :disabled="hero.statPointsRemaining !== 0" />
+            </div>
         </form>
+        <div class="swordlineContainer spacing"><img src="/divider.svg"
+                alt="A line of four swords, with a shield in the middle" /></div>
     </section>
 </template>
 
 <style scoped>
 .wrapper {
-    padding: 1rem;
-    background-color: var(--turqoise);
-    justify-self: center;
-    width: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.createHeroForm {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
 .container {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    gap: 5rem;
+}
+
+.tipsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    background-color: var(--bone-white);
+    padding: 1rem;
 }
 
 .group {
     display: flex;
     flex-direction: column;
-    gap: 0.2rem;
+    gap: 0.4rem;
 }
 
 .stat {
@@ -147,11 +174,34 @@ const submitHero = async () => {
     width: fit-content;
     max-width: 1.5rem;
     text-align: center;
+    font-family: monospace;
+    padding: 2px;
+    border: 1px solid var(--dark-green);
+}
+
+.stepOneView {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
 }
 
 .avatarPreview {
     border-radius: 50%;
-    height: 5rem;
-    width: 5rem;
+    height: 6rem;
+    width: auto;
+    border: 5px double var(--dark-green);
+}
+
+.creationControls {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.createMargin {
+    margin: 0.5rem 0;
 }
 </style>

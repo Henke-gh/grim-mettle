@@ -11,10 +11,10 @@ const hero = useHeroCreateStore();
 </script>
 
 <template>
-    <section>
-        <HeroCreationOne v-if="hero.currentStep === 1" />
-        <HeroCreationTwo v-else />
-    </section>
+    <CustomHeader />
+    <HeroCreationOne v-if="hero.currentStep === 1" />
+    <HeroCreationTwo v-else />
+    <CustomFooter />
 </template>
 
 <style scoped></style>

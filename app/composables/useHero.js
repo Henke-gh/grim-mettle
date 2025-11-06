@@ -69,6 +69,9 @@ export const useHero = () => {
 
   //Calculate win ratio as percentage wins
   const winRatio = computed(() => {
+    if (totalFights.value <= 0) {
+      return 0;
+    }
     const ratio = Math.round((hero.value.wins / totalFights.value) * 100);
     return ratio;
   });
