@@ -34,8 +34,10 @@
                     </select>
                 </div>
                 <p v-if="errorMsg">{{ errorMsg }}</p>
-                <button class="inspectViewBtn biggerBtn bold" @click="initiateFight()">Fight</button>
-                <button class="inspectViewBtn biggerBtn bold closeBtn" @click="regretChallenge">Back</button>
+                <div class="fightButtonGroup">
+                    <button class="inspectViewBtn biggerBtn bold closeBtn" @click="regretChallenge">Back</button>
+                    <button class="inspectViewBtn biggerBtn bold" @click="initiateFight()">Fight</button>
+                </div>
             </section>
         </div>
     </div>
@@ -148,6 +150,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 1rem;
 }
 
 .monsterSelect {
@@ -160,7 +163,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
 .monsterList {
     display: flex;
     flex-direction: column;
-    gap: 0.4rem;
+    gap: 0.8rem;
     width: 20rem;
     list-style: none;
 }
@@ -189,6 +192,13 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
     display: flex;
     flex-direction: column;
     gap: 0.2rem;
+}
+
+.fightButtonGroup {
+    display: flex;
+    flex-direction: row;
+    gap: 3rem;
+    margin: 1rem 0;
 }
 
 /* === Modal View === */

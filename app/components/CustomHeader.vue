@@ -34,13 +34,13 @@ header {
 
 .logo {
     height: auto;
-    width: 18rem;
+    width: 15rem;
 }
 
 .tagline {
     margin: 0;
     margin-top: 0.2rem;
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 600;
 }
 </style>
