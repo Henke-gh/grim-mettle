@@ -24,6 +24,13 @@ const user = useSupabaseUser();
                     the dangers that lie ahead.</p>
             </article>
         </section>
+        <div class="swordlineContainer spacing"><img src="/divider.svg"
+                alt="A line of four swords, with a shield in the middle" /></div>
+        <div class="news">
+            <p>* <span class="bold">Latest changes:</span> Tuned low level monsters to be slightly weaker. Added
+                some
+                higher level ones. *</p>
+        </div>
         <div class="gradientBorder fitContent gradientLogin">
             <section class="loginWrapper">
                 <div class="swordsContainer">
@@ -64,6 +71,10 @@ const user = useSupabaseUser();
 
 .introText p {
     margin: 0.7rem 0;
+}
+
+.news {
+    padding: 1rem;
 }
 
 .loginWrapper {
