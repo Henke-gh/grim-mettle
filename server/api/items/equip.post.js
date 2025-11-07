@@ -6,14 +6,7 @@ import { z } from "zod";
 const itemSchema = z.object({
   item_id: z.number(),
   inventory_id: z.number(),
-  item_slot: z.enum([
-    "main_hand",
-    "off_hand",
-    "armour",
-    "trinket_1",
-    "trinket_2",
-    "trinket_3",
-  ]),
+  item_slot: z.enum(["main_hand", "off_hand", "armour", "trinket"]),
 });
 
 export default defineEventHandler(async (event) => {
@@ -32,6 +25,7 @@ export default defineEventHandler(async (event) => {
     }
 
     const body = await readBody(event);
+    console.log("Request Bdy:", body);
     const result = itemSchema.safeParse(body);
     if (!result.success) {
       throw createError({
@@ -72,6 +66,14 @@ export default defineEventHandler(async (event) => {
     //Check if item has a strength requirment and if the hero has enough strength to equip item
     if (itemToEquip.strengthReq && hero.strength < itemToEquip.strengthReq) {
       throw createError({ statusCode: 400, message: "Not enough strength." });
+    }
+
+    console.log("ItmToEquip:", itemToEquip);
+    //Handle Trinkets, they can be equipped in one of 3 trinket equipment slots.
+    //Check if any are empty, if all are occupied update new trinket into first slot, trinket_1.
+    console.log("ItemSlotType:", itemToEquip.slot);
+    if (itemToEquip.slot === "trinket") {
+      console.log("Handle it!");
     }
 
     //Equip item

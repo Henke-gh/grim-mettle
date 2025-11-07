@@ -6,11 +6,14 @@ import { supabaseAdmin } from "~~/server/utils/supabaseAdmin";
 const registerSchema = z.object({
   username: z
     .string()
-    .min(3, "Username must be at least 3 characters")
-    .max(20, "Username must be at most 16 characters")
-    .regex(/^[a-zA-Z0-9_]+$/, "Only letters, numbers, and underscores allowed"),
+    .min(3, "Username must be at least 3 characters.")
+    .max(16, "Username too long, max 16 characters.")
+    .regex(
+      /^[\p{L}0-9_]+$/u,
+      "Only letters, numbers, and underscores allowed."
+    ),
   email: z.email("Invalid email address"),
-  password: z.string().min(8, "Password must be at least 8 characters long"),
+  password: z.string().min(8, "Password must be at least 8 characters long."),
 });
 
 export default defineEventHandler(async (event) => {
@@ -18,13 +21,16 @@ export default defineEventHandler(async (event) => {
 
   // Validate input
   const result = registerSchema.safeParse(body);
+  console.log(result);
   if (!result.success) {
+    const message = result.error.issues
+      .map((index) => index.message)
+      .join(", ");
     throw createError({
       statusCode: 400,
-      message: result.error.errors[0].message,
+      message,
     });
   }
-
   const { username, email, password } = result.data;
   const supabase = await serverSupabaseClient(event);
 
@@ -68,6 +74,6 @@ export default defineEventHandler(async (event) => {
 
   return {
     success: true,
-    message: "Account created! Please check your email to verify your account.",
+    message: "Account created! Press Continue.",
   };
 });
