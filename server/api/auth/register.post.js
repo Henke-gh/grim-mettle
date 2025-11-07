@@ -21,7 +21,6 @@ export default defineEventHandler(async (event) => {
 
   // Validate input
   const result = registerSchema.safeParse(body);
-  console.log(result);
   if (!result.success) {
     const message = result.error.issues
       .map((index) => index.message)

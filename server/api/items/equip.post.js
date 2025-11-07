@@ -25,7 +25,6 @@ export default defineEventHandler(async (event) => {
     }
 
     const body = await readBody(event);
-    console.log("Request Bdy:", body);
     const result = itemSchema.safeParse(body);
     if (!result.success) {
       throw createError({
@@ -68,13 +67,13 @@ export default defineEventHandler(async (event) => {
       throw createError({ statusCode: 400, message: "Not enough strength." });
     }
 
-    console.log("ItmToEquip:", itemToEquip);
+    //console.log("ItmToEquip:", itemToEquip);
     //Handle Trinkets, they can be equipped in one of 3 trinket equipment slots.
     //Check if any are empty, if all are occupied update new trinket into first slot, trinket_1.
-    console.log("ItemSlotType:", itemToEquip.slot);
-    if (itemToEquip.slot === "trinket") {
+    //console.log("ItemSlotType:", itemToEquip.slot);
+    /* if (itemToEquip.slot === "trinket") {
       console.log("Handle it!");
-    }
+    } */
 
     //Equip item
     const { error: errorEquipping } = await supabaseAdmin
