@@ -20,11 +20,16 @@
                 <input type="password" id="repeatPasswordInput" v-model="repeatPassword" placeholder="Repeat password"
                     min="8" />
             </div>
-            <div class="alignedCenter">
+            <div class="alignedCenter" v-if="!success">
                 <DefaultButton text="Register" type="submit" :disabled="loading" />
             </div>
-            <p v-if="error" class="text-red-400 mt-3 text-sm">{{ error }}</p>
-            <p v-if="success" class="text-green-400 mt-3 text-sm">{{ success }}</p>
+            <div class="messages">
+                <p v-if="error" class="text-red-400 mt-3 text-sm">{{ error }}</p>
+                <p v-if="success" class="text-green-400 mt-3 text-sm">{{ success }}</p>
+                <div v-if="success" class="wasSuccess">
+                    <DefaultButton text="Continue" routeTo="/login" theme="default" class="" />
+                </div>
+            </div>
         </form>
     </section>
 </template>
@@ -93,5 +98,18 @@ const submitForm = async () => {
     display: flex;
     flex-direction: column;
     align-items: end;
+}
+
+.messages {
+    margin-top: 1rem;
+    font-weight: 600;
+}
+
+.wasSuccess {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0.5rem;
 }
 </style>
