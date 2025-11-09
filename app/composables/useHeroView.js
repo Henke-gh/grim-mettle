@@ -31,24 +31,29 @@ export const useHeroView = () => {
 
   const mainAttributes = computed(() => {
     if (!hero.value) return null;
+
+    const itemBonuses = equipmentBonuses.value;
     return {
-      strength: hero.value.strength,
-      speed: hero.value.speed,
-      vitality: hero.value.vitality,
+      strength: hero.value.strength + (itemBonuses.strength || 0),
+      speed: hero.value.speed + (itemBonuses.speed || 0),
+      vitality: hero.value.vitality + (itemBonuses.vitality || 0),
     };
   });
 
   const skills = computed(() => {
     if (!hero.value || !derivedStats.value) return null;
+
+    const itemBonuses = equipmentBonuses.value;
     const allSkills = {
-      swords: hero.value.swords,
-      axes: hero.value.axes,
-      hammers: hero.value.hammers,
-      spears: hero.value.spears,
-      daggers: hero.value.daggers,
-      block: derivedStats.value.trueBlock,
-      evasion: derivedStats.value.trueEvasion,
-      initiative: derivedStats.value.trueInitiative,
+      swords: hero.value.swords + (itemBonuses.swords || 0),
+      axes: hero.value.axes + (itemBonuses.axes || 0),
+      hammers: hero.value.hammers + (itemBonuses.hammers || 0),
+      spears: hero.value.spears + (itemBonuses.spears || 0),
+      daggers: hero.value.daggers + (itemBonuses.daggers || 0),
+      block: derivedStats.value.trueBlock + (itemBonuses.block || 0),
+      evasion: derivedStats.value.trueEvasion + (itemBonuses.evasion || 0),
+      initiative:
+        derivedStats.value.trueInitiative + (itemBonuses.initiative || 0),
     };
     //Only returns skills with a value higher than 0, ie. skills the player has acually spent points on.
     return Object.fromEntries(
@@ -80,17 +85,51 @@ export const useHeroView = () => {
         ? getItemByInventoryId(equipment.value.armour, inventory.value)
         : null,
       trinkets: [
-        equipment.value.trinket_1
-          ? getItemByInventoryId(equipment.value.trinket_1, inventory.value)
-          : null,
-        equipment.value.trinket_2
-          ? getItemByInventoryId(equipment.value.trinket_2, inventory.value)
-          : null,
-        equipment.value.trinket_3
-          ? getItemByInventoryId(equipment.value.trinket_3, inventory.value)
-          : null,
-      ].filter((trinket) => trinket !== null),
+        {
+          slot: "trinket_1",
+          item: equipment.value.trinket_1
+            ? getItemByInventoryId(equipment.value.trinket_1, inventory.value)
+            : null,
+        },
+        {
+          slot: "trinket_2",
+          item: equipment.value.trinket_2
+            ? getItemByInventoryId(equipment.value.trinket_2, inventory.value)
+            : null,
+        },
+        {
+          slot: "trinket_3",
+          item: equipment.value.trinket_3
+            ? getItemByInventoryId(equipment.value.trinket_3, inventory.value)
+            : null,
+        },
+      ].filter((trinket) => trinket.item !== null),
     };
+  });
+  //Get equipment bonuses
+  const equipmentBonuses = computed(() => {
+    if (!equippedItems.value) return {};
+    console.log("Shield bonus:", equippedItems.value.offHand?.bonus);
+    console.log("Weapon bonus:", equippedItems.value.mainHand?.bonus);
+
+    const equipmentAsSet = {
+      main_hand: equippedItems.value.mainHand,
+      off_hand: equippedItems.value.offHand,
+      armour: equippedItems.value.armour,
+      trinket_1:
+        equippedItems.value.trinkets.find((t) => t.slot === "trinket_1")
+          ?.item || null,
+      trinket_2:
+        equippedItems.value.trinkets.find((t) => t.slot === "trinket_2")
+          ?.item || null,
+      trinket_3:
+        equippedItems.value.trinkets.find((t) => t.slot === "trinket_3")
+          ?.item || null,
+    };
+    console.log("equipment: ", equipmentAsSet);
+    const bonus = getItemBonuses(equipmentAsSet);
+    console.log("bonus: ", bonus);
+    return getItemBonuses(equipmentAsSet);
   });
 
   //Simply checks to see if a hero has any items in their inventory.

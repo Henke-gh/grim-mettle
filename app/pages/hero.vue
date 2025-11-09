@@ -97,8 +97,8 @@ const unEquippedItems = computed(() => {
                 <h4>Trinkets:</h4>
                 <p v-if="equippedItems?.trinkets.length === 0">- none -</p>
                 <div class="equippedItem" v-for="(trinket, index) in equippedItems?.trinkets" :key="index">
-                    <p>{{ trinket.name }}</p>
-                    <button v-if="equippedItems?.trinkets[index]" @click="unequipItem('trinket_' + (index + 1))"
+                    <p>{{ trinket.item.name }}</p>
+                    <button v-if="equippedItems?.trinkets[index]" @click="unequipItem(trinket.slot)"
                         :disabled="actionLoading" class="inspectViewBtn closeBtn bold">Unequip</button>
                 </div>
             </div>

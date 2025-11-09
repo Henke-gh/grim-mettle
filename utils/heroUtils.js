@@ -48,7 +48,7 @@ export function getItemBonuses(equippedItems) {
   const bonuses = {};
   const slots = [
     "main_hand",
-    "off-hand",
+    "off_hand",
     "armour",
     "trinket_1",
     "trinket_2",
