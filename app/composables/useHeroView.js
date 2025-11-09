@@ -109,8 +109,6 @@ export const useHeroView = () => {
   //Get equipment bonuses
   const equipmentBonuses = computed(() => {
     if (!equippedItems.value) return {};
-    console.log("Shield bonus:", equippedItems.value.offHand?.bonus);
-    console.log("Weapon bonus:", equippedItems.value.mainHand?.bonus);
 
     const equipmentAsSet = {
       main_hand: equippedItems.value.mainHand,
@@ -126,9 +124,6 @@ export const useHeroView = () => {
         equippedItems.value.trinkets.find((t) => t.slot === "trinket_3")
           ?.item || null,
     };
-    console.log("equipment: ", equipmentAsSet);
-    const bonus = getItemBonuses(equipmentAsSet);
-    console.log("bonus: ", bonus);
     return getItemBonuses(equipmentAsSet);
   });
 
