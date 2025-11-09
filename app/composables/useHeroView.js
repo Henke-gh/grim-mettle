@@ -31,7 +31,7 @@ export const useHeroView = () => {
 
   const mainAttributes = computed(() => {
     if (!hero.value) return null;
-
+    //Add item bonuses to calculation
     const itemBonuses = equipmentBonuses.value;
     return {
       strength: hero.value.strength + (itemBonuses.strength || 0),
@@ -42,7 +42,7 @@ export const useHeroView = () => {
 
   const skills = computed(() => {
     if (!hero.value || !derivedStats.value) return null;
-
+    //Add item bonuses to calculation
     const itemBonuses = equipmentBonuses.value;
     const allSkills = {
       swords: hero.value.swords + (itemBonuses.swords || 0),
