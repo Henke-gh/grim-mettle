@@ -132,6 +132,29 @@ export default defineEventHandler(async (event) => {
     hero.block = statBonuses.trueBlock;
     hero.initiative = statBonuses.trueInitiative;
 
+    //Calculate skill bonuses based on selected combat stance
+    //If stance is balanced no additional bonuses apply
+    if (combatSettings.stance === "offensive") {
+      //Get weapon skill to increase
+      const weaponSkill = heroEquipment.main_hand.category;
+      hero.initiative = Math.floor(hero.initiative * 1.1);
+      hero[weaponSkill] = Math.floor(hero[weaponSkill] * 1.1);
+      //Penalty to defensive skills.
+      hero.block = Math.floor(hero.block * 0.9);
+      hero.evasion = Math.floor(hero.evasion * 0.9);
+    }
+
+    if (combatSettings.stance === "defensive") {
+      const weaponSkill = heroEquipment.main_hand.category;
+
+      hero.block = Math.floor(hero.block * 1.1);
+      hero.evasion = Math.floor(hero.evasion * 1.1);
+
+      //Penalty to offensive skills
+      hero.initiative = Math.floor(hero.initiative * 0.9);
+      hero[weaponSkill] = Math.floor(hero[weaponSkill] * 0.9);
+    }
+
     //Set hp value at which the player hero will retreat/ give up the fight.
     const retreatValue = Math.ceil(
       (combatSettings.retreatValue / 100) * hero.hp_max

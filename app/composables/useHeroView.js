@@ -3,6 +3,7 @@ import { useEquipment } from "#imports";
 import { useInventory } from "#imports";
 import { useItems } from "#imports";
 import { getItemBonuses } from "~~/utils/heroUtils";
+import { computeDerivedStatBonus } from "~~/utils/heroUtils";
 
 export const useHeroView = () => {
   const {
@@ -11,7 +12,6 @@ export const useHeroView = () => {
     loading,
     error,
     heroAvatar,
-    derivedStats,
     canLevelUp,
     totalFights,
     winRatio,
@@ -40,22 +40,39 @@ export const useHeroView = () => {
     };
   });
 
+  //Derived Stats now take item bonuses into account!
+  const derivedStats = computed(() => {
+    if (!hero.value) return null;
+
+    const itemBonuses = equipmentBonuses.value;
+
+    // Combine base + bonuses
+    const finalStats = {
+      speed: hero.value.speed + (itemBonuses.speed || 0),
+      block: hero.value.block + (itemBonuses.block || 0),
+      evasion: hero.value.evasion + (itemBonuses.evasion || 0),
+      initiative: hero.value.initiative + (itemBonuses.initiative || 0),
+    };
+
+    return computeDerivedStatBonus(finalStats);
+  });
+
   const skills = computed(() => {
     if (!hero.value || !derivedStats.value) return null;
-    //Add item bonuses to calculation
     const itemBonuses = equipmentBonuses.value;
+
     const allSkills = {
       swords: hero.value.swords + (itemBonuses.swords || 0),
       axes: hero.value.axes + (itemBonuses.axes || 0),
       hammers: hero.value.hammers + (itemBonuses.hammers || 0),
       spears: hero.value.spears + (itemBonuses.spears || 0),
       daggers: hero.value.daggers + (itemBonuses.daggers || 0),
-      block: derivedStats.value.trueBlock + (itemBonuses.block || 0),
-      evasion: derivedStats.value.trueEvasion + (itemBonuses.evasion || 0),
-      initiative:
-        derivedStats.value.trueInitiative + (itemBonuses.initiative || 0),
+      //Block, evasion and initiative get their item bonuses applied by the derived stats
+      block: derivedStats.value.trueBlock,
+      evasion: derivedStats.value.trueEvasion,
+      initiative: derivedStats.value.trueInitiative,
     };
-    //Only returns skills with a value higher than 0, ie. skills the player has acually spent points on.
+
     return Object.fromEntries(
       Object.entries(allSkills).filter(([_, value]) => value > 0)
     );

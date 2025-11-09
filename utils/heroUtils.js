@@ -1,5 +1,3 @@
-import { object } from "zod";
-
 //The computed values are used in combat and displayed on the hero stat sheet but not saved to the db.
 export function computeDerivedStatBonus(baseStats) {
   const { speed, block, evasion, initiative } = baseStats;
