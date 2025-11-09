@@ -2,7 +2,7 @@ import { z } from "zod";
 import { serverSupabaseClient } from "#supabase/server";
 import { supabaseAdmin } from "~~/server/utils/supabaseAdmin";
 import { monsterCatalog } from "#imports";
-import { computeDerivedStatBonus } from "~~/utils/heroUtils";
+import { computeDerivedStatBonus, getItemBonuses } from "~~/utils/heroUtils";
 import { doCombat } from "~~/server/utils/combat";
 import { getItemByInventoryId, getItemById } from "~~/utils/itemCatalog";
 
@@ -59,18 +59,6 @@ export default defineEventHandler(async (event) => {
       throw createError({ statusCode: 400, message: "Hero not found." });
     }
 
-    //Apply derived stat bonuses
-    const statBonuses = computeDerivedStatBonus({
-      speed: hero.speed,
-      block: hero.block,
-      evasion: hero.evasion,
-      initiative: hero.initiative,
-    });
-
-    hero.evasion = statBonuses.trueEvasion;
-    hero.block = statBonuses.trueBlock;
-    hero.initiative = statBonuses.trueInitiative;
-
     //Get hero equipped items (gets inventory IDs, which have to get matched with correct item id from hero_inventory)
     const { data: equipment, error: equipError } = await supabase
       .from("hero_equipment")
@@ -116,6 +104,33 @@ export default defineEventHandler(async (event) => {
       const fists = getItemById(400);
       heroEquipment.main_hand = fists;
     }
+    //Check equipped items for any item bonuses
+    const itemBonuses = getItemBonuses(heroEquipment);
+
+    //Update hero with bonuses, recalculate max HP and current HP, and block, ini and evasion.
+    hero.strength += itemBonuses.strength || 0;
+    hero.speed += itemBonuses.speed || 0;
+    hero.vitality += itemBonuses.vitality || 0;
+    hero.swords += itemBonuses.swords || 0;
+    hero.axes += itemBonuses.axes || 0;
+    hero.hammers += itemBonuses.hammers || 0;
+    hero.spears += itemBonuses.spears || 0;
+    hero.daggers += itemBonuses.daggers || 0;
+    hero.block += itemBonuses.block || 0;
+    hero.evasion += itemBonuses.evasion || 0;
+    hero.initiative += itemBonuses.initiative || 0;
+
+    //Apply derived stat bonuses
+    const statBonuses = computeDerivedStatBonus({
+      speed: hero.speed,
+      block: hero.block,
+      evasion: hero.evasion,
+      initiative: hero.initiative,
+    });
+
+    hero.evasion = statBonuses.trueEvasion;
+    hero.block = statBonuses.trueBlock;
+    hero.initiative = statBonuses.trueInitiative;
 
     //Set hp value at which the player hero will retreat/ give up the fight.
     const retreatValue = Math.ceil(

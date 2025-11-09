@@ -158,9 +158,9 @@ export const trinkets = [
     category: "trinkets",
     slot: "trinket",
     name: "Wrought-Iron Ring",
-    goldCost: 150,
+    goldCost: 175,
     bonus: {
-      vitality: 5,
+      speed: 5,
     },
     description:
       "Someone's carved runes into this. Fits around your arm like a bracelet.",

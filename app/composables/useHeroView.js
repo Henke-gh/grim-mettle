@@ -2,6 +2,7 @@ import { useHero } from "#imports";
 import { useEquipment } from "#imports";
 import { useInventory } from "#imports";
 import { useItems } from "#imports";
+import { getItemBonuses } from "~~/utils/heroUtils";
 
 export const useHeroView = () => {
   const {
@@ -59,7 +60,6 @@ export const useHeroView = () => {
   const inventoryWithItems = computed(() => {
     if (!inventory.value) return [];
     return inventory.value.map((inv) => ({
-      /*   ...inv, */
       inventory_id: inv.id, // ← Include unique ID
       item_id: inv.item_id,
       item: getItemById(inv.item_id),
@@ -92,6 +92,7 @@ export const useHeroView = () => {
       ].filter((trinket) => trinket !== null),
     };
   });
+
   //Simply checks to see if a hero has any items in their inventory.
   const hasInventory = computed(() => {
     return inventory.value && inventory.value.length > 0;

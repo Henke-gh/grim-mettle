@@ -25,6 +25,7 @@ body {
 main {
   padding-bottom: 5rem;
   min-height: 100vh;
+  max-width: 800px;
 }
 
 section {

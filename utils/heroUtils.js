@@ -1,3 +1,5 @@
+import { object } from "zod";
+
 //The computed values are used in combat and displayed on the hero stat sheet but not saved to the db.
 export function computeDerivedStatBonus(baseStats) {
   const { speed, block, evasion, initiative } = baseStats;
@@ -9,6 +11,7 @@ export function computeDerivedStatBonus(baseStats) {
   return { trueBlock, trueEvasion, trueInitiative };
 }
 
+//Hero max hitpoints calculation
 export function computeHeroHP(strength, vitality) {
   const maxHP = Math.floor(vitality * 1.25 + strength * 0.2);
 
@@ -31,11 +34,35 @@ export function calculateAssignedStartingPoints(baseStats) {
 
   return totalPointsSpent;
 }
-
+//Used during hero creation, simply adds +5 to the main attribute values.
 export function applyBaseAttributeScores(strength, speed, vitality) {
   const finalStrength = strength + 5;
   const finalSpeed = speed + 5;
   const finalVitality = vitality + 5;
 
   return { finalStrength, finalSpeed, finalVitality };
+}
+
+//Check all equipped items for item bonuses to apply
+export function getItemBonuses(equippedItems) {
+  const bonuses = {};
+  const slots = [
+    "main_hand",
+    "off-hand",
+    "armour",
+    "trinket_1",
+    "trinket_2",
+    "trinket_3",
+  ];
+  //Go through each equipment slot
+  slots.forEach((slot) => {
+    const item = equippedItems[slot];
+    //If item exists, and has a bonus, and safety check bonus is an object we add the bonus to our bonuses object!
+    if (item && item.bonus && typeof item.bonus === "object") {
+      Object.entries(item.bonus).forEach(([stat, value]) => {
+        bonuses[stat] = (bonuses[stat] || 0) + value;
+      });
+    }
+  });
+  return bonuses;
 }
