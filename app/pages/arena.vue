@@ -48,6 +48,7 @@
                     <div class="swordlineContainer spacing"><img :src="swordLine" alt="A line of four swords" /></div>
                     <h3>[ {{ selectedMonster.name }} ] - level {{ selectedMonster.level }}</h3>
                     <p>Weapon: {{ selectedMonster.weapon.name }}</p>
+                    <p v-if="selectedMonster.shield">Shield: {{ selectedMonster.shield.name }}</p>
                     <p>Armour: {{ selectedMonster.armour.name }}</p>
                     <p class="italic">{{ selectedMonster.description }}</p>
                     <div class="monsterModalControls">

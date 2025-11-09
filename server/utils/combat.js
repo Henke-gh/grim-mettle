@@ -67,7 +67,7 @@ function makeAttack(attacker, defender, weapon) {
 
   //Determine hit chance based on the skill diff between attackers weapon skill and defender evaion.
   let hitChance;
-  if (skillDiff >= 20) hitChance = 95;
+  if (skillDiff >= 40) hitChance = 95;
   else if (skillDiff >= 10) hitChance = 80;
   else if (skillDiff >= 5) hitChance = 70;
   else if (skillDiff >= 0) hitChance = 60;
@@ -86,7 +86,36 @@ function makeAttack(attacker, defender, weapon) {
 }
 //Determine if defender blocks if a shield is present in the off hand.
 //Has to handle hero off-hand empty/ null!
-function attemptBlock() {}
+function attemptBlock(attacker, defender, defenderShield, attackerWeapon) {
+  if (!defenderShield) {
+    return false;
+  }
+  const attackSkill = attackerWeapon.category;
+  const skillDiff = defender.block - Math.floor(attacker[attackSkill] / 2);
+  //Calc block penalty if blocker skill < shield block req
+  if (defenderShield.skillReq && defenderShield.skillReq > defender.block) {
+    const penalty = defenderShield.skillReq - defender.block;
+    skillDiff -= penalty * 2;
+  }
+
+  let blockChance;
+  if (skillDiff >= 40) blockChance = 95;
+  else if (skillDiff >= 20) blockChance = 80;
+  else if (skillDiff >= 10) blockChance = 70;
+  else if (skillDiff >= 0) blockChance = 60;
+  else if (skillDiff >= -10) blockChance = 50;
+  else if (skillDiff >= -20) blockChance = 35;
+  else if (skillDiff >= -30) blockChance = 20;
+  else blockChance = 10;
+
+  const rollBlockTarget = Math.random() * 100;
+
+  if (rollBlockTarget <= blockChance) {
+    return true;
+  } else {
+    return false;
+  }
+}
 
 //One full turn consists of two combatActions, each participant (hero and monster) gets to act and respond to attack.
 function combatAction(attacker, defender, weapon) {
