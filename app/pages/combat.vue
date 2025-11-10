@@ -22,7 +22,7 @@
                                     the worst of it.
                                     {{ action.data.defender }} takes {{ action.data.damage }}
                                     <span v-if="action.data.damageReduction > 0" class="italic">
-                                        (reduced by {{ action.data.damageReduction }})
+                                        ({{ action.data.damageReduction }} dmg absorbed)
                                     </span> damage!
                                 </template>
                                 <template v-else>
@@ -32,7 +32,7 @@
                                     isn't quick enough.
                                     {{ action.data.attacker }} strikes a clean blow dealing {{ action.data.damage }}
                                     <span v-if="action.data.damageReduction > 0" class="italic">
-                                        (reduced by {{ action.data.damageReduction }})
+                                        ({{ action.data.damageReduction }} dmg absorbed)
                                     </span> damage!
                                 </template>
                             </template>
@@ -44,7 +44,7 @@
                                         action.data.weapon }}.
                                     {{ action.data.attacker }} strikes a clean blow dealing {{ action.data.damage }}
                                     <span v-if="action.data.damageReduction > 0" class="italic">
-                                        (reduced by {{ action.data.damageReduction }})
+                                        ({{ action.data.damageReduction }} dmg absorbed)
                                     </span> damage!
                                 </template>
                                 <template v-else>
