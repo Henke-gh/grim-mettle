@@ -91,7 +91,7 @@ function attemptBlock(attacker, defender, defenderShield, attackerWeapon) {
     return false;
   }
   const attackSkill = attackerWeapon.category;
-  const skillDiff = defender.block - Math.floor(attacker[attackSkill] / 2);
+  let skillDiff = defender.block - Math.floor(attacker[attackSkill] / 2);
   //Calc block penalty if blocker skill < shield block req
   if (defenderShield.skillReq && defenderShield.skillReq > defender.block) {
     const penalty = defenderShield.skillReq - defender.block;
@@ -117,21 +117,39 @@ function attemptBlock(attacker, defender, defenderShield, attackerWeapon) {
   }
 }
 
-//One full turn consists of two combatActions, each participant (hero and monster) gets to act and respond to attack.
-function combatAction(attacker, defender, weapon) {
-  const damage = doDamage(weapon, attacker.strength);
-  const attackSuccessful = makeAttack(attacker, defender, weapon);
+//Encapsulates half a turn: Attacker makes an attack and the defender responds.
+function combatAction(
+  attacker,
+  attackerWeapon,
+  defender,
+  defenderShield,
+  defenderArmour
+) {
+  const damage = doDamage(attackerWeapon, attacker.strength);
+  const attackHits = makeAttack(attacker, defender, attackerWeapon);
   const criticalHit = false;
-  let attackHits;
 
-  if (attackSuccessful) {
-    attackHits = true;
-  } else {
-    attackHits = false;
+  let finalDamage = 0;
+  let blocked = false;
+  let damageReduction = defenderArmour?.damageReduction || 0;
+
+  if (attackHits) {
+    blocked = attemptBlock(attacker, defender, defenderShield, attackerWeapon);
+    if (blocked) {
+      damageReduction += defenderShield?.blockValue || 0;
+    }
+
+    finalDamage = applyDamageReduction(damage, damageReduction);
   }
 
-  const result = { damage, attackHits, criticalHit };
-  return result;
+  return {
+    damage,
+    finalDamage,
+    attackHits,
+    blocked,
+    criticalHit,
+    damageReduction,
+  };
 }
 
 //calculate rewards upon successful combat,
@@ -172,12 +190,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
   let heroHP = hero.hp_current;
   let monsterHP = monster.hp;
   let turnCounter = 1;
-  let heroDmgReduction = 0;
 
-  //Set dmg reduction if hero wears armour.
-  if (heroEquipment.armour) {
-    heroDmgReduction = heroEquipment.armour.damageReduction;
-  }
   //Push combat start to log
   combatLog.push(
     addLogEntry("combat_start", { hero: hero.hero_name, monster: monster.name })
@@ -190,6 +203,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
       actions: [],
     };
 
+    /* ===== Fatigue Checks ===== */
     if (monster.fatigue < turnCounter) {
       const getReward = giveRewards(monster, hero);
       rewards.gold = getReward.gold;
@@ -263,10 +277,12 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
 
     if (heroGoesFirst) {
       //Player hero won initiative and attacks first.
-      const outcome = combatAction(hero, monster, heroEquipment.main_hand);
-      const attackerDamage = applyDamageReduction(
-        outcome.damage,
-        monster.armour.damageReduction
+      const heroAttack = combatAction(
+        hero,
+        heroEquipment.main_hand,
+        monster,
+        monster.shield,
+        monster.armour
       );
 
       turn.actions.push(
@@ -276,15 +292,18 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
           defender: monster.name,
           defenderType: "monster",
           weapon: heroEquipment.main_hand.name,
-          hit: outcome.attackHits,
-          damage: attackerDamage,
-          dmgReduction: monster.armour.damageReduction,
-          critical: outcome.criticalHit,
+          hit: heroAttack.attackHits,
+          blocked: heroAttack.blocked,
+          shield: monster.shield?.name || null,
+          baseDamage: heroAttack.damage,
+          damage: heroAttack.finalDamage,
+          damageReduction: heroAttack.damageReduction,
+          critical: heroAttack.criticalHit,
         })
       );
-      if (outcome.attackHits) {
-        //Handle damage, reduced by wearing armour
-        monsterHP -= attackerDamage;
+      if (heroAttack.attackHits) {
+        monsterHP -= heroAttack.finalDamage;
+
         if (monsterHP <= 0) {
           const getReward = giveRewards(monster, hero);
           rewards.gold = getReward.gold;
@@ -312,12 +331,14 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
           break;
         }
       }
+      /* ===== Monster Counter-Attacks ===== */
 
-      //If not dead, monster counter-attacks.
-      const counterAttackOutcome = combatAction(monster, hero, monster.weapon);
-      const counterAttackDamage = applyDamageReduction(
-        counterAttackOutcome.damage,
-        heroDmgReduction
+      const monsterAttack = combatAction(
+        monster,
+        hero,
+        monster.weapon,
+        heroEquipment.off_hand, // Hero's shield
+        heroEquipment.armour
       );
 
       turn.actions.push(
@@ -327,14 +348,18 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
           defender: hero.hero_name,
           defenderType: "hero",
           weapon: monster.weapon.name,
-          hit: counterAttackOutcome.attackHits,
-          damage: counterAttackDamage,
-          dmgReduction: heroDmgReduction,
-          critical: counterAttackOutcome.criticalHit,
+          hit: monsterAttack.attackHits,
+          blocked: monsterAttack.blocked,
+          shield: heroEquipment.off_hand?.name || null,
+          baseDamage: monsterAttack.baseDamage,
+          damage: monsterAttack.finalDamage,
+          damageReduction: monsterAttack.damageReduction,
+          critical: monsterAttack.criticalHit,
         })
       );
-      if (counterAttackOutcome.attackHits) {
-        heroHP -= counterAttackDamage;
+
+      if (monsterAttack.attackHits) {
+        heroHP -= monsterAttack.finalDamage;
 
         if (heroHP <= heroRetreatsAt) {
           turn.actions.push(
@@ -360,12 +385,15 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
         }
       }
     } else {
-      //Monster won the initiative and attacks first.
-      const outcome = combatAction(monster, hero, monster.weapon);
-      const attackerDamage = applyDamageReduction(
-        outcome.damage,
-        heroDmgReduction
+      // === MONSTER ATTACKS FIRST ===
+      const monsterAttack = combatAction(
+        monster,
+        hero,
+        monster.weapon,
+        heroEquipment.off_hand,
+        heroEquipment.armour
       );
+
       turn.actions.push(
         addLogEntry("attack", {
           attacker: monster.name,
@@ -373,14 +401,18 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
           defender: hero.hero_name,
           defenderType: "hero",
           weapon: monster.weapon.name,
-          hit: outcome.attackHits,
-          damage: attackerDamage,
-          dmgReduction: heroDmgReduction,
-          critical: outcome.criticalHit,
+          hit: monsterAttack.attackHits,
+          blocked: monsterAttack.blocked,
+          shield: heroEquipment.off_hand?.name || null,
+          baseDamage: monsterAttack.baseDamage,
+          damage: monsterAttack.finalDamage,
+          damageReduction: monsterAttack.damageReduction,
+          critical: monsterAttack.criticalHit,
         })
       );
-      if (outcome.attackHits) {
-        heroHP -= attackerDamage;
+
+      if (monsterAttack.attackHits) {
+        heroHP -= monsterAttack.finalDamage;
 
         if (heroHP <= heroRetreatsAt) {
           turn.actions.push(
@@ -405,15 +437,14 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
           break;
         }
       }
-      //The hero counter-attacks, if not at retreat value or dead.
-      const counterAttackOutcome = combatAction(
+
+      // === HERO COUNTER-ATTACKS ===
+      const heroAttack = combatAction(
         hero,
         monster,
-        heroEquipment.main_hand
-      );
-      const counterAttackDamage = applyDamageReduction(
-        counterAttackOutcome.damage,
-        monster.armour.damageReduction
+        heroEquipment.main_hand,
+        monster.shield,
+        monster.armour
       );
 
       turn.actions.push(
@@ -423,42 +454,45 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
           defender: monster.name,
           defenderType: "monster",
           weapon: heroEquipment.main_hand.name,
-          hit: counterAttackOutcome.attackHits,
-          damage: counterAttackDamage,
-          dmgReduction: monster.armour.damageReduction,
-          critical: counterAttackOutcome.criticalHit,
+          hit: heroAttack.attackHits,
+          blocked: heroAttack.blocked,
+          shield: monster.shield?.name || null,
+          baseDamage: heroAttack.baseDamage,
+          damage: heroAttack.finalDamage,
+          damageReduction: heroAttack.damageReduction,
+          critical: heroAttack.criticalHit,
         })
       );
 
-      if (counterAttackOutcome.attackHits) {
-        monsterHP -= counterAttackDamage;
-      }
+      if (heroAttack.attackHits) {
+        monsterHP -= heroAttack.finalDamage;
 
-      if (monsterHP <= 0) {
-        const getReward = giveRewards(monster, hero);
-        rewards.gold = getReward.gold;
-        rewards.xp = getReward.xp;
+        if (monsterHP <= 0) {
+          const getReward = giveRewards(monster, hero);
+          rewards.gold = getReward.gold;
+          rewards.xp = getReward.xp;
 
-        turn.actions.push(
-          addLogEntry("defeat", {
-            defeated: monster.name,
-            defeatedType: "monster",
-            victor: hero.hero_name,
-          })
-        );
+          turn.actions.push(
+            addLogEntry("defeat", {
+              defeated: monster.name,
+              defeatedType: "monster",
+              victor: hero.hero_name,
+            })
+          );
 
-        combatLog.push(addLogEntry("turn", turn));
-        combatLog.push(
-          addLogEntry("combat_end", {
-            result: "victory",
-            turns: turnCounter,
-            hero: hero.hero_name,
-            monster: monster.name,
-            rewards: { gold: rewards.gold, xp: rewards.xp },
-          })
-        );
-        heroWon = true;
-        break;
+          combatLog.push(addLogEntry("turn", turn));
+          combatLog.push(
+            addLogEntry("combat_end", {
+              result: "victory",
+              turns: turnCounter,
+              hero: hero.hero_name,
+              monster: monster.name,
+              rewards: { gold: rewards.gold, xp: rewards.xp },
+            })
+          );
+          heroWon = true;
+          break;
+        }
       }
     }
     combatLog.push(addLogEntry("turn", turn));
