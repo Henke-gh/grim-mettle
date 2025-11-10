@@ -335,9 +335,9 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
 
       const monsterAttack = combatAction(
         monster,
-        hero,
         monster.weapon,
-        heroEquipment.off_hand, // Hero's shield
+        hero,
+        heroEquipment.off_hand,
         heroEquipment.armour
       );
 
@@ -388,8 +388,8 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
       // === MONSTER ATTACKS FIRST ===
       const monsterAttack = combatAction(
         monster,
-        hero,
         monster.weapon,
+        hero,
         heroEquipment.off_hand,
         heroEquipment.armour
       );
@@ -441,8 +441,8 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
       // === HERO COUNTER-ATTACKS ===
       const heroAttack = combatAction(
         hero,
-        monster,
         heroEquipment.main_hand,
+        monster,
         monster.shield,
         monster.armour
       );
