@@ -120,6 +120,7 @@ async function submitLevelUp() {
         })
 
         successMsg.value = res.message;
+        levelUpHero.reset();
         navigateTo('/hero');
     } catch (err) {
         errorMsg.value = err?.data?.message || 'Something went wrong'

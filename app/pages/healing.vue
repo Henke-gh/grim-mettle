@@ -9,6 +9,8 @@
         </article>
         <section class="healingItems">
             <h3>Forhild's Remedies</h3>
+            <p v-if="successMessage">{{ successMessage }}</p>
+            <p v-if="errorMessage">{{ errorMessage }}</p>
             <div class="healingShop" v-for="item in healingItems" :key="item.id">
                 <div class="itemContainer">
                     <p class="bold">{{ item.name }}</p>
@@ -17,7 +19,7 @@
                 <div class="healingItems">
                     <div class="part">
                         <p>Recovery: {{ item.healingValue }} hp</p>
-                        <button>Buy</button>
+                        <button class="inspectViewBtn" v-on:click="buyHealing(item.id)">Buy</button>
                     </div>
                     <p class="italic">Description: {{ item.description }}</p>
                 </div>
@@ -31,7 +33,28 @@
 definePageMeta({
     middleware: ["auth",],
 });
+import { ref } from "vue";
 import { healingItems } from "../../utils/healingItems";
+
+const buyingHealing = ref(false);
+const errorMessage = ref('');
+const successMessage = ref('');
+
+async function buyHealing(item_id) {
+    try {
+        const payload = { item_id: item_id };
+        await $fetch('/api/hero/buyHealing', { method: 'POST', body: payload })
+        successMessage.value = 'Purchase Succesful'
+
+        setTimeout(() => {
+            window.location.reload();
+        }, 700)
+    } catch (err) {
+        errorMessage.value = (err?.data?.message || err?.message || 'Purchase Failed')
+    } finally {
+        buyingHealing.value = false;
+    }
+}
 </script>
 
 <style scoped>
