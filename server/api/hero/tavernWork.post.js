@@ -2,6 +2,7 @@ import { supabaseAdmin } from "~~/server/utils/supabaseAdmin";
 import { serverSupabaseClient } from "#supabase/server";
 import { z } from "zod";
 import { tavernShifts } from "~~/utils/tavernShifts";
+
 const tavernSchema = z.object({
   shift_id: z.number(),
 });
@@ -9,7 +10,6 @@ const tavernSchema = z.object({
 export default defineEventHandler(async (event) => {
   try {
     const body = await readBody(event);
-    console.log("body", body);
     // Get the user-scoped Supabase client (reads the session cookie)
     const supabase = await serverSupabaseClient(event);
 
@@ -25,7 +25,6 @@ export default defineEventHandler(async (event) => {
 
     //Validate the contents of the request, only needs the item id.
     const result = tavernSchema.safeParse(body);
-    console.log("reslut:", result);
     if (!result.success) {
       throw createError({
         statusCode: 400,
@@ -34,10 +33,8 @@ export default defineEventHandler(async (event) => {
     }
 
     const id = result.data.shift_id;
-    console.log("id;", id);
-    //Find requested item in itemCatalog
+    //Find requested tavern shift
     const shiftCollection = tavernShifts;
-    console.log(tavernShifts);
     if (!Array.isArray(shiftCollection)) {
       throw createError({ statusCode: 400, message: "Invalid shift type" });
     }
@@ -60,8 +57,8 @@ export default defineEventHandler(async (event) => {
     if (!hero) {
       throw createError({ statusCode: 404, message: "Hero not found." });
     }
-    //Check hero gold
-    const cost = shift.gritCost ?? 0;
+    //Check hero current grit
+    const gritCost = shift.gritCost ?? 0;
     if (hero.grit_current < gritCost) {
       throw createError({
         statusCode: 400,
@@ -69,15 +66,12 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    let newCurrentHP = hero.hp_current + item.healingValue;
-    if (newCurrentHP > hero.hp_max) {
-      newCurrentHP = hero.hp_max;
-    }
+    let newCurrentGrit = hero.grit_current - shift.gritCost;
 
-    //Deduct gold from player hero and update hp_current
+    //Add gold to player hero and update grit_current
     const { data: updatedHero, error: updateError } = await supabaseAdmin
       .from("heroes")
-      .update({ gold: hero.gold - cost, hp_current: newCurrentHP })
+      .update({ gold: hero.gold + shift.payout, grit_current: newCurrentGrit })
       .eq("id", hero.id)
       .select()
       .maybeSingle();

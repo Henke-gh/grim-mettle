@@ -22,7 +22,7 @@
                     <p>Spend: {{ shift.gritCost }} grit</p>
                     <div class="part">
                         <p>Receive: {{ shift.payout }} gold</p>
-                        <button class="inspectViewBtn" v-on:click="buyHealing(shift.id)">Work</button>
+                        <button class="inspectViewBtn" v-on:click="workShift(shift.id)">Work</button>
                     </div>
                 </div>
             </div>
@@ -36,9 +36,27 @@ definePageMeta({
     middleware: ["auth",],
 });
 import { tavernShifts } from "../../utils/tavernShifts";
+import { ref } from "vue";
 
+const workingShift = ref(false);
 const errorMessage = ref('');
 const successMessage = ref('');
+
+async function workShift(shift_id) {
+    try {
+        const payload = { shift_id: shift_id };
+        await $fetch('/api/hero/tavernWork', { method: 'POST', body: payload })
+        successMessage.value = 'Purchase Succesful'
+
+        setTimeout(() => {
+            window.location.reload();
+        }, 700)
+    } catch (err) {
+        errorMessage.value = (err?.data?.message || err?.message || 'Tavern work failed.')
+    } finally {
+        workingShift.value = false;
+    }
+}
 </script>
 
 <style scoped>
