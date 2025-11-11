@@ -3,86 +3,103 @@
         <h1>- Level Up -</h1>
     </header>
     <div class="lvlUpWrapper">
-        <section class="wrapper" v-if="hero">
-            <p>Distribute new skill points:</p>
-            <p>{{ levelUpHero.statPointsRemaining }} points remaining.</p>
-            <form @submit.prevent="submitLevelUp">
-                <h3>Main Attributes</h3>
-                <div class="container">
-                    <div class="group">
-                        <div class="stat">
-                            <label for="strength">Strength: {{ hero.strength }}</label>
-                            <input id="strength" type="number" :value="levelUpHero.stats.strength" min="0"
-                                class="statInput"
-                                v-on:input="event => levelUpHero.allocateStatPoints('strength', Number(event.target.value))" />
+        <h2>You've gained a Level!</h2>
+        <div class="borderContainer">
+            <div class="gradientBorder">
+                <section class="wrapper" v-if="hero">
+                    <h3>Distribute new skill points:</h3>
+                    <p>{{ levelUpHero.statPointsRemaining }} points remaining.</p>
+                    <form @submit.prevent="submitLevelUp" class="lvlUpForm">
+                        <h3>Main Attributes</h3>
+                        <div class="container">
+                            <div class="group">
+                                <div class="stat">
+                                    <label for="strength">Strength: {{ mainAttributes.strength }}</label>
+                                    <input id="strength" type="number" :value="levelUpHero.stats.strength" min="0"
+                                        class="statInput"
+                                        v-on:input="event => levelUpHero.allocateStatPoints('strength', Number(event.target.value))" />
+                                </div>
+                                <div class="stat">
+                                    <label for="speed">Speed: {{ mainAttributes.speed }}</label>
+                                    <input id="speed" type="number" :value="levelUpHero.stats.speed" min="0"
+                                        class="statInput"
+                                        v-on:input="event => levelUpHero.allocateStatPoints('speed', Number(event.target.value))" />
+                                </div>
+                                <div class="stat">
+                                    <label for="vitality">Vitality: {{ mainAttributes.vitality }}</label>
+                                    <input id="vitality" type="number" :value="levelUpHero.stats.vitality" min="0"
+                                        class="statInput"
+                                        v-on:input="event => levelUpHero.allocateStatPoints('vitality', Number(event.target.value))" />
+                                </div>
+                            </div>
                         </div>
-                        <div class="stat">
-                            <label for="speed">Speed: {{ hero.speed }}</label>
-                            <input id="speed" type="number" :value="levelUpHero.stats.speed" min="0" class="statInput"
-                                v-on:input="event => levelUpHero.allocateStatPoints('speed', Number(event.target.value))" />
+                        <h3>Skills</h3>
+                        <div class="container">
+                            <section class="skills">
+                                <div class="group">
+                                    <h4>[Weapon Skills]</h4>
+                                    <div class="stat">
+                                        <label for="swords">Swords: {{ skills.swords || 0 }}</label>
+                                        <input id="swords" type="number" :value="levelUpHero.stats.swords" min="0"
+                                            class="statInput"
+                                            v-on:input="event => levelUpHero.allocateStatPoints('swords', Number(event.target.value))" />
+                                    </div>
+                                    <div class="stat">
+                                        <label for="axes">Axes: {{ skills.axes || 0 }}</label>
+                                        <input id="axes" type="number" :value="levelUpHero.stats.axes" min="0"
+                                            class="statInput"
+                                            v-on:input="event => levelUpHero.allocateStatPoints('axes', Number(event.target.value))" />
+                                    </div>
+                                    <div class="stat">
+                                        <label for="hammers">Hammers: {{ skills.hammers || 0 }}</label>
+                                        <input id="hammers" type="number" :value="levelUpHero.stats.hammers" min="0"
+                                            class="statInput"
+                                            v-on:input="event => levelUpHero.allocateStatPoints('hammers', Number(event.target.value))" />
+                                    </div>
+                                    <div class="stat">
+                                        <label for="spears">Spears: {{ skills.spears || 0 }}</label>
+                                        <input id="spears" type="number" :value="levelUpHero.stats.spears" min="0"
+                                            class="statInput"
+                                            v-on:input="event => levelUpHero.allocateStatPoints('spears', Number(event.target.value))" />
+                                    </div>
+                                    <div class="stat">
+                                        <label for="daggers">Daggers: {{ skills.daggers || 0 }}</label>
+                                        <input id="daggers" type="number" :value="levelUpHero.stats.daggers" min="0"
+                                            class="statInput"
+                                            v-on:input="event => levelUpHero.allocateStatPoints('daggers', Number(event.target.value))" />
+                                    </div>
+                                </div>
+                                <div class="group">
+                                    <h4>[Other Skills]</h4>
+                                    <div class="stat">
+                                        <label for="block">Block: {{ skills.block || 0 }}</label>
+                                        <input id="block" type="number" :value="levelUpHero.stats.block"
+                                            class="statInput"
+                                            v-on:input="event => levelUpHero.allocateStatPoints('block', Number(event.target.value))" />
+                                    </div>
+                                    <div class="stat">
+                                        <label for="evasion">Evasion: {{ skills.evasion || 0 }}</label>
+                                        <input id="evasion" type="number" :value="levelUpHero.stats.evasion"
+                                            class="statInput"
+                                            v-on:input="event => levelUpHero.allocateStatPoints('evasion', Number(event.target.value))" />
+                                    </div>
+                                    <div class="stat">
+                                        <label for="initiative">Initiative: {{ skills.initiative || 0 }}</label>
+                                        <input id="initiative" type="number" :value="levelUpHero.stats.initiative"
+                                            class="statInput"
+                                            v-on:input="event => levelUpHero.allocateStatPoints('initiative', Number(event.target.value))" />
+                                    </div>
+                                </div>
+                            </section>
                         </div>
-                        <div class="stat">
-                            <label for="vitality">Vitality: {{ hero.vitality }}</label>
-                            <input id="vitality" type="number" :value="levelUpHero.stats.vitality" min="0"
-                                class="statInput"
-                                v-on:input="event => levelUpHero.allocateStatPoints('vitality', Number(event.target.value))" />
+                        <div class="formControls">
+                            <DefaultButton text="Confirm" type="submit"
+                                :disabled="levelUpHero.statPointsRemaining !== 0" class="fitContent" />
                         </div>
-                    </div>
-                </div>
-                <h3>Skills</h3>
-                <div class="container">
-                    <div class="group">
-                        <h4>[Weapon Skills]</h4>
-                        <div class="stat">
-                            <label for="swords">Swords: {{ hero.swords }}</label>
-                            <input id="swords" type="number" :value="levelUpHero.stats.swords" min="0" class="statInput"
-                                v-on:input="event => levelUpHero.allocateStatPoints('swords', Number(event.target.value))" />
-                        </div>
-                        <div class="stat">
-                            <label for="axes">Axes: {{ hero.axes }}</label>
-                            <input id="axes" type="number" :value="levelUpHero.stats.axes" min="0" class="statInput"
-                                v-on:input="event => levelUpHero.allocateStatPoints('axes', Number(event.target.value))" />
-                        </div>
-                        <div class="stat">
-                            <label for="hammers">Hammers: {{ hero.hammers }}</label>
-                            <input id="hammers" type="number" :value="levelUpHero.stats.hammers" min="0"
-                                class="statInput"
-                                v-on:input="event => levelUpHero.allocateStatPoints('hammers', Number(event.target.value))" />
-                        </div>
-                        <div class="stat">
-                            <label for="spears">Spears: {{ hero.spears }}</label>
-                            <input id="spears" type="number" :value="levelUpHero.stats.spears" min="0" class="statInput"
-                                v-on:input="event => levelUpHero.allocateStatPoints('spears', Number(event.target.value))" />
-                        </div>
-                        <div class="stat">
-                            <label for="daggers">Daggers: {{ hero.daggers }}</label>
-                            <input id="daggers" type="number" :value="levelUpHero.stats.daggers" min="0"
-                                class="statInput"
-                                v-on:input="event => levelUpHero.allocateStatPoints('daggers', Number(event.target.value))" />
-                        </div>
-                    </div>
-                    <div class="group">
-                        <h4>[Other Skills]</h4>
-                        <div class="stat">
-                            <label for="block">Block: {{ derivedStats.trueBlock }}</label>
-                            <input id="block" type="number" :value="levelUpHero.stats.block" class="statInput"
-                                v-on:input="event => levelUpHero.allocateStatPoints('block', Number(event.target.value))" />
-                        </div>
-                        <div class="stat">
-                            <label for="evasion">Evasion: {{ derivedStats.trueEvasion }}</label>
-                            <input id="evasion" type="number" :value="levelUpHero.stats.evasion" class="statInput"
-                                v-on:input="event => levelUpHero.allocateStatPoints('evasion', Number(event.target.value))" />
-                        </div>
-                        <div class="stat">
-                            <label for="initiative">Initiative: {{ derivedStats.trueInitiative }}</label>
-                            <input id="initiative" type="number" :value="levelUpHero.stats.initiative" class="statInput"
-                                v-on:input="event => levelUpHero.allocateStatPoints('initiative', Number(event.target.value))" />
-                        </div>
-                    </div>
-                </div>
-                <DefaultButton text="Confirm" type="submit" :disabled="levelUpHero.statPointsRemaining !== 0" />
-            </form>
-        </section>
+                    </form>
+                </section>
+            </div>
+        </div>
     </div>
     <HeroNav />
 </template>
@@ -95,7 +112,7 @@ definePageMeta({
 import { useLevelUpStore } from "../stores/heroLevelUp"
 import { ref } from "vue";
 const levelUpHero = useLevelUpStore();
-const { hero, loading, error, fetchHero, canLevelUp, derivedStats } = useHero();
+const { hero, loading, error, fetchHero, canLevelUp, mainAttributes, skills } = useHeroView();
 const errorMsg = ref('');
 const successMsg = ref('');
 
@@ -120,6 +137,7 @@ async function submitLevelUp() {
         })
 
         successMsg.value = res.message;
+        levelUpHero.reset();
         navigateTo('/hero');
     } catch (err) {
         errorMsg.value = err?.data?.message || 'Something went wrong'
@@ -133,11 +151,41 @@ async function submitLevelUp() {
     text-align: center;
     background-color: var(--yellow);
     padding: 0.5rem;
+    margin-bottom: 1rem;
+    border-bottom: 5px double var(--bone-white);
+}
+
+.borderContainer {
+    padding: 0.5rem;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background-color: var(--bone-white);
+    padding: 0.5rem;
+}
+
+.lvlUpForm {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
 .lvlUpWrapper {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.skills {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: 0;
 }
 
 .group {
@@ -159,5 +207,13 @@ async function submitLevelUp() {
     width: 1.5rem;
     text-align: center;
     font-family: monospace;
+}
+
+.formControls {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    width: 100%;
+    padding-bottom: 0.5rem;
 }
 </style>

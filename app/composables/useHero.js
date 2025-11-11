@@ -1,5 +1,4 @@
 import { heroAvatars } from "../../utils/avatars";
-import { computeDerivedStatBonus } from "~~/utils/heroUtils";
 export const useHero = () => {
   const supabase = useSupabaseClient();
   const user = useSupabaseUser();
@@ -44,17 +43,6 @@ export const useHero = () => {
     return heroAvatars.find((avatar) => avatar.id === hero.value.avatar);
   });
 
-  //calculate final stat values
-  const derivedStats = computed(() => {
-    if (!hero.value) return null;
-    return computeDerivedStatBonus({
-      speed: hero.value.speed,
-      block: hero.value.block,
-      evasion: hero.value.evasion,
-      initiative: hero.value.initiative,
-    });
-  });
-
   //check if hero has enough xp to level up
   const canLevelUp = computed(() => {
     if (!hero.value) return false;
@@ -79,7 +67,6 @@ export const useHero = () => {
   return {
     hero,
     heroAvatar,
-    derivedStats,
     loading,
     error,
     fetchHero,

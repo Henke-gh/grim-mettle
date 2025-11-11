@@ -2,6 +2,8 @@ import { useHero } from "#imports";
 import { useEquipment } from "#imports";
 import { useInventory } from "#imports";
 import { useItems } from "#imports";
+import { getItemBonuses } from "~~/utils/heroUtils";
+import { computeDerivedStatBonus } from "~~/utils/heroUtils";
 
 export const useHeroView = () => {
   const {
@@ -10,7 +12,6 @@ export const useHeroView = () => {
     loading,
     error,
     heroAvatar,
-    derivedStats,
     canLevelUp,
     totalFights,
     winRatio,
@@ -30,26 +31,48 @@ export const useHeroView = () => {
 
   const mainAttributes = computed(() => {
     if (!hero.value) return null;
+    //Add item bonuses to calculation
+    const itemBonuses = equipmentBonuses.value;
     return {
-      strength: hero.value.strength,
-      speed: hero.value.speed,
-      vitality: hero.value.vitality,
+      strength: hero.value.strength + (itemBonuses.strength || 0),
+      speed: hero.value.speed + (itemBonuses.speed || 0),
+      vitality: hero.value.vitality + (itemBonuses.vitality || 0),
     };
+  });
+
+  //Derived Stats now take item bonuses into account!
+  const derivedStats = computed(() => {
+    if (!hero.value) return null;
+
+    const itemBonuses = equipmentBonuses.value;
+
+    // Combine base + bonuses
+    const finalStats = {
+      speed: hero.value.speed + (itemBonuses.speed || 0),
+      block: hero.value.block + (itemBonuses.block || 0),
+      evasion: hero.value.evasion + (itemBonuses.evasion || 0),
+      initiative: hero.value.initiative + (itemBonuses.initiative || 0),
+    };
+
+    return computeDerivedStatBonus(finalStats);
   });
 
   const skills = computed(() => {
     if (!hero.value || !derivedStats.value) return null;
+    const itemBonuses = equipmentBonuses.value;
+
     const allSkills = {
-      swords: hero.value.swords,
-      axes: hero.value.axes,
-      hammers: hero.value.hammers,
-      spears: hero.value.spears,
-      daggers: hero.value.daggers,
+      swords: hero.value.swords + (itemBonuses.swords || 0),
+      axes: hero.value.axes + (itemBonuses.axes || 0),
+      hammers: hero.value.hammers + (itemBonuses.hammers || 0),
+      spears: hero.value.spears + (itemBonuses.spears || 0),
+      daggers: hero.value.daggers + (itemBonuses.daggers || 0),
+      //Block, evasion and initiative get their item bonuses applied by the derived stats
       block: derivedStats.value.trueBlock,
       evasion: derivedStats.value.trueEvasion,
       initiative: derivedStats.value.trueInitiative,
     };
-    //Only returns skills with a value higher than 0, ie. skills the player has acually spent points on.
+
     return Object.fromEntries(
       Object.entries(allSkills).filter(([_, value]) => value > 0)
     );
@@ -59,7 +82,6 @@ export const useHeroView = () => {
   const inventoryWithItems = computed(() => {
     if (!inventory.value) return [];
     return inventory.value.map((inv) => ({
-      /*   ...inv, */
       inventory_id: inv.id, // ← Include unique ID
       item_id: inv.item_id,
       item: getItemById(inv.item_id),
@@ -80,18 +102,48 @@ export const useHeroView = () => {
         ? getItemByInventoryId(equipment.value.armour, inventory.value)
         : null,
       trinkets: [
-        equipment.value.trinket_1
-          ? getItemByInventoryId(equipment.value.trinket_1, inventory.value)
-          : null,
-        equipment.value.trinket_2
-          ? getItemByInventoryId(equipment.value.trinket_2, inventory.value)
-          : null,
-        equipment.value.trinket_3
-          ? getItemByInventoryId(equipment.value.trinket_3, inventory.value)
-          : null,
-      ].filter((trinket) => trinket !== null),
+        {
+          slot: "trinket_1",
+          item: equipment.value.trinket_1
+            ? getItemByInventoryId(equipment.value.trinket_1, inventory.value)
+            : null,
+        },
+        {
+          slot: "trinket_2",
+          item: equipment.value.trinket_2
+            ? getItemByInventoryId(equipment.value.trinket_2, inventory.value)
+            : null,
+        },
+        {
+          slot: "trinket_3",
+          item: equipment.value.trinket_3
+            ? getItemByInventoryId(equipment.value.trinket_3, inventory.value)
+            : null,
+        },
+      ].filter((trinket) => trinket.item !== null),
     };
   });
+  //Get equipment bonuses
+  const equipmentBonuses = computed(() => {
+    if (!equippedItems.value) return {};
+
+    const equipmentAsSet = {
+      main_hand: equippedItems.value.mainHand,
+      off_hand: equippedItems.value.offHand,
+      armour: equippedItems.value.armour,
+      trinket_1:
+        equippedItems.value.trinkets.find((t) => t.slot === "trinket_1")
+          ?.item || null,
+      trinket_2:
+        equippedItems.value.trinkets.find((t) => t.slot === "trinket_2")
+          ?.item || null,
+      trinket_3:
+        equippedItems.value.trinkets.find((t) => t.slot === "trinket_3")
+          ?.item || null,
+    };
+    return getItemBonuses(equipmentAsSet);
+  });
+
   //Simply checks to see if a hero has any items in their inventory.
   const hasInventory = computed(() => {
     return inventory.value && inventory.value.length > 0;

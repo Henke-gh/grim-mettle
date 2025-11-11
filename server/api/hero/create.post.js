@@ -14,7 +14,7 @@ const heroSchema = z.object({
     .string()
     .min(3)
     .max(16)
-    .regex(/^[a-zA-Z0-9_]+$/, "Only letters, numbers, and underscores allowed"),
+    .regex(/^[\p{L}0-9_]+$/u, "Only letters, numbers, and underscores allowed"),
   avatar: z.number(),
   stats: z.object({
     strength: z.number().min(0),

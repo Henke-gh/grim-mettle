@@ -33,7 +33,8 @@ export default defineEventHandler(async (event) => {
       });
     }
     /* Fetch Hero */
-    const { item_slot, inventory_id, item_id } = result.data;
+    //Value of item_slot changes if item type is a trinket, it's then set to the specific trinket slot to update.
+    let { item_slot, inventory_id, item_id } = result.data;
     const { data: hero, error: heroError } = await supabaseAdmin
       .from("heroes")
       .select("id, strength")
@@ -67,13 +68,35 @@ export default defineEventHandler(async (event) => {
       throw createError({ statusCode: 400, message: "Not enough strength." });
     }
 
-    //console.log("ItmToEquip:", itemToEquip);
     //Handle Trinkets, they can be equipped in one of 3 trinket equipment slots.
     //Check if any are empty, if all are occupied update new trinket into first slot, trinket_1.
-    //console.log("ItemSlotType:", itemToEquip.slot);
-    /* if (itemToEquip.slot === "trinket") {
-      console.log("Handle it!");
-    } */
+    if (itemToEquip.slot === "trinket") {
+      const { data: equippedTrinkets, error: trinketError } =
+        await supabaseAdmin
+          .from("hero_equipment")
+          .select("hero_id, trinket_1, trinket_2, trinket_3")
+          .eq("hero_id", hero.id)
+          .maybeSingle();
+      if (trinketError) {
+        throw createError({
+          statusCode: 500,
+          message: trinketError.message,
+        });
+      }
+      if (!equippedTrinkets) {
+        throw createError({ statusCode: 400, message: "No hero equipment." });
+      }
+
+      if (equippedTrinkets.trinket_1 === null) {
+        item_slot = "trinket_1";
+      } else if (equippedTrinkets.trinket_2 === null) {
+        item_slot = "trinket_2";
+      } else if (equippedTrinkets.trinket_3 === null) {
+        item_slot = "trinket_3";
+      } else {
+        item_slot = "trinket_1";
+      }
+    }
 
     //Equip item
     const { error: errorEquipping } = await supabaseAdmin

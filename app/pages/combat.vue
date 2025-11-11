@@ -12,23 +12,58 @@
                     <p v-if="action.type === 'initiative'">{{ action.data.fighter }} gets the upper hand!</p>
                     <!-- Attack phase -->
                     <p v-else-if="action.type === 'attack'">
-                        <template v-if="action.data.hit && action.data.damage > 0">
-                            {{ action.data.attacker }} charges towards {{ action.data.defender }} with {{
-                                action.data.weapon }}. {{ action.data.attacker }} strikes a clean blow dealing {{
-                                action.data.damage }}<span v-if="action.data.dmgReduction > 0" class="italic"> ({{
-                                action.data.dmgReduction
-                            }})</span> damage!
+                        <template v-if="action.data.hit">
+                            <!-- Attack hit with shield present -->
+                            <template v-if="action.data.shield">
+                                <template v-if="action.data.blocked">
+                                    {{ action.data.attacker }} delivers a measured blow to {{ action.data.defender }}
+                                    with {{ action.data.weapon }}.
+                                    {{ action.data.defender }} parries the attack with {{ action.data.shield }} avoiding
+                                    the worst of it.
+                                    {{ action.data.defender }} takes {{ action.data.damage }}
+                                    <span v-if="action.data.damageReduction > 0" class="italic">
+                                        ({{ action.data.damageReduction }} dmg absorbed)
+                                    </span> damage!
+                                </template>
+                                <template v-else>
+                                    {{ action.data.attacker }} charges towards {{ action.data.defender }} with {{
+                                        action.data.weapon }}.
+                                    {{ action.data.defender }} tries to block the hit with {{ action.data.shield }} but
+                                    isn't quick enough.
+                                    {{ action.data.attacker }} strikes a clean blow dealing {{ action.data.damage }}
+                                    <span v-if="action.data.damageReduction > 0" class="italic">
+                                        ({{ action.data.damageReduction }} dmg absorbed)
+                                    </span> damage!
+                                </template>
+                            </template>
+
+                            <!-- Attack hit without shield -->
+                            <template v-else>
+                                <template v-if="action.data.damage > 0">
+                                    {{ action.data.attacker }} charges towards {{ action.data.defender }} with {{
+                                        action.data.weapon }}.
+                                    {{ action.data.attacker }} strikes a clean blow dealing {{ action.data.damage }}
+                                    <span v-if="action.data.damageReduction > 0" class="italic">
+                                        ({{ action.data.damageReduction }} dmg absorbed)
+                                    </span> damage!
+                                </template>
+                                <template v-else>
+                                    {{ action.data.attacker }} charges towards {{ action.data.defender }} with {{
+                                        action.data.weapon }}.
+                                    {{ action.data.attacker }}'s hit was absorbed by the armour of {{
+                                        action.data.defender }}.
+                                </template>
+                            </template>
                         </template>
-                        <template v-else-if="action.data.hit && action.data.damage <= 0">
-                            {{ action.data.attacker }} charges towards {{ action.data.defender }} with {{
-                                action.data.weapon }}. {{ action.data.attacker }}'s hit was absored by the armour of {{
-                                action.data.defender }}.
-                        </template>
+
+                        <!-- Attack missed -->
                         <template v-else>
                             {{ action.data.attacker }} lets out a growl and swings {{ action.data.weapon }} in a wide
-                            arc! {{ action.data.defender }} deftly dodges the attack.
+                            arc!
+                            {{ action.data.defender }} deftly dodges the attack.
                         </template>
                     </p>
+
                     <!-- Combat Resolves -->
                     <p v-else-if="action.type === 'fatigue'">
                         {{ action.data.fighter }} collapses in the sand, too tired to keep fighting.
@@ -68,7 +103,17 @@ onMounted(() => {
 })
 
 function exitCombatLog() {
-    navigateTo('/arena');
+    //Check the log for the combat result, if the hero died during combat the player
+    //should be sent to hero creation.
+    const combatEnd = log.find(entry => entry.type === 'combat_end');
+
+    combatResult.combatLog.value = null;
+
+    if (combatEnd?.data.result === 'death') {
+        navigateTo('/create-hero');
+    } else {
+        navigateTo('/arena');
+    }
 }
 </script>
 

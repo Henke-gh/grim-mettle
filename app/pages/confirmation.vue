@@ -1,3 +1,4 @@
+<!-- This is currently not in use as it requries setting up an SMTP service which is a problem for another day -->
 <template>
     <div class="group">
         <header>
