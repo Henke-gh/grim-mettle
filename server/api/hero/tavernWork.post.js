@@ -1,14 +1,15 @@
 import { supabaseAdmin } from "~~/server/utils/supabaseAdmin";
 import { serverSupabaseClient } from "#supabase/server";
 import { z } from "zod";
-import { healingItems } from "~~/utils/healingItems";
-const buyHealingSchema = z.object({
-  item_id: z.number(),
+import { tavernShifts } from "~~/utils/tavernShifts";
+const tavernSchema = z.object({
+  shift_id: z.number(),
 });
 
 export default defineEventHandler(async (event) => {
   try {
     const body = await readBody(event);
+    console.log("body", body);
     // Get the user-scoped Supabase client (reads the session cookie)
     const supabase = await serverSupabaseClient(event);
 
@@ -23,7 +24,8 @@ export default defineEventHandler(async (event) => {
     }
 
     //Validate the contents of the request, only needs the item id.
-    const result = buyHealingSchema.safeParse(body);
+    const result = tavernSchema.safeParse(body);
+    console.log("reslut:", result);
     if (!result.success) {
       throw createError({
         statusCode: 400,
@@ -31,21 +33,23 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    const id = result.data.item_id;
+    const id = result.data.shift_id;
+    console.log("id;", id);
     //Find requested item in itemCatalog
-    const itemCollection = healingItems;
-    if (!Array.isArray(itemCollection)) {
-      throw createError({ statusCode: 400, message: "Invalid item type" });
+    const shiftCollection = tavernShifts;
+    console.log(tavernShifts);
+    if (!Array.isArray(shiftCollection)) {
+      throw createError({ statusCode: 400, message: "Invalid shift type" });
     }
 
-    const item = itemCollection.find((it) => it.id === id);
-    if (!item) {
-      throw createError({ statusCode: 404, message: "Item not found" });
+    const shift = shiftCollection.find((it) => it.id === id);
+    if (!shift) {
+      throw createError({ statusCode: 404, message: "Shift not found" });
     }
-    //Get the hero id + gold from the heroes table
+    //Get the hero id + gold and current grit from the heroes table
     const { data: hero, error: checkError } = await supabaseAdmin
       .from("heroes")
-      .select("id, gold, hp_current, hp_max")
+      .select("id, gold, grit_current")
       .eq("user_id", user.id)
       .maybeSingle();
 
@@ -57,11 +61,11 @@ export default defineEventHandler(async (event) => {
       throw createError({ statusCode: 404, message: "Hero not found." });
     }
     //Check hero gold
-    const cost = item.cost ?? 0;
-    if (hero.gold < cost) {
+    const cost = shift.gritCost ?? 0;
+    if (hero.grit_current < gritCost) {
       throw createError({
         statusCode: 400,
-        message: "You don't have enough gold.",
+        message: "You're too tired to work this shift.",
       });
     }
 
