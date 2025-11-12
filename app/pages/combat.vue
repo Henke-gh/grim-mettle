@@ -83,23 +83,36 @@
             </div>
             <!-- Rewards, retreats or deaths -->
             <div v-else-if="entry.type === 'combat_end'">
-                <p v-if="entry.data.result === 'victory'"><span class="bold">{{ entry.data.hero }}</span> is victorious!
-                </p>
-                <div v-if="entry.data.rewards">You earn <span class="bold">{{ entry.data.rewards.xp }} XP</span> and
-                    <span class="bold">{{
-                        entry.data.rewards.gold }}
-                        gold</span> from the
-                    duke's coffers.
+                <div v-if="entry.data.result === 'victory'" class="resultCard">
+                    <img :src="victory" alt="A golden trophy with small ribbons flying in the air" class="resultImg" />
+                    <div class="resultText">
+                        <p><span class="bold">{{ entry.data.hero }}</span> is
+                            victorious!
+                        </p>
+                        <div v-if="entry.data.rewards">You earn <span class="bold">{{ entry.data.rewards.xp }} XP</span>
+                            and
+                            <span class="bold">{{
+                                entry.data.rewards.gold }}
+                                gold</span> from the
+                            duke's coffers.
+                        </div>
+                    </div>
                 </div>
                 <div v-else-if="entry.data.result === 'death'" class="resultCard">
                     <img :src="death" alt="Skulls and weapons piled around each other. Your hero has died."
-                        class="heroDeathImg" />
+                        class="resultImg" />
                     <div class="resultText">
                         <p class="bold">Your journey ends.</p>
                         <p>The dead salute you and the living move on.</p>
                     </div>
                 </div>
-                <p v-else>You live to fight another day, tend to your wounds.</p>
+                <div v-else class="resultCard">
+                    <img :src="defeatImg" class="resultImg" alt="The hero leaves the arena in shame." />
+                    <div class="resultText">
+                        <p class="bold">Defeat.</p>
+                        <p>You live to fight another day. Tend to your wounds.</p>
+                    </div>
+                </div>
             </div>
         </section>
         <button class="defaultButton default" @click="exitCombatLog">Continue</button>
@@ -115,6 +128,8 @@ definePageMeta({
 });
 import swords from "../assets/images/crossedSwords.png"
 import death from "../assets/images/player_death_small.png"
+import victory from "../assets/images/victory_small.png"
+import defeatImg from "../assets/images/defeat_small.png"
 
 
 const combatResult = useCombatResult();
@@ -173,7 +188,7 @@ function exitCombatLog() {
     margin-bottom: 0.5rem;
 }
 
-.heroDeathImg {
+.resultImg {
     height: 6rem;
     width: auto;
 }
