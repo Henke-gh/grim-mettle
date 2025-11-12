@@ -63,6 +63,7 @@ async function workShift(shift_id) {
 .tavernWrapper {
     margin-top: 6.5rem;
     padding: 0.5rem;
+    padding-bottom: 5rem;
     display: flex;
     flex-direction: column;
     align-items: center;

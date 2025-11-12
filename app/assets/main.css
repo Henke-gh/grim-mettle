@@ -23,7 +23,6 @@ body {
 }
 
 main {
-  padding-bottom: 5rem;
   min-height: 100vh;
   max-width: 800px;
 }
@@ -106,4 +105,8 @@ section {
 
 .centerText {
   text-align: center;
+}
+
+.topMargin {
+  margin-top: 1rem;
 }

@@ -8,7 +8,7 @@
         </div>
         <section class="logEntry" v-for="(entry, index) in log" :key="index">
             <h2 v-if="entry.type === 'combat_start'" class="centerText">{{ entry.data.hero }} vs {{ entry.data.monster
-            }}</h2>
+                }}</h2>
             <p v-if="entry.type === 'combat_start'" class="italic centerText">An audience of {{ audience }} attendees
                 cheer you on!
             </p>
@@ -17,7 +17,7 @@
                 <article class="turnAction" v-for="(action, idx) in entry.data.actions" :key="idx">
                     <!-- Turn Initiative -->
                     <p v-if="action.type === 'initiative'" class="italic">{{ action.data.fighter
-                        }} gets the upper hand!
+                    }} gets the upper hand!
                     </p>
                     <!-- Attack phase -->
                     <p v-else-if="action.type === 'attack'">
@@ -120,9 +120,9 @@
             </div>
         </section>
         <button class="defaultButton default" @click="exitCombatLog">Continue</button>
+        <div class="swordlineContainer spacing topMargin"><img src="/divider.svg"
+                alt="A line of four swords, with a shield in the middle" /></div>
     </div>
-    <div class="swordlineContainer spacing"><img src="/divider.svg"
-            alt="A line of four swords, with a shield in the middle" /></div>
     <HeroNav />
 </template>
 
@@ -176,6 +176,7 @@ function exitCombatLog() {
 
 .combatWrapper {
     padding: 0.5rem;
+    padding-bottom: 5rem;
     display: flex;
     flex-direction: column;
     align-items: center;

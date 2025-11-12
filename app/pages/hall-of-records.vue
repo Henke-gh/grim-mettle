@@ -106,6 +106,7 @@ onMounted(async () => {
     flex-direction: column;
     text-align: center;
     padding: 1rem;
+    padding-bottom: 5rem;
     gap: 0.5rem;
 }
 

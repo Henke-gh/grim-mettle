@@ -163,6 +163,7 @@ const unEquippedItems = computed(() => {
     display: flex;
     flex-direction: column;
     padding: 0.5rem;
+    padding-bottom: 5rem;
     gap: 0.5rem;
 }
 

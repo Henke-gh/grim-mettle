@@ -96,11 +96,11 @@
                         selectedItem.damageReduction }}</p>
                     <p v-if="selectedItem.blockValue !== undefined"><strong>Block Value:</strong> {{
                         selectedItem.blockValue
-                    }}
+                        }}
                     </p>
                     <p v-if="selectedItem.weight"><strong>Weight:</strong> {{ selectedItem.weight ?? '—' }}</p>
                     <p v-if="selectedItem.strengthReq"><strong>Strength Req:</strong> {{ selectedItem.strengthReq ?? '—'
-                    }}</p>
+                        }}</p>
                     <p v-if="selectedItem.skillReq"><strong>Skill Req:</strong> <span
                             v-for="value, key in selectedItem.skillReq" :key="key"> {{ capitalise(key) }}: {{ value
                             }}</span></p>
@@ -243,6 +243,7 @@ async function sellItem(inventory_id) {
 .wrapper {
     margin-top: 6.5rem;
     padding: 0.5rem;
+    padding-bottom: 5rem;
 }
 
 .storeHeader {
