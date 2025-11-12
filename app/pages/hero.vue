@@ -109,10 +109,9 @@ const unEquippedItems = computed(() => {
             </div>
             <div class="part heroInventory" v-else>
                 <h4>Inventory</h4>
-                <div class="equippedItem" v-for="entry in inventoryWithItems" :key="entry.inventory_id">
-                    <p v-if="!isEquipped(entry.inventory_id)">{{ entry.item.name }}</p>
-                    <button v-if="!isEquipped(entry.inventory_id)"
-                        @click="equipItem(entry.item_id, entry.inventory_id, entry.item.slot)"
+                <div class="equippedItem" v-for="entry in unEquippedItems" :key="entry.inventory_id">
+                    <p>{{ entry.item.name }}</p>
+                    <button @click="equipItem(entry.item_id, entry.inventory_id, entry.item.slot)"
                         :disabled="actionLoading || !canEquip(entry.item)" class="inspectViewBtn bold"
                         :class="{ 'disabled': !canEquip(entry.item) }">
                         {{ canEquip(entry.item) ? 'Equip' : 'Requirements not met' }}
