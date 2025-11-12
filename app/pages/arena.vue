@@ -14,31 +14,48 @@
                 </li>
             </ul>
             <p v-else>Loading monsters..</p>
+            <div class="swordlineContainer spacing"><img src="/divider.svg"
+                    alt="A line of four swords, with a shield in the middle" /></div>
         </section>
-        <div class="gradientBorder fitContent" v-if="showCombatSettings && hero">
-            <section class="combatSettings" v-if="showCombatSettings && hero">
-                <h2>Make your preparations </h2>
-                <h3>{{ hero.hero_name }} vs {{ selectedMonster.name }}</h3>
-                <div class="optionSelect">
-                    <label for="stance">- Select fighting stance -</label>
-                    <select v-model="selectedStance" id="stance">
-                        <option v-for="stance in stances" :value="stance" :key="stance">{{ capitalise(stance) }}
-                        </option>
-                    </select>
-                </div>
-                <div class="optionSelect">
-                    <label for="hp-selector">Set HP retreat value:</label>
-                    <select v-model.number="retreatPercent" id="hp-selector">
-                        <option v-for="percent in retreatOptions" :value="percent" :key="percent">{{ percent }}% HP
-                        </option>
-                    </select>
-                </div>
-                <p v-if="errorMsg">{{ errorMsg }}</p>
-                <div class="fightButtonGroup">
-                    <button class="inspectViewBtn biggerBtn bold closeBtn" @click="regretChallenge">Back</button>
-                    <button class="inspectViewBtn biggerBtn bold" @click="initiateFight()">Fight</button>
-                </div>
-            </section>
+        <div class="settingsWrapper" v-if="showCombatSettings && hero">
+            <div class="gradientBorder fitContent">
+                <section class="combatSettings">
+                    <h2>Make your preparations </h2>
+                    <h3>{{ hero.hero_name }} vs {{ selectedMonster.name }}</h3>
+                    <div class="optionSelect">
+                        <label for="stance">- Select fighting stance -</label>
+                        <select v-model="selectedStance" id="stance" class="arenaInput">
+                            <option v-for="stance in stances" :value="stance" :key="stance">{{ capitalise(stance) }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="optionSelect">
+                        <label for="hp-selector">Set HP retreat value:</label>
+                        <select v-model.number="retreatPercent" id="hp-selector" class="arenaInput">
+                            <option v-for="percent in retreatOptions" :value="percent" :key="percent">{{ percent }}% HP
+                            </option>
+                        </select>
+                    </div>
+                    <p v-if="errorMsg">{{ errorMsg }}</p>
+                    <div class="fightButtonGroup">
+                        <button class="inspectViewBtn biggerBtn bold closeBtn" @click="regretChallenge">Back</button>
+                        <button class="inspectViewBtn biggerBtn bold" @click="initiateFight()">Fight</button>
+                    </div>
+                </section>
+            </div>
+            <article class="stanceTips">
+                <h2 class="centerText">- Stances -</h2>
+                <h3>Balanced</h3>
+                <p>This is the default stance, no additional modifiers.</p>
+                <h3>Offensive</h3>
+                <p>The Offensive stance offers a boost to your weapon skill and initiative while also applying a penalty
+                    to your ability to block and evade.</p>
+                <h3>Defensive</h3>
+                <p>This stance is the reverse of Offensive. Increased block and evasion at the cost of initiative and
+                    your chance to hit.</p>
+            </article>
+            <div class="swordlineContainer spacing"><img src="/divider.svg"
+                    alt="A line of four swords, with a shield in the middle" /></div>
         </div>
     </div>
     <Teleport to="body">
@@ -148,10 +165,30 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
 .arenaWrapper {
     margin-top: 7rem;
     padding: 0.5rem;
+    padding-bottom: 5rem;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 1rem;
+}
+
+.settingsWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.arenaInput {
+    font-family: monospace;
+    border: 1px solid var(--dark-green);
+}
+
+.stanceTips {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
 }
 
 .monsterSelect {

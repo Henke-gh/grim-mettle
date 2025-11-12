@@ -100,6 +100,8 @@
                 </section>
             </div>
         </div>
+        <div class="swordlineContainer spacing"><img src="/divider.svg"
+                alt="A line of four swords, with a shield in the middle" /></div>
     </div>
     <HeroNav />
 </template>
@@ -178,6 +180,7 @@ async function submitLevelUp() {
     flex-direction: column;
     align-items: center;
     gap: 1rem;
+    padding-bottom: 5rem;
 }
 
 .skills {

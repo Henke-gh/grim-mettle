@@ -61,6 +61,7 @@ async function buyHealing(item_id) {
 .healingWrapper {
     margin-top: 6.5rem;
     padding: 1rem;
+    padding-bottom: 5rem;
     display: flex;
     flex-direction: column;
     align-items: center;

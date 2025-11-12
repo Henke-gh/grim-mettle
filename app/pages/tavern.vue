@@ -46,7 +46,7 @@ async function workShift(shift_id) {
     try {
         const payload = { shift_id: shift_id };
         await $fetch('/api/hero/tavernWork', { method: 'POST', body: payload })
-        successMessage.value = 'Purchase Succesful'
+        successMessage.value = 'Work Completed!'
 
         setTimeout(() => {
             window.location.reload();
@@ -63,6 +63,7 @@ async function workShift(shift_id) {
 .tavernWrapper {
     margin-top: 6.5rem;
     padding: 0.5rem;
+    padding-bottom: 5rem;
     display: flex;
     flex-direction: column;
     align-items: center;

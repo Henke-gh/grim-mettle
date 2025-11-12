@@ -243,6 +243,7 @@ async function sellItem(inventory_id) {
 .wrapper {
     margin-top: 6.5rem;
     padding: 0.5rem;
+    padding-bottom: 5rem;
 }
 
 .storeHeader {
@@ -343,5 +344,6 @@ async function sellItem(inventory_id) {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    margin-bottom: 0.5rem;
 }
 </style>

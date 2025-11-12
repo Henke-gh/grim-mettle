@@ -17,7 +17,7 @@ export const weapons = [
     skillReq: { swords: 10 },
     strengthReq: 5,
     weight: 2,
-    goldCost: 50,
+    goldCost: 35,
     bonus: {},
     description: "Keep it short and sweet.",
   },
@@ -96,6 +96,68 @@ export const weapons = [
     bonus: { evasion: 5 },
     description: "It ain't much, but it'll get the job done. If you're lucky.",
   },
+  {
+    id: 7,
+    category: "axes",
+    slot: "main_hand",
+    twoHanded: false,
+    name: "Small-Axe",
+    minDmg: 3,
+    maxDmg: 9,
+    skillReq: { axes: 30 },
+    strengthReq: 25,
+    weight: 2,
+    goldCost: 190,
+    bonus: {},
+    description:
+      "Despite its name the Small-Axe is longer than the Hand Axe and can be quite deadly.",
+  },
+  {
+    id: 8,
+    category: "hammers",
+    slot: "main_hand",
+    twoHanded: false,
+    name: "Iron Mace",
+    minDmg: 2,
+    maxDmg: 10,
+    skillReq: { hammers: 25 },
+    strengthReq: 40,
+    weight: 2,
+    goldCost: 185,
+    bonus: {},
+    description: "Who ever's on the receiving end better wear a helmet.",
+  },
+  {
+    id: 9,
+    category: "spears",
+    slot: "main_hand",
+    twoHanded: false,
+    name: "Hunting Spear",
+    minDmg: 2,
+    maxDmg: 8,
+    skillReq: { spears: 40 },
+    strengthReq: 15,
+    weight: 2,
+    goldCost: 195,
+    bonus: { initiative: 10 },
+    description: "Sleek and well crafted, this spear gores boars.",
+  },
+  {
+    id: 10,
+    category: "daggers",
+    slot: "main_hand",
+    twoHanded: false,
+    name: "Long Knife",
+    minDmg: 3,
+    maxDmg: 6,
+    skillReq: { daggers: 35 },
+    strengthReq: 10,
+    weight: 1,
+    goldCost: 190,
+    bonus: { evasion: 10 },
+    description:
+      "The blade is quite long, and the edge sharp. Terrifying in a bar fight.",
+  },
 ];
 
 export const shields = [
@@ -125,6 +187,19 @@ export const shields = [
     bonus: { block: 5 },
     description: "An iron-shod wooden square. It makes you feel safer.",
   },
+  {
+    id: 102,
+    category: "shields",
+    slot: "off_hand",
+    name: "Round Shield",
+    skillReq: { block: 35 },
+    strengthReq: 25,
+    blockValue: 3,
+    goldCost: 130,
+    weight: 2,
+    bonus: { block: 15 },
+    description: "In experience hands this light shield is a joy to wield.",
+  },
 ];
 
 export const armour = [
@@ -150,6 +225,18 @@ export const armour = [
     bonus: {},
     description: "The padding offers some extra protection.",
   },
+  {
+    id: 202,
+    category: "armour",
+    slot: "armour",
+    name: "Chain Mail",
+    damageReduction: 3,
+    goldCost: 225,
+    weight: 5,
+    bonus: { speed: -10 },
+    description:
+      "A classic, the added weight will tire you out quicker though.",
+  },
 ];
 
 export const trinkets = [
@@ -164,6 +251,29 @@ export const trinkets = [
     },
     description:
       "Someone's carved runes into this. Fits around your arm like a bracelet.",
+  },
+  {
+    id: 301,
+    category: "trinkets",
+    slot: "trinket",
+    name: "Silver Leaf",
+    goldCost: 190,
+    bonus: {
+      initiative: 5,
+    },
+    description:
+      "Worn like a pin or a badge, it gleams an almost pure white in the sun.",
+  },
+  {
+    id: 302,
+    category: "trinkets",
+    slot: "trinket",
+    name: "Tooth-row Necklace",
+    goldCost: 410,
+    bonus: {
+      strength: 10,
+    },
+    description: "Various animal teeth on a string. It's pretty savage.",
   },
 ];
 

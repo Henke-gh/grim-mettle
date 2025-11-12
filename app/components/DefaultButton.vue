@@ -43,6 +43,11 @@ const handleClick = (event) => {
     color: var(--bone-white);
 }
 
+.secondary {
+    background-color: var(--brown);
+    color: var(--bone-white);
+}
+
 .light {
     background-color: var(--bone-white);
     color: var(--warm-black);

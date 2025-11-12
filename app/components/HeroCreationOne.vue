@@ -1,14 +1,42 @@
 <script setup>
+import { ref, computed } from "vue";
 import { heroAvatars } from "../../utils/avatars.js"
 import { useHeroCreateStore } from "#imports";
 
 const avatars = heroAvatars;
 const hero = useHeroCreateStore();
+
+const allowedNamePattern = /^[\p{L}0-9_]+$/u;
+//Check hero name, ensure it's valid.
+const isValidName = computed(() => {
+    return (
+        hero.name.length >= 3 &&
+        hero.name.length <= 16 &&
+        allowedNamePattern.test(hero.name)
+    );
+});
+
+const nameError = computed(() => {
+    if (hero.name.length === 0) return "";
+    if (hero.name.length < 3) return "Name must be at least 3 characters.";
+    if (hero.name.length > 16) return "Name too long, max 16 characters.";
+    if (!allowedNamePattern.test(hero.name))
+        return "Only letters, numbers, and underscores are allowed.";
+    return "";
+});
 </script>
 
 <template>
     <section class="heroCreation">
         <h2>Create your Hero - step 1/2</h2>
+        <div class="gradientBorder">
+            <div class="tipsContainer">
+                <p><span class="bold">Tip: </span>If your hero takes damage, you will recover both Hit Points and Grit
+                    over time.</p>
+                <p>Regeneration occurs every 3 minutes.</p>
+
+            </div>
+        </div>
         <div class="portraitSelection">
             <h3>Select avatar:</h3>
             <div class="portraitCollection">
@@ -24,9 +52,10 @@ const hero = useHeroCreateStore();
             </label>
             <input class="nameInput" type="text" id="heroName" min="3" max="16" placeholder="Give your hero a name"
                 :value="hero.name" v-on:input="event => hero.setHeroName(event.target.value)"></input>
+            <p v-if="nameError">{{ nameError }}</p>
         </div>
         <div class="nextStep">
-            <DefaultButton text="Continue" type="button" :disabled="hero.name.length < 3" @click="hero.nextStep()" />
+            <DefaultButton text="Continue" type="button" :disabled="!isValidName" @click="hero.nextStep()" />
         </div>
     </section>
     <div class="swordlineContainer spacing"><img src="/divider.svg"
@@ -39,6 +68,14 @@ const hero = useHeroCreateStore();
     flex-direction: column;
     gap: 1rem;
     align-items: center;
+}
+
+.tipsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    background-color: var(--bone-white);
+    padding: 1rem;
 }
 
 .portraitSelection {
@@ -77,6 +114,7 @@ const hero = useHeroCreateStore();
     flex-direction: column;
     width: fit-content;
     text-align: center;
+    align-items: center;
     gap: 0.5rem;
 }
 
@@ -88,6 +126,7 @@ const hero = useHeroCreateStore();
 .nameInput {
     font-family: monospace;
     padding: 0.5rem;
+    width: 15rem;
     border: 1px solid var(--dark-green);
 }
 </style>

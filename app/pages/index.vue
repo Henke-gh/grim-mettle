@@ -11,6 +11,9 @@ const user = useSupabaseUser();
     <CustomHeader />
     <div class="indexWrapper">
         <section class="welcome">
+            <div class="news">
+                <p>* <span class="bold">Latest changes:</span> Block is now live. Try it out! *</p>
+            </div>
             <div class="guardContainer">
                 <img :src="guard" alt="A hooded guard watching the gates of an arena" class="guardImg" />
             </div>
@@ -26,11 +29,6 @@ const user = useSupabaseUser();
         </section>
         <div class="swordlineContainer spacing"><img src="/divider.svg"
                 alt="A line of four swords, with a shield in the middle" /></div>
-        <div class="news">
-            <p>* <span class="bold">Latest changes:</span> Tuned low level monsters to be slightly weaker. Added
-                some
-                higher level ones. *</p>
-        </div>
         <div class="gradientBorder fitContent gradientLogin">
             <section class="loginWrapper">
                 <div class="swordsContainer">

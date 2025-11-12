@@ -98,6 +98,7 @@ const hero = useHeroView();
     flex-direction: column;
     gap: 0.5rem;
     padding: 1rem;
+    padding-bottom: 5rem;
     font-family: monospace;
 }
 </style>
