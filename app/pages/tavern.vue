@@ -46,7 +46,7 @@ async function workShift(shift_id) {
     try {
         const payload = { shift_id: shift_id };
         await $fetch('/api/hero/tavernWork', { method: 'POST', body: payload })
-        successMessage.value = 'Purchase Succesful'
+        successMessage.value = 'Work Completed!'
 
         setTimeout(() => {
             window.location.reload();
