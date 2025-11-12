@@ -7,7 +7,11 @@
             <img :src="swords" alt="Two crossed swords" class="swordsImg" />
         </div>
         <section class="logEntry" v-for="(entry, index) in log" :key="index">
-            <h2 v-if="entry.type === 'combat_start'">{{ entry.data.hero }} vs {{ entry.data.monster }}</h2>
+            <h2 v-if="entry.type === 'combat_start'" class="centerText">{{ entry.data.hero }} vs {{ entry.data.monster
+            }}</h2>
+            <p v-if="entry.type === 'combat_start'" class="italic centerText">An audience of {{ audience }} attendees
+                cheer you on!
+            </p>
             <div class="turnBlock" v-if="entry.type === 'turn'">
                 <h3>[ Turn {{ entry.data.number }} ]</h3>
                 <article class="turnAction" v-for="(action, idx) in entry.data.actions" :key="idx">
@@ -130,10 +134,12 @@ import swords from "../assets/images/crossedSwords.png"
 import death from "../assets/images/player_death_small.png"
 import victory from "../assets/images/victory_small.png"
 import defeatImg from "../assets/images/defeat_small.png"
+import { getAudience } from "~~/utils/general";
 
 
 const combatResult = useCombatResult();
 const log = combatResult.combatLog.value;
+const audience = getAudience();
 
 onMounted(() => {
     if (!log) {
