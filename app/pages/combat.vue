@@ -9,7 +9,7 @@
         <section class="logEntry" v-for="(entry, index) in log" :key="index">
             <h2 v-if="entry.type === 'combat_start'">{{ entry.data.hero }} vs {{ entry.data.monster }}</h2>
             <div class="turnBlock" v-if="entry.type === 'turn'">
-                <h3>Turn {{ entry.data.number }}</h3>
+                <h3>[ Turn {{ entry.data.number }} ]</h3>
                 <article class="turnAction" v-for="(action, idx) in entry.data.actions" :key="idx">
                     <!-- Turn Initiative -->
                     <p v-if="action.type === 'initiative'" class="italic">{{ action.data.fighter
@@ -71,11 +71,11 @@
 
                     <!-- Combat Resolves -->
                     <p v-else-if="action.type === 'fatigue'">
-                        <span class="italic">{{ action.data.fighter }} collapses in the sand, too tired to keep
+                        <span class="italic bold">{{ action.data.fighter }} collapses in the sand, too tired to keep
                             fighting.</span>
                     </p>
                     <p v-else-if="action.type === 'defeat'">
-                        <span class="italic">
+                        <span class="italic bold">
                             {{ action.data.defeated }} {{ action.data.slain ? 'is slain!' : 'is defeated.' }}
                         </span>
                     </p>
