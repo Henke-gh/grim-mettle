@@ -126,8 +126,10 @@ const submitHero = async () => {
                 </div>
             </div>
             <div class="creationControls">
+                <DefaultButton text="Back" type="button" theme="secondary" @click="hero.previousStep()" />
                 <DefaultButton text="Create Hero" type="submit" :disabled="hero.statPointsRemaining !== 0" />
             </div>
+            <p v-if="error">{{ error }}</p>
         </form>
         <div class="swordlineContainer spacing"><img src="/divider.svg"
                 alt="A line of four swords, with a shield in the middle" /></div>
@@ -146,6 +148,7 @@ const submitHero = async () => {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    padding: 0.5rem;
 }
 
 .container {
@@ -202,7 +205,7 @@ const submitHero = async () => {
 .creationControls {
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: space-between;
     margin-top: 1rem;
     margin-bottom: 0.5rem;
 }

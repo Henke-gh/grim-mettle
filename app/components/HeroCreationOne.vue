@@ -1,9 +1,29 @@
 <script setup>
+import { ref, computed } from "vue";
 import { heroAvatars } from "../../utils/avatars.js"
 import { useHeroCreateStore } from "#imports";
 
 const avatars = heroAvatars;
 const hero = useHeroCreateStore();
+
+const allowedNamePattern = /^[\p{L}0-9_]+$/u;
+//Check hero name, ensure it's valid.
+const isValidName = computed(() => {
+    return (
+        hero.name.length >= 3 &&
+        hero.name.length <= 16 &&
+        allowedNamePattern.test(hero.name)
+    );
+});
+
+const nameError = computed(() => {
+    if (hero.name.length === 0) return "Name your hero.";
+    if (hero.name.length < 3) return "Name must be at least 3 characters.";
+    if (hero.name.length > 16) return "Name too long, max 16 characters.";
+    if (!allowedNamePattern.test(hero.name))
+        return "Only letters, numbers, and underscores are allowed.";
+    return "";
+});
 </script>
 
 <template>
@@ -24,9 +44,10 @@ const hero = useHeroCreateStore();
             </label>
             <input class="nameInput" type="text" id="heroName" min="3" max="16" placeholder="Give your hero a name"
                 :value="hero.name" v-on:input="event => hero.setHeroName(event.target.value)"></input>
+            <p v-if="nameError">{{ nameError }}</p>
         </div>
         <div class="nextStep">
-            <DefaultButton text="Continue" type="button" :disabled="hero.name.length < 3" @click="hero.nextStep()" />
+            <DefaultButton text="Continue" type="button" :disabled="!isValidName" @click="hero.nextStep()" />
         </div>
     </section>
     <div class="swordlineContainer spacing"><img src="/divider.svg"
@@ -77,6 +98,7 @@ const hero = useHeroCreateStore();
     flex-direction: column;
     width: fit-content;
     text-align: center;
+    align-items: center;
     gap: 0.5rem;
 }
 
@@ -88,6 +110,7 @@ const hero = useHeroCreateStore();
 .nameInput {
     font-family: monospace;
     padding: 0.5rem;
+    width: 15rem;
     border: 1px solid var(--dark-green);
 }
 </style>
