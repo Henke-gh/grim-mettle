@@ -17,7 +17,7 @@ const isValidName = computed(() => {
 });
 
 const nameError = computed(() => {
-    if (hero.name.length === 0) return "Name your hero.";
+    if (hero.name.length === 0) return "";
     if (hero.name.length < 3) return "Name must be at least 3 characters.";
     if (hero.name.length > 16) return "Name too long, max 16 characters.";
     if (!allowedNamePattern.test(hero.name))
@@ -29,6 +29,14 @@ const nameError = computed(() => {
 <template>
     <section class="heroCreation">
         <h2>Create your Hero - step 1/2</h2>
+        <div class="gradientBorder">
+            <div class="tipsContainer">
+                <p><span class="bold">Tip: </span>If your hero takes damage, you will recover both Hit Points and Grit
+                    over time.</p>
+                <p>Regeneration occurs every 3 minutes.</p>
+
+            </div>
+        </div>
         <div class="portraitSelection">
             <h3>Select avatar:</h3>
             <div class="portraitCollection">
@@ -60,6 +68,14 @@ const nameError = computed(() => {
     flex-direction: column;
     gap: 1rem;
     align-items: center;
+}
+
+.tipsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    background-color: var(--bone-white);
+    padding: 1rem;
 }
 
 .portraitSelection {
