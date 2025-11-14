@@ -50,30 +50,24 @@
             <p>Sword and board! Hide behind a shield and reduce incoming damage. Pretty similar to Evasion,
                 except it reduces damage based off of the equipped shield's damage reduction value.</p>
 
-            <!--  <p class="bold headline">[Item Weight and Total Weight]</p>
-            <p>As your hero gears up you might notice the Total Weight score increase. This is a measure of the heroes
-                encumbrance.
-                There's no upper limit to how much weight your hero can bear, however weight does negatively affect the
-                skills Block, Evasion and Initiative. Making them less effective.
-                This effect is not visible, except for well I mean.. you might start noticing you're not evading quite
-                as much in combat as you used to.
-            </p>
-            <p>Compensate for added weight by investing more points into the affected skills.</p>
-
             <h4 class="headline">- Combat -</h4>
             <p>Just a couple of things, not too much to divulge here.</p>
 
             <p class="bold headline">[Stances]</p>
             <p>When your hero enters a fight you get to choose one of three different stances. These affect your stats
                 and skills in some way.</p>
-            <p>Fast Attacks - Your hero favours quicker strikes and increased mobility. Gives a bonus to Initiative,
-                Evasion and your chance to hit. Lowers your damage.</p>
+            <p>Offensive - Grants a bonus to your chance to hit as well as Initiative, while applying a reduction to
+                Evasion and Block.</p>
             <p>Balanced - No seasoning. Your hero swings, dodges, blocks and does damage using unmodified values. A good
                 baseline!</p>
-            <p>Heavy Guard - Slow and punishing. You gain a bonus to Block and deal increased damage. However both
-                Initiative and your chance to hit is reduced.</p>
+            <p>Defensive - The reverse of the Offensive stance. Grants a bonus to Block and Evasion while reducing
+                Initiative and your skill with equipped weapon.</p>
 
-            <p class="bold headline">[Critical hits]</p>
+            <p class="bold headline">[Misc]</p>
+            <p>What if you don't have a weapon equipped during combat you say? Then you will do battle with your fists,
+                relying only on your strength!</p>
+
+            <!--  <p class="bold headline">[Critical hits]</p>
             <p>Just thought I'd throw this in here aswell. Both the player and the monsters you fight have a chance to
                 critically strike, dealing increased damage. You have been warned!</p> -->
             <div class="swordlineContainer spacing"><img src="/divider.svg"
