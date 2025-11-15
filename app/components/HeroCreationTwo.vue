@@ -20,6 +20,7 @@ const submitHero = async () => {
                 body: hero.getCreatePayload(),
             })
             success.value = res.message
+            hero.reset();
             navigateTo('/hero');
         } catch (err) {
             error.value = err?.data?.message || 'Something went wrong'
@@ -54,17 +55,20 @@ const submitHero = async () => {
                 <div class="group">
                     <div class="stat">
                         <label for="strength">Strength: (5 +)</label>
-                        <input id="strength" type="number" :value="hero.stats.strength" min="0" class="statInput"
+                        <input id="strength" type="number" :value="hero.stats.strength === 0 ? '' : hero.stats.strength"
+                            min="0" placeholder="0" class="statInput" inputmode="numeric"
                             v-on:input="event => hero.allocateStatPoints('strength', Number(event.target.value))" />
                     </div>
                     <div class="stat">
                         <label for="speed">Speed: (5 +)</label>
-                        <input id="speed" type="number" :value="hero.stats.speed" min="0" class="statInput"
+                        <input id="speed" type="number" :value="hero.stats.speed === 0 ? '' : hero.stats.speed" min="0"
+                            placeholder="0" class="statInput" inputmode="numeric"
                             v-on:input="event => hero.allocateStatPoints('speed', Number(event.target.value))" />
                     </div>
                     <div class="stat">
                         <label for="vitality">Vitality: (5 +)</label>
-                        <input id="vitality" type="number" :value="hero.stats.vitality" min="0" class="statInput"
+                        <input id="vitality" type="number" :value="hero.stats.vitality === 0 ? '' : hero.stats.vitality"
+                            min="0" placeholder="0" class="statInput" inputmode="numeric"
                             v-on:input="event => hero.allocateStatPoints('vitality', Number(event.target.value))" />
                     </div>
                 </div>
@@ -75,27 +79,32 @@ const submitHero = async () => {
                     <h4 class="createMargin">[Weapon Skills]</h4>
                     <div class="stat">
                         <label for="swords">Swords:</label>
-                        <input id="swords" type="number" :value="hero.stats.swords" min="0" class="statInput"
+                        <input id="swords" type="number" :value="hero.stats.swords === 0 ? '' : hero.stats.swords"
+                            min="0" placeholder="0" class="statInput" inputmode="numeric"
                             v-on:input="event => hero.allocateStatPoints('swords', Number(event.target.value))" />
                     </div>
                     <div class="stat">
                         <label for="axes">Axes:</label>
-                        <input id="axes" type="number" :value="hero.stats.axes" min="0" class="statInput"
+                        <input id="axes" type="number" :value="hero.stats.axes === 0 ? '' : hero.stats.axes" min="0"
+                            placeholder="0" class="statInput" inputmode="numeric"
                             v-on:input="event => hero.allocateStatPoints('axes', Number(event.target.value))" />
                     </div>
                     <div class="stat">
                         <label for="hammers">Hammers:</label>
-                        <input id="hammers" type="number" :value="hero.stats.hammers" min="0" class="statInput"
+                        <input id="hammers" type="number" :value="hero.stats.hammers === 0 ? '' : hero.stats.hammers"
+                            min="0" placeholder="0" class="statInput" inputmode="numeric"
                             v-on:input="event => hero.allocateStatPoints('hammers', Number(event.target.value))" />
                     </div>
                     <div class="stat">
                         <label for="spears">Spears:</label>
-                        <input id="spears" type="number" :value="hero.stats.spears" min="0" class="statInput"
+                        <input id="spears" type="number" :value="hero.stats.spears === 0 ? '' : hero.stats.spears"
+                            min="0" placeholder="0" class="statInput" inputmode="numeric"
                             v-on:input="event => hero.allocateStatPoints('spears', Number(event.target.value))" />
                     </div>
                     <div class="stat">
                         <label for="daggers">Daggers:</label>
-                        <input id="daggers" type="number" :value="hero.stats.daggers" min="0" class="statInput"
+                        <input id="daggers" type="number" :value="hero.stats.daggers === 0 ? '' : hero.stats.daggers"
+                            min="0" placeholder="0" class="statInput" inputmode="numeric"
                             v-on:input="event => hero.allocateStatPoints('daggers', Number(event.target.value))" />
                     </div>
                 </div>
@@ -103,17 +112,21 @@ const submitHero = async () => {
                     <h4 class="createMargin">[Other Skills]</h4>
                     <div class="stat">
                         <label for="block">Block:</label>
-                        <input id="block" type="number" :value="hero.stats.block" class="statInput"
+                        <input id="block" type="number" :value="hero.stats.block === 0 ? '' : hero.stats.block"
+                            placeholder="0" class="statInput" inputmode="numeric"
                             v-on:input="event => hero.allocateStatPoints('block', Number(event.target.value))" />
                     </div>
                     <div class="stat">
                         <label for="evasion">Evasion:</label>
-                        <input id="evasion" type="number" :value="hero.stats.evasion" class="statInput"
+                        <input id="evasion" type="number" :value="hero.stats.evasion === 0 ? '' : hero.stats.evasion"
+                            placeholder="0" class="statInput" inputmode="numeric"
                             v-on:input="event => hero.allocateStatPoints('evasion', Number(event.target.value))" />
                     </div>
                     <div class="stat">
                         <label for="initiative">Initiative:</label>
-                        <input id="initiative" type="number" :value="hero.stats.initiative" class="statInput"
+                        <input id="initiative" type="number"
+                            :value="hero.stats.initiative === 0 ? '' : hero.stats.initiative" placeholder="0"
+                            class="statInput" inputmode="numeric"
                             v-on:input="event => hero.allocateStatPoints('initiative', Number(event.target.value))" />
                     </div>
                 </div>

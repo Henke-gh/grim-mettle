@@ -119,7 +119,6 @@ export default defineEventHandler(async (event) => {
       .eq("id", hero.id);
 
     if (updateError) {
-      console.log(updateError);
       throw createError({ statusCode: 500, message: updateError.message });
     }
 

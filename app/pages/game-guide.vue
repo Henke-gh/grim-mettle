@@ -72,7 +72,7 @@
                 critically strike, dealing increased damage. You have been warned!</p> -->
             <div class="swordlineContainer spacing"><img src="/divider.svg"
                     alt="A line of four swords, with a shield in the middle" /></div>
-            <p class="italic">Last updated: 03/11-25</p>
+            <p class="italic">Last updated: 14/11-25</p>
         </article>
     </div>
     <HeroNav v-if="user && hero" />
