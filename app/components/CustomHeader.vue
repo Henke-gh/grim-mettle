@@ -5,7 +5,9 @@
             <p class="tagline">- Where heroes live forever -</p>
             <p class="tagline">Until they die.</p>
         </header>
-        <GameNav />
+        <div class="navContainer">
+            <GameNav />
+        </div>
     </div>
 </template>
 
@@ -19,6 +21,7 @@ import grimLogo from "../assets/images/Logo_variant.svg"
     flex-direction: row;
     justify-content: space-between;
     background-color: var(--yellow);
+    width: 100%;
     padding: 0.5rem;
     padding-left: 1.5rem;
     margin-bottom: 0.5rem;
@@ -42,5 +45,21 @@ header {
     margin-top: 0.2rem;
     font-size: 1rem;
     font-weight: 600;
+}
+
+@media only screen and (min-width: 650px) {
+    .group {
+        padding-left: 0;
+        justify-content: center;
+        position: relative;
+    }
+
+    .navContainer {
+        position: absolute;
+        top: 0.5rem;
+        right: 1rem;
+        display: flex;
+        align-items: center;
+    }
 }
 </style>

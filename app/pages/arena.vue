@@ -271,4 +271,10 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
     flex-direction: row;
     justify-content: space-between;
 }
+
+@media only screen and (min-width: 650px) {
+    .arenaWrapper {
+        margin-top: 1rem;
+    }
+}
 </style>

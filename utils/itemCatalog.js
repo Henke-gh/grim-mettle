@@ -198,7 +198,7 @@ export const shields = [
     goldCost: 130,
     weight: 2,
     bonus: { block: 15 },
-    description: "In experience hands this light shield is a joy to wield.",
+    description: "In experienced hands this light shield is a joy to wield.",
   },
 ];
 

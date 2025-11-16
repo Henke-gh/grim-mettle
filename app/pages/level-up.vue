@@ -15,20 +15,23 @@
                             <div class="group">
                                 <div class="stat">
                                     <label for="strength">Strength: {{ mainAttributes.strength }}</label>
-                                    <input id="strength" type="number" :value="levelUpHero.stats.strength" min="0"
-                                        class="statInput"
+                                    <input id="strength" type="number"
+                                        :value="levelUpHero.stats.strength === 0 ? '' : levelUpHero.stats.strength"
+                                        min="0" class="statInput" placeholder="0" inputmode="numeric"
                                         v-on:input="event => levelUpHero.allocateStatPoints('strength', Number(event.target.value))" />
                                 </div>
                                 <div class="stat">
                                     <label for="speed">Speed: {{ mainAttributes.speed }}</label>
-                                    <input id="speed" type="number" :value="levelUpHero.stats.speed" min="0"
-                                        class="statInput"
+                                    <input id="speed" type="number"
+                                        :value="levelUpHero.stats.speed === 0 ? '' : levelUpHero.stats.speed" min="0"
+                                        class="statInput" placeholder="0" inputmode="numeric"
                                         v-on:input="event => levelUpHero.allocateStatPoints('speed', Number(event.target.value))" />
                                 </div>
                                 <div class="stat">
                                     <label for="vitality">Vitality: {{ mainAttributes.vitality }}</label>
-                                    <input id="vitality" type="number" :value="levelUpHero.stats.vitality" min="0"
-                                        class="statInput"
+                                    <input id="vitality" type="number"
+                                        :value="levelUpHero.stats.vitality === 0 ? '' : levelUpHero.stats.vitality"
+                                        min="0" class="statInput" placeholder="0" inputmode="numeric"
                                         v-on:input="event => levelUpHero.allocateStatPoints('vitality', Number(event.target.value))" />
                                 </div>
                             </div>
@@ -40,32 +43,37 @@
                                     <h4>[Weapon Skills]</h4>
                                     <div class="stat">
                                         <label for="swords">Swords: {{ skills.swords || 0 }}</label>
-                                        <input id="swords" type="number" :value="levelUpHero.stats.swords" min="0"
-                                            class="statInput"
+                                        <input id="swords" type="number"
+                                            :value="levelUpHero.stats.swords === 0 ? '' : levelUpHero.stats.swords"
+                                            min="0" class="statInput" placeholder="0" inputmode="numeric"
                                             v-on:input="event => levelUpHero.allocateStatPoints('swords', Number(event.target.value))" />
                                     </div>
                                     <div class="stat">
                                         <label for="axes">Axes: {{ skills.axes || 0 }}</label>
-                                        <input id="axes" type="number" :value="levelUpHero.stats.axes" min="0"
-                                            class="statInput"
+                                        <input id="axes" type="number"
+                                            :value="levelUpHero.stats.axes === 0 ? '' : levelUpHero.stats.axes" min="0"
+                                            class="statInput" placeholder="0" inputmode="numeric"
                                             v-on:input="event => levelUpHero.allocateStatPoints('axes', Number(event.target.value))" />
                                     </div>
                                     <div class="stat">
                                         <label for="hammers">Hammers: {{ skills.hammers || 0 }}</label>
-                                        <input id="hammers" type="number" :value="levelUpHero.stats.hammers" min="0"
-                                            class="statInput"
+                                        <input id="hammers" type="number"
+                                            :value="levelUpHero.stats.hammers === 0 ? '' : levelUpHero.stats.hammers"
+                                            min="0" class="statInput" placeholder="0" inputmode="numeric"
                                             v-on:input="event => levelUpHero.allocateStatPoints('hammers', Number(event.target.value))" />
                                     </div>
                                     <div class="stat">
                                         <label for="spears">Spears: {{ skills.spears || 0 }}</label>
-                                        <input id="spears" type="number" :value="levelUpHero.stats.spears" min="0"
-                                            class="statInput"
+                                        <input id="spears" type="number"
+                                            :value="levelUpHero.stats.spears === 0 ? '' : levelUpHero.stats.spears"
+                                            min="0" class="statInput" placeholder="0" inputmode="numeric"
                                             v-on:input="event => levelUpHero.allocateStatPoints('spears', Number(event.target.value))" />
                                     </div>
                                     <div class="stat">
                                         <label for="daggers">Daggers: {{ skills.daggers || 0 }}</label>
-                                        <input id="daggers" type="number" :value="levelUpHero.stats.daggers" min="0"
-                                            class="statInput"
+                                        <input id="daggers" type="number"
+                                            :value="levelUpHero.stats.daggers === 0 ? '' : levelUpHero.stats.daggers"
+                                            min="0" class="statInput" placeholder="0" inputmode="numeric"
                                             v-on:input="event => levelUpHero.allocateStatPoints('daggers', Number(event.target.value))" />
                                     </div>
                                 </div>
@@ -73,20 +81,23 @@
                                     <h4>[Other Skills]</h4>
                                     <div class="stat">
                                         <label for="block">Block: {{ skills.block || 0 }}</label>
-                                        <input id="block" type="number" :value="levelUpHero.stats.block"
-                                            class="statInput"
+                                        <input id="block" type="number"
+                                            :value="levelUpHero.stats.block === 0 ? '' : levelUpHero.stats.block"
+                                            class="statInput" placeholder="0" inputmode="numeric"
                                             v-on:input="event => levelUpHero.allocateStatPoints('block', Number(event.target.value))" />
                                     </div>
                                     <div class="stat">
                                         <label for="evasion">Evasion: {{ skills.evasion || 0 }}</label>
-                                        <input id="evasion" type="number" :value="levelUpHero.stats.evasion"
-                                            class="statInput"
+                                        <input id="evasion" type="number"
+                                            :value="levelUpHero.stats.evasion === 0 ? '' : levelUpHero.stats.evasion"
+                                            class="statInput" placeholder="0" inputmode="numeric"
                                             v-on:input="event => levelUpHero.allocateStatPoints('evasion', Number(event.target.value))" />
                                     </div>
                                     <div class="stat">
                                         <label for="initiative">Initiative: {{ skills.initiative || 0 }}</label>
-                                        <input id="initiative" type="number" :value="levelUpHero.stats.initiative"
-                                            class="statInput"
+                                        <input id="initiative" type="number"
+                                            :value="levelUpHero.stats.initiative === 0 ? '' : levelUpHero.stats.initiative"
+                                            class="statInput" placeholder="0" inputmode="numeric"
                                             v-on:input="event => levelUpHero.allocateStatPoints('initiative', Number(event.target.value))" />
                                     </div>
                                 </div>

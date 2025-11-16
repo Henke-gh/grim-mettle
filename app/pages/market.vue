@@ -19,11 +19,27 @@
         <section class="storeContainer" v-else>
             <div class="category">
                 <h2>Weapons</h2>
-                <div class="item" v-for="weapon in data.items.weapons">
-                    <p>{{ weapon.name }}</p>
-                    <div class="part">
-                        <p>Cost: {{ weapon.goldCost }} gold</p>
-                        <button class="inspectViewBtn bold" @click="openModal(weapon, 'weapons')">View</button>
+                <div class="weaponCategory" v-for="weaponCategory in weaponCategories" :key="weaponCategory.key">
+                    <button @click="toggleCategory(weaponCategory.key)" class="categoryToggle roboto-mono-600">
+                        <span v-if="!isCategoryExpanded[weaponCategory.key]" class="toggleBtnContent">
+                            <p>Show {{
+                                weaponCategory.label
+                            }}</p>
+                            <img src="/ArrowDown.svg" alt="Arrow pointing down" />
+                        </span>
+                        <span v-else class="toggleBtnContent">
+                            <p>Hide {{ weaponCategory.label }}</p>
+                            <img src="/ArrowUp.svg" alt="Arrow point up" />
+                        </span>
+                    </button>
+                    <div class="categoryList" v-if="isCategoryExpanded[weaponCategory.key]">
+                        <div class="item" v-for="weapon in getWeaponsByCategory(weaponCategory.value)" :key="weapon.id">
+                            <p>{{ weapon.name }}</p>
+                            <div class="part">
+                                <p>Cost: {{ weapon.goldCost }} gold</p>
+                                <button class="inspectViewBtn bold" @click="openModal(weapon, 'weapons')">View</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -96,11 +112,11 @@
                         selectedItem.damageReduction }}</p>
                     <p v-if="selectedItem.blockValue !== undefined"><strong>Block Value:</strong> {{
                         selectedItem.blockValue
-                        }}
+                    }}
                     </p>
                     <p v-if="selectedItem.weight"><strong>Weight:</strong> {{ selectedItem.weight ?? '—' }}</p>
                     <p v-if="selectedItem.strengthReq"><strong>Strength Req:</strong> {{ selectedItem.strengthReq ?? '—'
-                        }}</p>
+                    }}</p>
                     <p v-if="selectedItem.skillReq"><strong>Skill Req:</strong> <span
                             v-for="value, key in selectedItem.skillReq" :key="key"> {{ capitalise(key) }}: {{ value
                             }}</span></p>
@@ -134,10 +150,38 @@
 definePageMeta({
     middleware: ["auth",],
 });
-import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { ref, onMounted, onBeforeUnmount, computed } from 'vue';
 import { capitalise } from '~~/utils/general';
 
 const { data } = await useFetch('/api/items/itemCatalog');
+
+/* === Item Display === */
+const weaponCategories = [
+    { key: 'swords', value: 'swords', label: 'Swords' },
+    { key: 'axes', value: 'axes', label: 'Axes' },
+    { key: 'hammers', value: 'hammers', label: 'Hammers' },
+    { key: 'spears', value: 'spears', label: 'Spears' },
+    { key: 'daggers', value: 'daggers', label: 'Daggers' },
+];
+
+const isCategoryExpanded = ref({
+    swords: false,
+    axes: false,
+    hammers: false,
+    spears: false,
+    daggers: false
+});
+
+function toggleCategory(categoryKey) {
+    isCategoryExpanded.value[categoryKey] = !isCategoryExpanded.value[categoryKey];
+}
+
+//Filter the items collection by weapon category
+function getWeaponsByCategory(category) {
+    return data.value?.items.weapons.filter(weapon => weapon.category === category) || [];
+}
+
+/* === Item Modal === */
 
 const showModal = ref(false);
 const selectedItem = ref({});
@@ -267,6 +311,28 @@ async function sellItem(inventory_id) {
     border-radius: 50%;
 }
 
+.categoryToggle {
+    width: 100%;
+    background-color: var(--brown);
+    color: var(--bone-white);
+    border: none;
+    box-shadow: 2px 2px 2px var(--warm-black);
+    padding: 0.4rem;
+}
+
+.toggleBtnContent {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.categoryList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin: 1rem 0;
+}
+
 .item {
     display: flex;
     flex-direction: row;
@@ -285,6 +351,7 @@ async function sellItem(inventory_id) {
     flex-direction: column;
     gap: 0.8rem;
     width: 20rem;
+    margin-top: 1rem;
 }
 
 /* MODAL STYLING */
@@ -345,5 +412,18 @@ async function sellItem(inventory_id) {
     flex-direction: row;
     justify-content: space-between;
     margin-bottom: 0.5rem;
+}
+
+@media only screen and (min-width: 650px) {
+    .wrapper {
+        margin-top: 1rem;
+    }
+
+    .storeContainer {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
 }
 </style>

@@ -44,6 +44,7 @@
   position: fixed;
   bottom: 0;
   width: 100%;
+  max-width: 650px;
   z-index: 900;
   background-color: var(--yellow);
   border-top: 5px double var(--bone-white);

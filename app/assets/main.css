@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Roboto+Slab:wght@100..900&display=swap");
+
 :root {
   --bone-white: #f1eee0;
   --warm-black: #25241f;
@@ -9,6 +11,21 @@
   --yellow: #f5c938;
   --brown: #756e56;
 }
+
+.roboto-mono-400 {
+  font-family: "Roboto Mono", monospace;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.roboto-mono-600 {
+  font-family: "Roboto Mono", monospace;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+}
+
 * {
   padding: 0;
   margin: 0;
@@ -17,7 +34,10 @@
 
 body {
   margin: 0;
-  font-family: monospace;
+  font-family: "Roboto Mono", monospace;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-size: 0.8rem;
   color: var(--warm-black);
   background-color: var(--bone-white);
 }
@@ -81,7 +101,7 @@ section {
   border: none;
   font-family: monospace;
   padding: 0.2rem 0.4rem 0.2rem;
-  box-shadow: 2px 2px var(--warm-black);
+  box-shadow: 2px 2px 2px var(--warm-black);
   cursor: pointer;
   color: var(--bone-white);
   background-color: var(--dark-green);
@@ -109,4 +129,24 @@ section {
 
 .topMargin {
   margin-top: 1rem;
+}
+
+@media only screen and (min-width: 650px) {
+  body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--brown);
+  }
+
+  main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 650px;
+    max-width: 650px;
+    background-color: var(--bone-white);
+  }
 }

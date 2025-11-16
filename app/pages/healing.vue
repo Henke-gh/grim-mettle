@@ -105,4 +105,10 @@ async function buyHealing(item_id) {
     gap: 0.5rem;
     margin-top: 0.4rem;
 }
+
+@media only screen and (min-width: 650px) {
+    .healingWrapper {
+        margin-top: 1rem;
+    }
+}
 </style>
