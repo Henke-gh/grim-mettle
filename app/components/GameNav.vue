@@ -105,6 +105,9 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onEscape));
 
 }
 
+/* Positions the acual menu at the edge of the <main> element on larger screens
+    Dirty fix? 
+*/
 @media only screen and (min-width: 650px) {
     .gameNav {
         right: calc((100vw - 650px - 15px) / 2);

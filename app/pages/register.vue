@@ -27,6 +27,7 @@ import "../components/NewUser.vue"
     display: flex;
     flex-direction: column;
     align-items: center;
+    height: 100vh;
     gap: 1rem;
 }
 
