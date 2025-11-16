@@ -108,6 +108,7 @@ const user = useSupabaseUser();
     flex-direction: column;
     align-items: center;
     text-align: center;
+    width: 100%;
     background-color: var(--dark-green);
     padding: 2rem 0.4rem;
     margin-top: 1rem;

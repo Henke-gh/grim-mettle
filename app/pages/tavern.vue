@@ -108,4 +108,10 @@ async function workShift(shift_id) {
     gap: 0.5rem;
     align-items: center;
 }
+
+@media only screen and (min-width: 650px) {
+    .tavernWrapper {
+        margin-top: 1rem;
+    }
+}
 </style>

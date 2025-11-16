@@ -239,4 +239,10 @@ const unEquippedItems = computed(() => {
     align-items: center;
     gap: 0.5rem;
 }
+
+@media only screen and (min-width: 650px) {
+    .heroWrapper {
+        min-width: 650px;
+    }
+}
 </style>

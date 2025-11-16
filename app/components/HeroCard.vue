@@ -80,4 +80,15 @@ onMounted(async () => {
   top: 0.5rem;
   right: 0.5rem;
 }
+
+@media only screen and (min-width: 650px) {
+  .container {
+    max-width: 650px;
+    position: relative;
+  }
+
+  .fixedMenu {
+    position: absolute;
+  }
+}
 </style>
