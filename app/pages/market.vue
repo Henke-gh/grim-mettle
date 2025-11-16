@@ -21,9 +21,16 @@
                 <h2>Weapons</h2>
                 <div class="weaponCategory" v-for="weaponCategory in weaponCategories" :key="weaponCategory.key">
                     <button @click="toggleCategory(weaponCategory.key)" class="categoryToggle roboto-mono-600">
-                        <span v-if="!isCategoryExpanded[weaponCategory.key]">- Show {{ weaponCategory.label
-                        }} -</span>
-                        <span v-else>- Hide {{ weaponCategory.label }} -</span>
+                        <span v-if="!isCategoryExpanded[weaponCategory.key]" class="toggleBtnContent">
+                            <p>Show {{
+                                weaponCategory.label
+                            }}</p>
+                            <img src="/arrowDown.svg" alt="Arrow pointing down" />
+                        </span>
+                        <span v-else class="toggleBtnContent">
+                            <p>Hide {{ weaponCategory.label }}</p>
+                            <img src="/arrowUp.svg" alt="Arrow point up" />
+                        </span>
                     </button>
                     <div class="categoryList" v-if="isCategoryExpanded[weaponCategory.key]">
                         <div class="item" v-for="weapon in getWeaponsByCategory(weaponCategory.value)" :key="weapon.id">
@@ -311,6 +318,12 @@ async function sellItem(inventory_id) {
     border: none;
     box-shadow: 2px 2px 2px var(--warm-black);
     padding: 0.4rem;
+}
+
+.toggleBtnContent {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 .categoryList {
