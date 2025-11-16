@@ -24,12 +24,12 @@
                         <span v-if="!isCategoryExpanded[weaponCategory.key]" class="toggleBtnContent">
                             <p>Show {{
                                 weaponCategory.label
-                                }}</p>
-                            <img src="/arrowDown.svg" alt="Arrow pointing down" />
+                            }}</p>
+                            <img src="/ArrowDown.svg" alt="Arrow pointing down" />
                         </span>
                         <span v-else class="toggleBtnContent">
                             <p>Hide {{ weaponCategory.label }}</p>
-                            <img src="/arrowUp.svg" alt="Arrow point up" />
+                            <img src="/ArrowUp.svg" alt="Arrow point up" />
                         </span>
                     </button>
                     <div class="categoryList" v-if="isCategoryExpanded[weaponCategory.key]">
@@ -112,11 +112,11 @@
                         selectedItem.damageReduction }}</p>
                     <p v-if="selectedItem.blockValue !== undefined"><strong>Block Value:</strong> {{
                         selectedItem.blockValue
-                        }}
+                    }}
                     </p>
                     <p v-if="selectedItem.weight"><strong>Weight:</strong> {{ selectedItem.weight ?? '—' }}</p>
                     <p v-if="selectedItem.strengthReq"><strong>Strength Req:</strong> {{ selectedItem.strengthReq ?? '—'
-                        }}</p>
+                    }}</p>
                     <p v-if="selectedItem.skillReq"><strong>Skill Req:</strong> <span
                             v-for="value, key in selectedItem.skillReq" :key="key"> {{ capitalise(key) }}: {{ value
                             }}</span></p>
