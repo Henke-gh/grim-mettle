@@ -1,7 +1,7 @@
 <template>
     <HeroCard v-if="user && hero" />
     <CustomHeader v-else />
-    <div class="recordsWrapper" :style="{ marginTop: (user && hero) ? '7rem' : null }">
+    <div class="recordsWrapper" :class="{ 'withTopMargin': (user && hero) }">
         <h1>Hall of Records</h1>
         <p class="textLeft">The bureaucrats of this world need to make a living somehow. Thus records are kept, of those
             still fighting
@@ -110,6 +110,10 @@ onMounted(async () => {
     gap: 0.5rem;
 }
 
+.recordsWrapper.withTopMargin {
+    margin-top: 7rem;
+}
+
 .recordsContainer {
     display: flex;
     flex-direction: column;
@@ -139,5 +143,11 @@ onMounted(async () => {
 
 .textLeft {
     text-align: left;
+}
+
+@media only screen and (min-width: 650px) {
+    .recordsWrapper.withTopMargin {
+        margin-top: 1rem;
+    }
 }
 </style>

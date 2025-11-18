@@ -1,5 +1,5 @@
 <template>
-    <div class="linksMenu" v-if="!showGameMenu">
+    <div class="linksMenu">
         <button class="burgerBtn" @click="toggleGameMenu">
             <img src="/menuIcon_twist.svg" />
         </button>
@@ -10,13 +10,15 @@
             <img src="/smallDivider.svg" alt="Two swords on a horizontal line" />
             <div class="links">
                 <NuxtLink to="/" style="text-decoration: none; color: var(--bone-white);">Start</NuxtLink>
-                <NuxtLink to="/hall-of-records" style="text-decoration: none; color: var(--bone-white);">Hall of Records
+                <NuxtLink to="/hall-of-records" style="text-decoration: none; color: var(--bone-white);">Hall of
+                    Records
                 </NuxtLink>
                 <NuxtLink to="/game-guide" style="text-decoration: none; color: var(--bone-white);">Game Guide
                 </NuxtLink>
                 <div class="links separation">
                     <button class="menuButton" @click="logoutUser" v-if="user">Log Out</button>
-                    <NuxtLink to="/login" v-if="!user" style="text-decoration: none; color: var(--bone-white);">Login
+                    <NuxtLink to="/login" v-if="!user" style="text-decoration: none; color: var(--bone-white);">
+                        Login
                     </NuxtLink>
                     <NuxtLink to="/register" v-if="!user" style="text-decoration: none; color: var(--bone-white);">
                         Register</NuxtLink>
@@ -101,5 +103,14 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onEscape));
     text-align: left;
     font-family: monospace;
 
+}
+
+/* Positions the acual menu at the edge of the <main> element on larger screens
+    Dirty fix? 
+*/
+@media only screen and (min-width: 650px) {
+    .gameNav {
+        right: calc((100vw - 650px - 15px) / 2);
+    }
 }
 </style>

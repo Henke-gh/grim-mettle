@@ -1,7 +1,7 @@
 <template>
     <HeroCard v-if="user && hero" />
     <CustomHeader v-else />
-    <div class="guideWrapper" :style="{ marginTop: (user && hero) ? '7rem' : null }">
+    <div class="guideWrapper" :class="{ 'withTopMargin': (user && hero) }">
         <h1 class="roboto-mono-600 centerText">Game Guide</h1>
         <article class="gameGuide roboto-mono-400">
             <p class="centerText">This guide provides a quick run down of the skills and mechanics of Grim Mettle.</p>
@@ -66,7 +66,7 @@
             <h3 class="bold headline">[Misc]</h3>
             <p>What if you don't have a weapon equipped during combat you say? Then you will do battle with your fists,
                 relying only on your strength!</p>
-
+            <!-- Not implemented yet! -->
             <!--  <p class="bold headline">[Critical hits]</p>
             <p>Just thought I'd throw this in here aswell. Both the player and the monsters you fight have a chance to
                 critically strike, dealing increased damage. You have been warned!</p> -->
@@ -96,9 +96,19 @@ const hero = useHeroView();
     font-family: monospace;
 }
 
+.guideWrapper.withTopMargin {
+    margin-top: 7rem;
+}
+
 .gameGuide {
     display: flex;
     flex-direction: column;
     gap: 0.4rem
+}
+
+@media only screen and (min-width: 650px) {
+    .guideWrapper.withTopMargin {
+        margin-top: 1rem;
+    }
 }
 </style>

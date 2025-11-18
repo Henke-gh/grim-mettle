@@ -1,19 +1,17 @@
 <template>
     <CustomHeader />
-    <div class="wrapper">
-        <section class="loginWrapper">
-            <h1>Enter the Arena</h1>
-            <div class="gradientBorder fitContent">
-                <div class="loginContainer">
-                    <LoginForm />
-                </div>
+    <section class="loginWrapper">
+        <h1>Enter the Arena</h1>
+        <div class="gradientBorder fitContent">
+            <div class="loginContainer">
+                <LoginForm />
             </div>
-            <div class="ctaRegister">
-                <p class="customP">Don't have an account? It only takes a moment to set up.</p>
-                <DefaultButton text="Register new user" routeTo="/register" theme="light" />
-            </div>
-        </section>
-    </div>
+        </div>
+        <div class="ctaRegister">
+            <p class="customP">Don't have an account? It only takes a moment to set up.</p>
+            <DefaultButton text="Register new user" routeTo="/register" theme="light" />
+        </div>
+    </section>
     <CustomFooter />
 </template>
 
@@ -25,7 +23,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
+    height: 100vh;
     gap: 2rem;
 }
 
