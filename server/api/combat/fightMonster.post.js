@@ -59,6 +59,14 @@ export default defineEventHandler(async (event) => {
       throw createError({ statusCode: 400, message: "Hero not found." });
     }
 
+    //Check hero current grit, has to be above 0. Else the hero is too tired to fight!
+    if (hero.grit_current <= 0) {
+      throw createError({
+        statusCode: 400,
+        message: "Not enough Grit. Your hero is too tired.",
+      });
+    }
+
     //Get hero equipped items (gets inventory IDs, which have to get matched with correct item id from hero_inventory)
     const { data: equipment, error: equipError } = await supabase
       .from("hero_equipment")
@@ -159,7 +167,16 @@ export default defineEventHandler(async (event) => {
     const retreatValue = Math.ceil(
       (combatSettings.retreatValue / 100) * hero.hp_max
     );
-    //Run the combat loop
+
+    //Final hp check
+    if (retreatValue > hero.hp_current) {
+      throw createError({
+        statusCode: 400,
+        message: "Not enough HP. Recover or lower your retreat value.",
+      });
+    }
+
+    /* === Combat Initiated === */
     //Executes all combat related game logic and returns the results
     const combatResult = doCombat(hero, heroEquipment, retreatValue, monster);
 

@@ -163,6 +163,7 @@ async function submitLevelUp() {
 .lvlUpHeader {
     text-align: center;
     background-color: var(--yellow);
+    width: 100%;
     padding: 0.5rem;
     margin-bottom: 1rem;
     border-bottom: 5px double var(--bone-white);
@@ -229,5 +230,11 @@ async function submitLevelUp() {
     align-items: end;
     width: 100%;
     padding-bottom: 0.5rem;
+}
+
+@media only screen and (min-width: 650px) {
+    .statInput {
+        width: 2rem;
+    }
 }
 </style>
