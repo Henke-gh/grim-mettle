@@ -18,6 +18,11 @@
                     alt="A line of four swords, with a shield in the middle" /></div>
         </section>
         <div class="settingsWrapper" v-if="showCombatSettings && hero">
+            <!-- Sword Animation -->
+            <div class="swords-container">
+                <img :src="leftSword" class="sword-img left-hand" ref="leftHandEl" />
+                <img :src="rightSword" class="sword-img right-hand" ref="rightHandEl" />
+            </div>
             <div class="gradientBorder fitContent">
                 <section class="combatSettings">
                     <h2>Make your preparations </h2>
@@ -85,8 +90,11 @@ definePageMeta({
     middleware: ["auth",],
 });
 import { ref } from 'vue';
+import { gsap } from 'gsap'
 import { capitalise } from '~~/utils/general';
 import swordLine from "../assets/images/swordLine.svg"
+import leftSword from "../assets/images/swordIcon.png"
+import rightSword from "../assets/images/swordIconMirror.png"
 
 const showMonsterModal = ref(false);
 const selectedMonster = ref('');
@@ -98,6 +106,9 @@ const { data: monsters, error } = await useAsyncData('monsters', () => $fetch('/
 const { hero, initialise } = useHeroView();
 const errorMsg = ref('');
 
+const leftHandEl = ref(null);
+const rightHandEl = ref(null);
+
 //Creates an array with the selectable retreat values.
 const retreatOptions = Array.from({ length: 11 }, (_, hp) => 100 - hp * 10);
 const stances = ["balanced", "offensive", "defensive"];
@@ -105,10 +116,6 @@ const stances = ["balanced", "offensive", "defensive"];
 if (error.value) {
     console.error('Error fetching monsters:', error.value);
 }
-
-onMounted(async () => {
-    await initialise();
-})
 
 function showDetailedInfo(monster) {
     showMonsterModal.value = true;
@@ -163,7 +170,28 @@ function onKeydown(e) {
     if (e.key === 'Escape' && showMonsterModal.value) closeDetailedInfo()
 }
 
-onMounted(() => window.addEventListener('keydown', onKeydown));
+onMounted(async () => {
+    await initialise();
+
+    window.addEventListener('keydown', onKeydown);
+});
+
+function swordAnimation() {
+    const tl_SwordAnimation = gsap.timeline();
+
+    tl_SwordAnimation.to(leftHandEl.value, { duration: 0.12, x: -20, rotation: -15 });
+    tl_SwordAnimation.to(rightHandEl.value, { duration: 0.12, x: 20, rotation: 15 }, "<");
+    tl_SwordAnimation.to(leftHandEl.value, { duration: 0.5, x: 30, rotation: 45, ease: "power4.in" });
+    tl_SwordAnimation.to(rightHandEl.value, { duration: 0.5, x: -30, rotation: -45, ease: "power4.in" }, "<");
+}
+
+watch(showCombatSettings, async (isVisible) => {
+    if (isVisible) {
+        await nextTick();
+        swordAnimation();
+    }
+})
+
 onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
 </script>
 
@@ -243,6 +271,24 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
     flex-direction: row;
     gap: 3rem;
     margin: 1rem 0;
+}
+
+/* === Swords Animation === */
+.swords-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 5rem;
+    width: 5rem;
+    border-radius: 50%;
+    background-color: var(--dark-green);
+    border: 4px double var(--brown);
+}
+
+.sword-img {
+    height: 8rem;
+    width: auto;
 }
 
 /* === Modal View === */

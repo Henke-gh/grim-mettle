@@ -47,6 +47,7 @@ onMounted(async () => {
   padding-right: 3.5rem;
   background-color: var(--yellow);
   border-bottom: 5px double var(--bone-white);
+  z-index: 5;
 }
 
 .hero {
