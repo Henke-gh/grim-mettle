@@ -278,7 +278,7 @@ export const monsterCatalog = [
     block: 50,
     initiative: 0,
     fatigue: 25,
-    hp: 185,
+    hp: 155,
     weapon: {
       name: "War Hammer",
       minDmg: 5,
@@ -295,6 +295,36 @@ export const monsterCatalog = [
     armour: { name: "Bronze-Scaled Mail", damageReduction: 4 },
     description:
       "The clonkers guard the upper district. Their endurance and heavy armour makes them quite tough.",
+  },
+  {
+    id: 12,
+    name: "Goblin War-chief",
+    level: 12,
+    xpPayout: 25,
+    strength: 50,
+    speed: 10,
+    vitality: 10,
+    attack: 55,
+    evasion: 0,
+    block: 25,
+    initiative: 30,
+    fatigue: 20,
+    hp: 125,
+    weapon: {
+      name: "Blackened Cleaver",
+      minDmg: 5,
+      maxDmg: 20,
+      skillReq: 0,
+      category: "attack",
+    },
+    shield: {
+      name: "Spiked Buckler",
+      blockValue: 2,
+      skillReq: 5,
+      category: "shields",
+    },
+    armour: { name: "Tribal Chief's garb", damageReduction: 2 },
+    description: "He's huge for a goblin. The axe looks particularly nasty.",
   },
 ];
 

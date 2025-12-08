@@ -226,4 +226,10 @@ const submitHero = async () => {
 .createMargin {
     margin: 0.5rem 0;
 }
+
+@media only screen and (min-width: 650px) {
+    .statInput {
+        width: 2rem;
+    }
+}
 </style>

@@ -158,6 +158,83 @@ export const weapons = [
     description:
       "The blade is quite long, and the edge sharp. Terrifying in a bar fight.",
   },
+  {
+    id: 11,
+    category: "swords",
+    slot: "main_hand",
+    twoHanded: false,
+    name: "Long Sword",
+    minDmg: 5,
+    maxDmg: 12,
+    skillReq: { swords: 60 },
+    strengthReq: 40,
+    weight: 5,
+    goldCost: 600,
+    bonus: { swords: 5, initiative: 5 },
+    description: "A classic, the very definition of a sword.",
+  },
+  {
+    id: 12,
+    category: "axes",
+    slot: "main_hand",
+    twoHanded: false,
+    name: "War Axe",
+    minDmg: 6,
+    maxDmg: 11,
+    skillReq: { axes: 40 },
+    strengthReq: 50,
+    weight: 2,
+    goldCost: 550,
+    bonus: { block: 5 },
+    description:
+      "The longer haft makes it easier to attack while wielding a shield. Made for battle.",
+  },
+  {
+    id: 13,
+    category: "hammers",
+    slot: "main_hand",
+    twoHanded: false,
+    name: "Morning Star",
+    minDmg: 4,
+    maxDmg: 14,
+    skillReq: { hammers: 40 },
+    strengthReq: 70,
+    weight: 2,
+    goldCost: 550,
+    bonus: {},
+    description: "Sharp spikes adorn the blackened steel ball.",
+  },
+  {
+    id: 14,
+    category: "spears",
+    slot: "main_hand",
+    twoHanded: false,
+    name: "Glaive",
+    minDmg: 3,
+    maxDmg: 12,
+    skillReq: { spears: 60 },
+    strengthReq: 15,
+    weight: 2,
+    goldCost: 580,
+    bonus: { initiative: 10, evasion: 5 },
+    description: "The slightly curved single edged blade catches the light.",
+  },
+  {
+    id: 15,
+    category: "daggers",
+    slot: "main_hand",
+    twoHanded: false,
+    name: "Kariul Blade",
+    minDmg: 3,
+    maxDmg: 10,
+    skillReq: { daggers: 55 },
+    strengthReq: 10,
+    weight: 1,
+    goldCost: 620,
+    bonus: { evasion: 20 },
+    description:
+      "An exotic weapon often carried by the nomads of the Kariul Plains.",
+  },
 ];
 
 export const shields = [
@@ -220,7 +297,7 @@ export const armour = [
     slot: "armour",
     name: "Padded Tunic",
     damageReduction: 2,
-    goldCost: 175,
+    goldCost: 200,
     weight: 5,
     bonus: {},
     description: "The padding offers some extra protection.",
@@ -231,11 +308,22 @@ export const armour = [
     slot: "armour",
     name: "Chain Mail",
     damageReduction: 3,
-    goldCost: 225,
+    goldCost: 275,
     weight: 5,
     bonus: { speed: -10 },
     description:
       "A classic, the added weight will tire you out quicker though.",
+  },
+  {
+    id: 202,
+    category: "armour",
+    slot: "armour",
+    name: "Bronze-scaled Tunic",
+    damageReduction: 4,
+    goldCost: 700,
+    weight: 5,
+    bonus: { speed: -10 },
+    description: "The overlapping scales afford superior protection.",
   },
 ];
 
@@ -275,11 +363,28 @@ export const trinkets = [
     },
     description: "Various animal teeth on a string. It's pretty savage.",
   },
+  {
+    id: 302,
+    category: "trinkets",
+    slot: "trinket",
+    name: "Prism of Lahr",
+    goldCost: 1500,
+    bonus: {
+      swords: 10,
+      axes: 10,
+      hammers: 10,
+      spears: 10,
+      daggers: 10,
+    },
+    description:
+      "The prism is said to bestow visions of many possible futures.",
+  },
 ];
 
 //These id's are default values in the hero_equipment-table.
 export const starterGear = [
   {
+    //Only used during combat, if hero has no equipped weapon
     id: 400,
     category: "strength",
     slot: "main_hand",
@@ -295,6 +400,7 @@ export const starterGear = [
       "Your fists will only carry you so far. Might want to look into improving that situation.",
   },
   {
+    //Not in use
     id: 401,
     category: "armour",
     name: "Plain Tunic",

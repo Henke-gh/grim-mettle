@@ -12,7 +12,9 @@ const user = useSupabaseUser();
     <div class="indexWrapper">
         <section class="welcome">
             <div class="news">
-                <p>* <span class="bold">Latest changes:</span> Block is now live. Try it out! *</p>
+                <p class="centerText">* <span class="bold">Latest changes:</span> Small balance changes, new items.
+                    <span class="italic">7/12-25</span> *
+                </p>
             </div>
             <div class="guardContainer">
                 <img :src="guard" alt="A hooded guard watching the gates of an arena" class="guardImg" />
