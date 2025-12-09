@@ -120,10 +120,13 @@
                     <p v-if="selectedItem.skillReq"><strong>Skill Req:</strong> <span
                             v-for="value, key in selectedItem.skillReq" :key="key"> {{ capitalise(key) }}: {{ value
                             }}</span></p>
-                    <p v-if="Object.keys(selectedItem.bonus ?? {}).length"><strong>Bonus: </strong><span
-                            v-for="value, key in selectedItem.bonus" :key="key"> {{ capitalise(key) }}: {{ value
-                            }}</span>
-                    </p>
+                    <template v-if="Object.keys(selectedItem.bonus ?? {}).length">
+                        <p><strong>Bonus:</strong>
+                            <li style="list-style-type: none;" v-for="value, key in selectedItem.bonus" :key="key">{{
+                                capitalise(key) }}: {{ value
+                                }}</li>
+                        </p>
+                    </template>
                     <p><strong>Cost:</strong> {{ selectedItem.goldCost }} gold</p>
                     <p class="descriptionLine">{{ selectedItem.description }}</p>
                 </section>

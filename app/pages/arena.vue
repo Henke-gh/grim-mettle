@@ -128,6 +128,7 @@ function closeDetailedInfo() {
 }
 
 function challengeMonster(passMonster) {
+    window.scrollTo({ top: 0 });
     showCombatSettings.value = true;
     closeDetailedInfo();
     selectedMonster.value = passMonster
