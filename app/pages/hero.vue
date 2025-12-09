@@ -42,7 +42,7 @@ onMounted(async () => {
 const unEquippedItems = computed(() => {
     const items = unref(inventoryWithItems) || [];
     return items.filter(e => !isEquipped(e.inventory_id))
-})
+});
 </script>
 
 <template>
