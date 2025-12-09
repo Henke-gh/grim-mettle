@@ -7,3 +7,8 @@ export function getAudience() {
 
   return audience;
 }
+
+// Simple async timer
+export function delay(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
