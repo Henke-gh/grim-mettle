@@ -315,7 +315,7 @@ export const armour = [
       "A classic, the added weight will tire you out quicker though.",
   },
   {
-    id: 202,
+    id: 203,
     category: "armour",
     slot: "armour",
     name: "Bronze-scaled Tunic",
