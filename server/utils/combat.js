@@ -193,7 +193,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
 
   //Push combat start to log
   combatLog.push(
-    addLogEntry("combat_start", { hero: hero.hero_name, monster: monster.name })
+    addLogEntry("combat_start", { hero: hero.hero_name, monster: monster.name, monsterLevel: monster.level })
   );
 
   while (heroHP > heroRetreatsAt && monsterHP > 0) {

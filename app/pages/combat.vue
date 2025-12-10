@@ -7,12 +7,18 @@
         <div class="versus-container" v-if="log && heroAvatar">
             <div class="contestant left">
                 <img :src="heroAvatar.src" class="avatarImg hero-avatar" />
-                <p class="hero-name custom-vs-txt">[ {{ log[0].data.hero }} ]</p>
+                <div class="contestant-info">
+                    <p class="hero-name custom-vs-txt">[ {{ log[0].data.hero }} ]</p>
+                    <p class="hero-name custom-vs-txt">Level: {{ hero.level }}</p>
+                </div>
             </div>
             <p class="versus-text custom-vs-txt italic">Versus..</p>
             <div class="contestant right">
                 <img :src="monsterAvatar" class="avatarImg monster-avatar" />
-                <p class="monster-name custom-vs-txt">[ {{ log[0].data.monster }} ]</p>
+                <div class="contestant-info">
+                    <p class="monster-name custom-vs-txt">[ {{ log[0].data.monster }} ]</p>
+                    <p class="monster-name custom-vs-txt">Level: {{ log[0].data.monsterLevel }}</p>
+                </div>
             </div>
         </div>
         <p v-if="log && heroAvatar" class="italic centerText audience-text">An audience of {{ audience }} attendees
@@ -152,7 +158,7 @@ import defeatImg from "../assets/images/defeat_small.png"
 import monsterAvatar from "../assets/images/monster_Avatar.png"
 import { getAudience, delay } from "~~/utils/general";
 
-const { heroAvatar, fetchHero } = useHeroView();
+const { heroAvatar, hero, fetchHero } = useHeroView();
 const combatResult = useCombatResult();
 const log = combatResult.combatLog.value;
 const audience = getAudience();
@@ -288,6 +294,10 @@ function exitCombatLog() {
     margin-left: 2rem;
 }
 
+.contestant-info {
+    text-align: left;
+}
+
 .versus-text {
     margin-left: 10rem;
 }
@@ -331,6 +341,10 @@ function exitCombatLog() {
 
     .contestant.right {
         margin-right: 3rem;
+    }
+
+    .contestant-info {
+        text-align: center;
     }
 
     .versus-text {
