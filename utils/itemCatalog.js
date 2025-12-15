@@ -364,7 +364,7 @@ export const trinkets = [
     description: "Various animal teeth on a string. It's pretty savage.",
   },
   {
-    id: 302,
+    id: 303,
     category: "trinkets",
     slot: "trinket",
     name: "Prism of Lahr",

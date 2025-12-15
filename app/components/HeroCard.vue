@@ -9,7 +9,7 @@ onMounted(async () => {
   if (response?.regenerated) {
     await fetchHero();
   }
-})
+});
 </script>
 
 <template>
