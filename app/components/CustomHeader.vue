@@ -1,10 +1,12 @@
 <template>
     <div class="group">
-        <header>
-            <img :src="grimLogo" alt="Grim Mettle" class="logo" />
-            <p class="tagline">- Where heroes live forever -</p>
-            <p class="tagline">Until they die.</p>
-        </header>
+        <NuxtLink to="/" style="text-decoration: none;">
+            <header>
+                <img :src="grimLogo" alt="Grim Mettle" class="logo" />
+                <p class="tagline">- Where heroes live forever -</p>
+                <p class="tagline">Until they die.</p>
+            </header>
+        </NuxtLink>
         <div class="navContainer">
             <GameNav />
         </div>
@@ -45,6 +47,7 @@ header {
     margin-top: 0.2rem;
     font-size: 1rem;
     font-weight: 600;
+    color: var(--warm-black);
 }
 
 @media only screen and (min-width: 650px) {

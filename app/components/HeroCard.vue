@@ -14,9 +14,11 @@ onMounted(async () => {
 
 <template>
   <div class="container" v-if="hero">
-    <div class="hero">
-      <img :src="heroAvatar.src" class="heroPortraitSmall" :alt="heroAvatar.alt" />
-    </div>
+    <NuxtLink to="/hero">
+      <div class="hero">
+        <img :src="heroAvatar.src" class="heroPortraitSmall" :alt="heroAvatar.alt" />
+      </div>
+    </NuxtLink>
     <div class="levelUp" v-if="canLevelUp">
       <p>You&apos;ve gained a level!</p>
       <DefaultButton theme="light" text="Level Up" routeTo="/level-up" class="fitContent" />
