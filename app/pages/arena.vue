@@ -33,6 +33,8 @@
             <div class="swordlineContainer spacing"><img src="/divider.svg"
                     alt="A line of four swords, with a shield in the middle" /></div>
         </section>
+
+        <!-- Combat Settings View -->
         <div class="settingsWrapper" v-if="showCombatSettings && hero">
             <!-- Sword Animation -->
             <div class="swords-container">
@@ -79,6 +81,8 @@
                     alt="A line of four swords, with a shield in the middle" /></div>
         </div>
     </div>
+
+    <!-- Monster Info Modal -->
     <Teleport to="body">
         <div v-if="showMonsterModal" class="monsterModalWrapper" @click.self="closeDetailedInfo">
             <div class="gradientBorder">
@@ -98,6 +102,8 @@
             </div>
         </div>
     </Teleport>
+
+    <!-- Hero Nav Bar -->
     <HeroNav />
 </template>
 
