@@ -5,14 +5,30 @@
         <section class="monsterSelect" v-if="!showCombatSettings">
             <img src="../assets/images/goblin_fighter_sharp.png" class="goblinCombatant"
                 alt="A goblin fighter ready for battle." />
-            <h2>The challengers of your demise</h2>
+            <h2 style="text-align: center;">The challengers of your demise</h2>
             <div class="swordlineContainer spacing"><img :src="swordLine" alt="A line of four swords" /></div>
-            <ul class="monsterList" v-if="monsters">
-                <li class="listItem" v-for="monster in monsters" :key="monster.id">
-                    <p>{{ monster.name }} - Level: {{ monster.level }}</p>
-                    <button class="inspectViewBtn bold" @click="showDetailedInfo(monster)">View</button>
-                </li>
-            </ul>
+            <section v-if="monsters" class="brackets-container">
+                <article v-for="bracket in monsterBrackets" :key="bracket.rank" class="bracket-container">
+                    <button class="categoryToggle roboto-mono-600 toggleBtnContent"
+                        @click="toggleBracket((bracket.rank))">
+                        <h4>{{ bracket.rank }} [{{ bracket.lvlSpan }}]</h4>
+                        <span class="bracket-controls" v-if="!isBracketExpanded[bracket.rank]">
+                            <p>Show</p>
+                            <img src="/ArrowDown.svg" alt="Arrow point down" />
+                        </span>
+                        <span class="bracket-controls" v-else>
+                            <p>Hide</p>
+                            <img src="/ArrowUp.svg" alt="Arrow point up" />
+                        </span>
+                    </button>
+                    <ul class="monsterList" v-if="isBracketExpanded[bracket.rank]">
+                        <li v-for="monster in bracket.monsters" :key="monster.id" class="listItem">
+                            <p>{{ monster.name }} - Level: {{ monster.level }}</p>
+                            <button class="inspectViewBtn bold" @click="showDetailedInfo(monster)">View</button>
+                        </li>
+                    </ul>
+                </article>
+            </section>
             <p v-else>Loading monsters..</p>
             <div class="swordlineContainer spacing"><img src="/divider.svg"
                     alt="A line of four swords, with a shield in the middle" /></div>
@@ -92,6 +108,8 @@ definePageMeta({
 import { ref } from 'vue';
 import { gsap } from 'gsap'
 import { capitalise } from '~~/utils/general';
+import { monstersByBracket } from '~~/utils/arena';
+import { setDefaultMonsterBracket } from '~~/utils/heroUtils';
 import swordLine from "../assets/images/swordLine.svg"
 import leftSword from "../assets/images/swordIcon.png"
 import rightSword from "../assets/images/swordIconMirror.png"
@@ -108,6 +126,22 @@ const errorMsg = ref('');
 
 const leftHandEl = ref(null);
 const rightHandEl = ref(null);
+
+const isBracketExpanded = ref({
+    Novice: false,
+    Gladiator: false,
+    Veteran: false,
+})
+
+function toggleBracket(bracketKey) {
+    isBracketExpanded.value[bracketKey] = !isBracketExpanded.value[bracketKey];
+}
+
+//Gets the monsters array and sorts monsters into their respective level bracket.
+const monsterBrackets = computed(() => {
+    if (!monsters.value) return [];
+    return monstersByBracket(monsters.value);
+})
 
 //Creates an array with the selectable retreat values.
 const retreatOptions = Array.from({ length: 11 }, (_, hp) => 100 - hp * 10);
@@ -174,6 +208,10 @@ function onKeydown(e) {
 onMounted(async () => {
     await initialise();
 
+    if (hero.value) {
+        toggleBracket(setDefaultMonsterBracket(hero.value.level));
+    }
+
     window.addEventListener('keydown', onKeydown);
 });
 
@@ -207,6 +245,18 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
     gap: 1rem;
 }
 
+.brackets-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.bracket-controls {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}
+
 .settingsWrapper {
     display: flex;
     flex-direction: column;
@@ -231,20 +281,31 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
     flex-direction: column;
     justify-content: center;
     gap: 0.5rem;
+    width: 100%;
+}
+
+.bracket-info {
+    margin: 0.5rem 0;
+    width: 100%;
 }
 
 .monsterList {
     display: flex;
     flex-direction: column;
     gap: 0.8rem;
-    width: 20rem;
+    width: 100%;
+    padding: 0.5rem 0.5rem;
     list-style: none;
+    border: 2px dotted var(--dark-green);
+    border-radius: 5px;
+    margin-top: 0.5rem;
 }
 
 .listItem {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
 }
 
 .combatSettings {
