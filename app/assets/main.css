@@ -131,6 +131,40 @@ section {
   margin-top: 1rem;
 }
 
+.categoryToggle {
+  width: 100%;
+  background-color: var(--brown);
+  color: var(--bone-white);
+  border: none;
+  box-shadow: 2px 2px 2px var(--warm-black);
+  padding: 0.5rem;
+}
+
+.toggleBtnContent {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+/* === Bracket Expand Animation === */
+.expandBracket-enter-active,
+.expandBracket-leave-active {
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  overflow: hidden;
+}
+
+.expandBracket-enter-from,
+.expandBracket-leave-to {
+  max-height: 0;
+  opacity: 0;
+}
+
+.expandBracket-enter.to,
+.expandBracket-leave-from {
+  max-height: 45rem;
+  opacity: 1;
+}
+
 @media only screen and (min-width: 650px) {
   body {
     display: flex;

@@ -237,6 +237,7 @@ const unEquippedItems = computed(() => {
     display: flex;
     flex-direction: column;
     align-items: center;
+    text-align: center;
     gap: 0.5rem;
 }
 

@@ -43,11 +43,11 @@ function applyDamageReduction(damage, dmgRed) {
   return finalDamage;
 }
 
-//Give combatants a small chance for critical attack or miss.
+//Give combatants a small chance for critical attack.
 function isCritical() {
   const rollCritical = Math.random() * 101;
 
-  if (rollCritical > 96) {
+  if (rollCritical > 95) {
     return true;
   } else {
     return false;
@@ -127,13 +127,16 @@ function combatAction(
 ) {
   const damage = doDamage(attackerWeapon, attacker.strength);
   const attackHits = makeAttack(attacker, defender, attackerWeapon);
-  const criticalHit = false;
+  const criticalHit = isCritical();
 
   let finalDamage = 0;
   let blocked = false;
   let damageReduction = defenderArmour?.damageReduction || 0;
 
-  if (attackHits) {
+  if (criticalHit) {
+    damageReduction = 0;
+    finalDamage = Math.floor(damage * 1.5); //Damage multiplier on critical hit! Always hits, bypasses all dmg reduction and block.
+  } else if (!criticalHit && attackHits) {
     blocked = attemptBlock(attacker, defender, defenderShield, attackerWeapon);
     if (blocked) {
       damageReduction += defenderShield?.blockValue || 0;
@@ -193,7 +196,11 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
 
   //Push combat start to log
   combatLog.push(
-    addLogEntry("combat_start", { hero: hero.hero_name, monster: monster.name, monsterLevel: monster.level })
+    addLogEntry("combat_start", {
+      hero: hero.hero_name,
+      monster: monster.name,
+      monsterLevel: monster.level,
+    })
   );
 
   while (heroHP > heroRetreatsAt && monsterHP > 0) {
@@ -301,7 +308,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
           critical: heroAttack.criticalHit,
         })
       );
-      if (heroAttack.attackHits) {
+      if (heroAttack.criticalHit || heroAttack.attackHits) {
         monsterHP -= heroAttack.finalDamage;
 
         if (monsterHP <= 0) {
@@ -358,7 +365,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
         })
       );
 
-      if (monsterAttack.attackHits) {
+      if (monsterAttack.criticalHit || monsterAttack.attackHits) {
         heroHP -= monsterAttack.finalDamage;
 
         if (heroHP <= heroRetreatsAt) {
@@ -411,7 +418,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
         })
       );
 
-      if (monsterAttack.attackHits) {
+      if (monsterAttack.criticalHit || monsterAttack.attackHits) {
         heroHP -= monsterAttack.finalDamage;
 
         if (heroHP <= heroRetreatsAt) {
@@ -464,7 +471,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
         })
       );
 
-      if (heroAttack.attackHits) {
+      if (monsterAttack.criticalHit || heroAttack.attackHits) {
         monsterHP -= heroAttack.finalDamage;
 
         if (monsterHP <= 0) {

@@ -64,3 +64,17 @@ export function getItemBonuses(equippedItems) {
   });
   return bonuses;
 }
+
+export function setDefaultMonsterBracket(heroLevel) {
+  let showBracket = undefined;
+
+  if (heroLevel <= 4) {
+    showBracket = "Novice";
+  } else if (heroLevel <= 8) {
+    showBracket = "Gladiator";
+  } else {
+    showBracket = "Veteran";
+  }
+
+  return showBracket;
+}

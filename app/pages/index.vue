@@ -12,8 +12,9 @@ const user = useSupabaseUser();
     <div class="indexWrapper">
         <section class="welcome">
             <div class="news">
-                <p class="centerText">* <span class="bold">Latest changes:</span> Small balance changes, new items.
-                    <span class="italic">7/12-25</span> *
+                <p class="centerText">* <span class="bold">News:</span> Critical hits are now possible. Both the player
+                    and monsters might hit *significantly* harder than before.
+                    <span class="italic">19/12-25</span> *
                 </p>
             </div>
             <div class="guardContainer">

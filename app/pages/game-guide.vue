@@ -66,13 +66,12 @@
             <h3 class="bold headline">[Misc]</h3>
             <p>What if you don't have a weapon equipped during combat you say? Then you will do battle with your fists,
                 relying only on your strength!</p>
-            <!-- Not implemented yet! -->
-            <!--  <p class="bold headline">[Critical hits]</p>
+            <p class="bold headline">[Critical hits]</p>
             <p>Just thought I'd throw this in here aswell. Both the player and the monsters you fight have a chance to
-                critically strike, dealing increased damage. You have been warned!</p> -->
+                critically strike, dealing increased damage. You have been warned!</p>
             <div class="swordlineContainer spacing"><img src="/divider.svg"
                     alt="A line of four swords, with a shield in the middle" /></div>
-            <p class="italic">Last updated: 14/11-25</p>
+            <p class="italic">Last updated: 19/12-25</p>
         </article>
     </div>
     <HeroNav v-if="user && hero" />

@@ -24,7 +24,7 @@
                         <span v-if="!isCategoryExpanded[weaponCategory.key]" class="toggleBtnContent">
                             <p>Show {{
                                 weaponCategory.label
-                            }}</p>
+                                }}</p>
                             <img src="/ArrowDown.svg" alt="Arrow pointing down" />
                         </span>
                         <span v-else class="toggleBtnContent">
@@ -32,15 +32,19 @@
                             <img src="/ArrowUp.svg" alt="Arrow point up" />
                         </span>
                     </button>
-                    <div class="categoryList" v-if="isCategoryExpanded[weaponCategory.key]">
-                        <div class="item" v-for="weapon in getWeaponsByCategory(weaponCategory.value)" :key="weapon.id">
-                            <p>{{ weapon.name }}</p>
-                            <div class="part">
-                                <p>Cost: {{ weapon.goldCost }} gold</p>
-                                <button class="inspectViewBtn bold" @click="openModal(weapon, 'weapons')">View</button>
+                    <Transition name="expandBracket">
+                        <div class="categoryList" v-if="isCategoryExpanded[weaponCategory.key]">
+                            <div class="item" v-for="weapon in getWeaponsByCategory(weaponCategory.value)"
+                                :key="weapon.id">
+                                <p>{{ weapon.name }}</p>
+                                <div class="part">
+                                    <p>Cost: {{ weapon.goldCost }} gold</p>
+                                    <button class="inspectViewBtn bold"
+                                        @click="openModal(weapon, 'weapons')">View</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </Transition>
                 </div>
             </div>
             <div class="category">
@@ -112,11 +116,11 @@
                         selectedItem.damageReduction }}</p>
                     <p v-if="selectedItem.blockValue !== undefined"><strong>Block Value:</strong> {{
                         selectedItem.blockValue
-                    }}
+                        }}
                     </p>
                     <p v-if="selectedItem.weight"><strong>Weight:</strong> {{ selectedItem.weight ?? '—' }}</p>
                     <p v-if="selectedItem.strengthReq"><strong>Strength Req:</strong> {{ selectedItem.strengthReq ?? '—'
-                    }}</p>
+                        }}</p>
                     <p v-if="selectedItem.skillReq"><strong>Skill Req:</strong> <span
                             v-for="value, key in selectedItem.skillReq" :key="key"> {{ capitalise(key) }}: {{ value
                             }}</span></p>
@@ -312,21 +316,6 @@ async function sellItem(inventory_id) {
     width: 7rem;
     height: auto;
     border-radius: 50%;
-}
-
-.categoryToggle {
-    width: 100%;
-    background-color: var(--brown);
-    color: var(--bone-white);
-    border: none;
-    box-shadow: 2px 2px 2px var(--warm-black);
-    padding: 0.4rem;
-}
-
-.toggleBtnContent {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
 }
 
 .categoryList {
