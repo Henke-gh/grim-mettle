@@ -21,12 +21,14 @@
                             <img src="/ArrowUp.svg" alt="Arrow point up" />
                         </span>
                     </button>
-                    <ul class="monsterList" v-if="isBracketExpanded[bracket.rank]">
-                        <li v-for="monster in bracket.monsters" :key="monster.id" class="listItem">
-                            <p>{{ monster.name }} - Level: {{ monster.level }}</p>
-                            <button class="inspectViewBtn bold" @click="showDetailedInfo(monster)">View</button>
-                        </li>
-                    </ul>
+                    <Transition name="expandBracket">
+                        <ul class="monsterList" v-if="isBracketExpanded[bracket.rank]">
+                            <li v-for="monster in bracket.monsters" :key="monster.id" class="listItem">
+                                <p>{{ monster.name }} - Level: {{ monster.level }}</p>
+                                <button class="inspectViewBtn bold" @click="showDetailedInfo(monster)">View</button>
+                            </li>
+                        </ul>
+                    </Transition>
                 </article>
             </section>
             <p v-else>Loading monsters..</p>

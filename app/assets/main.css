@@ -146,6 +146,25 @@ section {
   justify-content: space-between;
 }
 
+/* === Bracket Expand Animation === */
+.expandBracket-enter-active,
+.expandBracket-leave-active {
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  overflow: hidden;
+}
+
+.expandBracket-enter-from,
+.expandBracket-leave-to {
+  max-height: 0;
+  opacity: 0;
+}
+
+.expandBracket-enter.to,
+.expandBracket-leave-from {
+  max-height: 45rem;
+  opacity: 1;
+}
+
 @media only screen and (min-width: 650px) {
   body {
     display: flex;

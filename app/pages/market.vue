@@ -32,15 +32,19 @@
                             <img src="/ArrowUp.svg" alt="Arrow point up" />
                         </span>
                     </button>
-                    <div class="categoryList" v-if="isCategoryExpanded[weaponCategory.key]">
-                        <div class="item" v-for="weapon in getWeaponsByCategory(weaponCategory.value)" :key="weapon.id">
-                            <p>{{ weapon.name }}</p>
-                            <div class="part">
-                                <p>Cost: {{ weapon.goldCost }} gold</p>
-                                <button class="inspectViewBtn bold" @click="openModal(weapon, 'weapons')">View</button>
+                    <Transition name="expandBracket">
+                        <div class="categoryList" v-if="isCategoryExpanded[weaponCategory.key]">
+                            <div class="item" v-for="weapon in getWeaponsByCategory(weaponCategory.value)"
+                                :key="weapon.id">
+                                <p>{{ weapon.name }}</p>
+                                <div class="part">
+                                    <p>Cost: {{ weapon.goldCost }} gold</p>
+                                    <button class="inspectViewBtn bold"
+                                        @click="openModal(weapon, 'weapons')">View</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </Transition>
                 </div>
             </div>
             <div class="category">
