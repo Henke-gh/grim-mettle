@@ -30,12 +30,24 @@
                     <h3>[ Turn {{ entry.data.number }} ]</h3>
                     <article class="turnAction" v-for="(action, idx) in entry.data.actions" :key="idx">
                         <!-- Turn Initiative -->
-                        <p v-if="action.type === 'initiative'" class="italic">{{ action.data.fighter
-                            }} gets the upper hand!
+                        <p v-if="action.type === 'initiative'" class="italic">
+                            {{ action.data.fighter }} gets the upper hand!
                         </p>
                         <!-- Attack phase -->
                         <p v-else-if="action.type === 'attack'">
-                            <template v-if="action.data.hit">
+                            <!-- Attack is a Critical Hit! -->
+                            <template v-if="action.data.critical">
+                                {{ action.data.attacker }} feints and catches {{ action.data.defender }} off guard!
+                                {{ action.data.defender }} has no time to react as {{ action.data.attacker }}'s {{
+                                    action.data.weapon }} comes crashing down.
+                                {{ action.data.attacker }} critically hits dealing <strong>{{ action.data.damage }}
+                                    damage!</strong><span class="italic">
+                                    The crowd roars with excitement!
+                                </span>
+                            </template>
+
+                            <!-- Attack is a normal hit -->
+                            <template v-else-if="action.data.hit">
                                 <!-- Attack hit with shield present -->
                                 <template v-if="action.data.shield">
                                     <template v-if="action.data.blocked">

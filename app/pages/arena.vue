@@ -45,6 +45,9 @@
                 <section class="combatSettings">
                     <h2>Make your preparations </h2>
                     <h3>{{ hero.hero_name }} vs {{ selectedMonster.name }}</h3>
+                    <p class="centerText"><span class="bold">NEW:</span> Critical hits are now enabled. Expect monsters
+                        to on occasion
+                        hit a lot harder!</p>
                     <div class="optionSelect">
                         <label for="stance">- Select fighting stance -</label>
                         <select v-model="selectedStance" id="stance" class="arenaInput">
