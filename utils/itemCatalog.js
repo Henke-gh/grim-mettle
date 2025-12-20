@@ -302,6 +302,20 @@ export const shields = [
     description: "In experienced hands this light shield is a joy to wield.",
     image: {},
   },
+  {
+    id: 103,
+    category: "shields",
+    slot: "off_hand",
+    name: "Large Shield",
+    skillReq: { block: 55 },
+    strengthReq: 40,
+    blockValue: 5,
+    goldCost: 600,
+    weight: 5,
+    bonus: { block: 10, speed: -5 },
+    description: "An engraved and polish metal disc. Why yes, it is large.",
+    image: {},
+  },
 ];
 
 export const armour = [
@@ -354,6 +368,18 @@ export const armour = [
     description: "The overlapping scales afford superior protection.",
     image: {},
   },
+  {
+    id: 204,
+    category: "armour",
+    slot: "armour",
+    name: "Sleek Leather Garb",
+    damageReduction: 1,
+    goldCost: 800,
+    weight: 5,
+    bonus: { evasion: 5, initiative: 10 },
+    description: "Not much in the way of protection, but it looks real fancy.",
+    image: {},
+  },
 ];
 
 export const trinkets = [
@@ -362,7 +388,7 @@ export const trinkets = [
     category: "trinkets",
     slot: "trinket",
     name: "Wrought-Iron Ring",
-    goldCost: 175,
+    goldCost: 190,
     bonus: {
       speed: 5,
     },
@@ -375,7 +401,7 @@ export const trinkets = [
     category: "trinkets",
     slot: "trinket",
     name: "Silver Leaf",
-    goldCost: 190,
+    goldCost: 200,
     bonus: {
       initiative: 5,
     },
@@ -388,7 +414,7 @@ export const trinkets = [
     category: "trinkets",
     slot: "trinket",
     name: "Tooth-row Necklace",
-    goldCost: 410,
+    goldCost: 450,
     bonus: {
       strength: 10,
     },
@@ -410,6 +436,30 @@ export const trinkets = [
     },
     description:
       "The prism is said to bestow visions of many possible futures.",
+    image: {},
+  },
+  {
+    id: 304,
+    category: "trinkets",
+    slot: "trinket",
+    name: "Desert Scarab",
+    goldCost: 400,
+    bonus: {
+      block: 10,
+    },
+    description: "Its back-plates give off a certain radiance.",
+    image: {},
+  },
+  {
+    id: 305,
+    category: "trinkets",
+    slot: "trinket",
+    name: "Rat-tail Talisman",
+    goldCost: 600,
+    bonus: {
+      evasion: 10,
+    },
+    description: "Who in their right mind would carry this around?",
     image: {},
   },
 ];

@@ -326,6 +326,32 @@ export const monsterCatalog = [
     armour: { name: "Tribal Chief's garb", damageReduction: 2 },
     description: "He's huge for a goblin. The axe looks particularly nasty.",
   },
+  {
+    id: 13,
+    name: "Old Man Ro",
+    level: 15,
+    xpPayout: 30,
+    strength: 80,
+    speed: 10,
+    vitality: 10,
+    attack: 80,
+    evasion: 0,
+    block: 25,
+    initiative: 30,
+    fatigue: 20,
+    hp: 155,
+    weapon: {
+      name: "Weathered Double-Axe",
+      minDmg: 10,
+      maxDmg: 20,
+      skillReq: 0,
+      category: "attack",
+    },
+    shield: {},
+    armour: { name: "Old Gladiator Leathers", damageReduction: 4 },
+    description:
+      "Ro's been eyeing you since you first got here. He's not impressed.",
+  },
 ];
 
 export const viewMonsterCollection = monsterCatalog.map((monster) => ({
