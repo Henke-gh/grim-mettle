@@ -29,7 +29,7 @@ const user = useSupabaseUser();
                     the dangers that lie ahead.</p>
             </article>
         </section>
-        <section>
+        <section style="width: 100%;">
             <div class="swordlineContainer spacing"><img src="/divider.svg"
                     alt="A line of four swords, with a shield in the middle" /></div>
             <section class="loginWrapper">

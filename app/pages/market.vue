@@ -134,6 +134,10 @@
                     <p><strong>Cost:</strong> {{ selectedItem.goldCost }} gold</p>
                     <p class="descriptionLine">{{ selectedItem.description }}</p>
                 </section>
+                <div v-if="selectedItem.image.src" class="itemImgContainer">
+                    <img :src="selectedItem.image.src" :alt="selectedItem.image.alt" class="itemImg"
+                        style="height: 3rem; width: auto;" />
+                </div>
                 <footer class="modalFooter">
                     <div class="modalFooterBtnContainer">
                         <button class="inspectViewBtn biggerBtn bold closeBtn" @click="closeModal"
@@ -374,6 +378,7 @@ async function sellItem(inventory_id) {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-bottom: 1px dashed var(--brown);
 }
 
 .closeByXBtn {
@@ -388,6 +393,13 @@ async function sellItem(inventory_id) {
     margin: 0.4rem 0;
 }
 
+.itemImgContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: 0.5rem 0rem;
+}
+
 .descriptionLine {
     font-style: italic;
 }
@@ -396,7 +408,9 @@ async function sellItem(inventory_id) {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    margin-top: 0.75rem;
+    margin-top: 0.5rem;
+    padding-top: 0.75rem;
+    border-top: 1px dashed var(--brown);
 }
 
 .modalFooterBtnContainer {
