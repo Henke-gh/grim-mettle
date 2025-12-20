@@ -1,11 +1,12 @@
 <template>
     <HeroCard />
     <div class="arenaWrapper">
-        <h1>The Arena</h1>
+        <h1 style="text-align: center; font-size: 1.2rem;">The challengers of your demise</h1>
         <section class="monsterSelect" v-if="!showCombatSettings">
             <img src="../assets/images/goblin_fighter_sharp.png" class="goblinCombatant"
                 alt="A goblin fighter ready for battle." />
-            <h2 style="text-align: center;">The challengers of your demise</h2>
+            <p class="italic" style="margin-top: 0.5rem;">From beyond the portcullis you can hear the rumbling
+                anticipation of the crowd.</p>
             <div class="swordlineContainer spacing"><img :src="swordLine" alt="A line of four swords" /></div>
             <section v-if="monsters" class="brackets-container">
                 <article v-for="bracket in monsterBrackets" :key="bracket.rank" class="bracket-container">
@@ -94,9 +95,10 @@
                 <section class="monsterDetails">
                     <div class="swordlineContainer spacing"><img :src="swordLine" alt="A line of four swords" /></div>
                     <h3>[ {{ selectedMonster.name }} ] - level {{ selectedMonster.level }}</h3>
-                    <p>Weapon: {{ selectedMonster.weapon.name }}</p>
-                    <p v-if="selectedMonster.shield">Shield: {{ selectedMonster.shield.name }}</p>
-                    <p>Armour: {{ selectedMonster.armour.name }}</p>
+                    <p><span class="bold">Weapon:</span> {{ selectedMonster.weapon.name }}</p>
+                    <p v-if="selectedMonster.shield"><span class="bold">Shield:</span> {{ selectedMonster.shield.name }}
+                    </p>
+                    <p><span class="bold">Armour:</span> {{ selectedMonster.armour.name }}</p>
                     <p class="italic">{{ selectedMonster.description }}</p>
                     <div class="monsterModalControls">
                         <button class="inspectViewBtn biggerBtn bold closeBtn" @click="closeDetailedInfo">Close</button>
@@ -259,6 +261,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
 .brackets-container {
     display: flex;
     flex-direction: column;
+    width: 100%;
     gap: 0.5rem;
 }
 
@@ -291,6 +294,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
     gap: 0.5rem;
     width: 100%;
 }
@@ -330,7 +334,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
 
 .goblinCombatant {
     height: auto;
-    width: 20rem;
+    width: 15rem;
 }
 
 .optionSelect {
@@ -395,11 +399,19 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px dashed var(--brown);
 }
 
 @media only screen and (min-width: 650px) {
     .arenaWrapper {
         margin-top: 1rem;
+    }
+
+    .goblinCombatant {
+        height: auto;
+        width: 20rem;
     }
 }
 </style>

@@ -20,6 +20,10 @@ export const weapons = [
     goldCost: 35,
     bonus: {},
     description: "Keep it short and sweet.",
+    image: {
+      src: "/weapons/short_sword.png",
+      alt: "A Short Sword",
+    },
   },
   {
     id: 2,
@@ -35,6 +39,7 @@ export const weapons = [
     goldCost: 200,
     bonus: { swords: 5 },
     description: "A thicker blade with a bit of heft.",
+    image: {},
   },
   {
     id: 3,
@@ -50,6 +55,10 @@ export const weapons = [
     goldCost: 25,
     bonus: {},
     description: "A small, light-weight axe.",
+    image: {
+      src: "/weapons/hand_ax.png",
+      alt: "A Hand Axe",
+    },
   },
   {
     id: 4,
@@ -65,6 +74,7 @@ export const weapons = [
     goldCost: 20,
     bonus: {},
     description: "Includes membership in the Club Clubbers Club.",
+    image: {},
   },
   {
     id: 5,
@@ -80,6 +90,7 @@ export const weapons = [
     goldCost: 25,
     bonus: { initiative: 5 },
     description: "A stick with a pointy end. Decent reach.",
+    image: {},
   },
   {
     id: 6,
@@ -95,6 +106,7 @@ export const weapons = [
     goldCost: 20,
     bonus: { evasion: 5 },
     description: "It ain't much, but it'll get the job done. If you're lucky.",
+    image: {},
   },
   {
     id: 7,
@@ -111,7 +123,9 @@ export const weapons = [
     bonus: {},
     description:
       "Despite its name the Small-Axe is longer than the Hand Axe and can be quite deadly.",
+    image: {},
   },
+
   {
     id: 8,
     category: "hammers",
@@ -126,6 +140,7 @@ export const weapons = [
     goldCost: 185,
     bonus: {},
     description: "Who ever's on the receiving end better wear a helmet.",
+    image: {},
   },
   {
     id: 9,
@@ -141,6 +156,7 @@ export const weapons = [
     goldCost: 195,
     bonus: { initiative: 10 },
     description: "Sleek and well crafted, this spear gores boars.",
+    image: {},
   },
   {
     id: 10,
@@ -157,6 +173,7 @@ export const weapons = [
     bonus: { evasion: 10 },
     description:
       "The blade is quite long, and the edge sharp. Terrifying in a bar fight.",
+    image: {},
   },
   {
     id: 11,
@@ -172,6 +189,7 @@ export const weapons = [
     goldCost: 600,
     bonus: { swords: 5, initiative: 5 },
     description: "A classic, the very definition of a sword.",
+    image: {},
   },
   {
     id: 12,
@@ -188,6 +206,7 @@ export const weapons = [
     bonus: { block: 5 },
     description:
       "The longer haft makes it easier to attack while wielding a shield. Made for battle.",
+    image: {},
   },
   {
     id: 13,
@@ -203,6 +222,7 @@ export const weapons = [
     goldCost: 550,
     bonus: {},
     description: "Sharp spikes adorn the blackened steel ball.",
+    image: {},
   },
   {
     id: 14,
@@ -218,6 +238,7 @@ export const weapons = [
     goldCost: 580,
     bonus: { initiative: 10, evasion: 5 },
     description: "The slightly curved single edged blade catches the light.",
+    image: {},
   },
   {
     id: 15,
@@ -234,6 +255,7 @@ export const weapons = [
     bonus: { evasion: 20 },
     description:
       "An exotic weapon often carried by the nomads of the Kariul Plains.",
+    image: {},
   },
 ];
 
@@ -250,6 +272,7 @@ export const shields = [
     weight: 0,
     bonus: { block: 5 },
     description: "A metal disc.",
+    image: {},
   },
   {
     id: 101,
@@ -263,6 +286,7 @@ export const shields = [
     weight: 2,
     bonus: { block: 5 },
     description: "An iron-shod wooden square. It makes you feel safer.",
+    image: {},
   },
   {
     id: 102,
@@ -276,6 +300,21 @@ export const shields = [
     weight: 2,
     bonus: { block: 15 },
     description: "In experienced hands this light shield is a joy to wield.",
+    image: {},
+  },
+  {
+    id: 103,
+    category: "shields",
+    slot: "off_hand",
+    name: "Large Shield",
+    skillReq: { block: 55 },
+    strengthReq: 40,
+    blockValue: 5,
+    goldCost: 600,
+    weight: 5,
+    bonus: { block: 10, speed: -5 },
+    description: "An engraved and polish metal disc. Why yes, it is large.",
+    image: {},
   },
 ];
 
@@ -290,6 +329,7 @@ export const armour = [
     weight: 1,
     bonus: {},
     description: "This one's made from leather, it's a fantasy trope.",
+    image: {},
   },
   {
     id: 201,
@@ -301,6 +341,7 @@ export const armour = [
     weight: 5,
     bonus: {},
     description: "The padding offers some extra protection.",
+    image: {},
   },
   {
     id: 202,
@@ -313,6 +354,7 @@ export const armour = [
     bonus: { speed: -10 },
     description:
       "A classic, the added weight will tire you out quicker though.",
+    image: {},
   },
   {
     id: 203,
@@ -324,6 +366,19 @@ export const armour = [
     weight: 5,
     bonus: { speed: -10 },
     description: "The overlapping scales afford superior protection.",
+    image: {},
+  },
+  {
+    id: 204,
+    category: "armour",
+    slot: "armour",
+    name: "Sleek Leather Garb",
+    damageReduction: 1,
+    goldCost: 800,
+    weight: 5,
+    bonus: { evasion: 5, initiative: 10 },
+    description: "Not much in the way of protection, but it looks real fancy.",
+    image: {},
   },
 ];
 
@@ -333,35 +388,38 @@ export const trinkets = [
     category: "trinkets",
     slot: "trinket",
     name: "Wrought-Iron Ring",
-    goldCost: 175,
+    goldCost: 190,
     bonus: {
       speed: 5,
     },
     description:
       "Someone's carved runes into this. Fits around your arm like a bracelet.",
+    image: {},
   },
   {
     id: 301,
     category: "trinkets",
     slot: "trinket",
     name: "Silver Leaf",
-    goldCost: 190,
+    goldCost: 200,
     bonus: {
       initiative: 5,
     },
     description:
       "Worn like a pin or a badge, it gleams an almost pure white in the sun.",
+    image: {},
   },
   {
     id: 302,
     category: "trinkets",
     slot: "trinket",
     name: "Tooth-row Necklace",
-    goldCost: 410,
+    goldCost: 450,
     bonus: {
       strength: 10,
     },
     description: "Various animal teeth on a string. It's pretty savage.",
+    image: {},
   },
   {
     id: 303,
@@ -378,6 +436,31 @@ export const trinkets = [
     },
     description:
       "The prism is said to bestow visions of many possible futures.",
+    image: {},
+  },
+  {
+    id: 304,
+    category: "trinkets",
+    slot: "trinket",
+    name: "Desert Scarab",
+    goldCost: 400,
+    bonus: {
+      block: 10,
+    },
+    description: "Its back-plates give off a certain radiance.",
+    image: {},
+  },
+  {
+    id: 305,
+    category: "trinkets",
+    slot: "trinket",
+    name: "Rat-tail Talisman",
+    goldCost: 600,
+    bonus: {
+      evasion: 10,
+    },
+    description: "Who in their right mind would carry this around?",
+    image: {},
   },
 ];
 
@@ -398,7 +481,9 @@ export const starterGear = [
     bonus: {},
     description:
       "Your fists will only carry you so far. Might want to look into improving that situation.",
+    image: {},
   },
+
   {
     //Not in use
     id: 401,

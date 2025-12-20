@@ -10,6 +10,8 @@
             <p>Your e-mail will only be used as part of your login credentials and is never publicly displayed.</p>
             <p>Username is not used for login but might be displayed in certain game contexts, such as leaderboards.</p>
         </article>
+        <div class="swordlineContainer spacing"><img src="/divider.svg"
+                alt="A line of four swords, with a shield in the middle" /></div>
     </div>
     <CustomFooter />
 </template>
