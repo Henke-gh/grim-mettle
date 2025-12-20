@@ -1,10 +1,9 @@
 <template>
     <HeroCard />
     <div class="healingWrapper">
-        <h1>The Healer</h1>
+        <h1 class="centerText">Forhild's Herbs and Splints</h1>
         <img class="hospitalImg" src="../assets/images/hospital_small.png" alt="A view of Forhild's medicinal hut." />
         <article class="healingFlavourText">
-            <h2 class="centerText">Forhild's Herbs and Splints</h2>
             <p>This is where the wounded go to recover and get patched up, if they have the gold to spare. </p>
         </article>
         <section class="healingItems">
@@ -25,6 +24,9 @@
                 </div>
             </div>
         </section>
+        <div class="swordlineContainer spacing"><img src="/divider.svg"
+                alt="A line of four swords, with a shield in the middle" />
+        </div>
     </div>
     <HeroNav />
 </template>

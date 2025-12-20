@@ -7,8 +7,10 @@
                 <LoginForm />
             </div>
         </div>
+        <div class="swordlineContainer spacing"><img src="/divider.svg"
+                alt="A line of four swords, with a shield in the middle" /></div>
         <div class="ctaRegister">
-            <p class="customP">Don't have an account? It only takes a moment to set up.</p>
+            <p class="customP">Don't have an account? It's free and only takes a moment to set up.</p>
             <DefaultButton text="Register new user" routeTo="/register" theme="light" />
         </div>
     </section>
@@ -38,13 +40,12 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: 0.5rem;
-    padding: 0.5rem;
-    padding-bottom: 1rem;
-    font-size: 1rem;
-    font-weight: 600;
+    gap: 1rem;
+    padding: 1rem;
+    padding-bottom: 1.5rem;
     color: var(--bone-white);
     border-radius: 5px;
+    border: 5px double var(--bone-white);
 }
 
 .fitContent {

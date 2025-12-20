@@ -1,11 +1,12 @@
 <template>
     <HeroCard />
     <div class="arenaWrapper">
-        <h1>The Arena</h1>
+        <h1 style="text-align: center; font-size: 1.2rem;">The challengers of your demise</h1>
         <section class="monsterSelect" v-if="!showCombatSettings">
             <img src="../assets/images/goblin_fighter_sharp.png" class="goblinCombatant"
                 alt="A goblin fighter ready for battle." />
-            <h2 style="text-align: center;">The challengers of your demise</h2>
+            <p class="italic" style="margin-top: 0.5rem;">From beyond the portcullis you can hear the rumbling
+                anticipation of the crowd.</p>
             <div class="swordlineContainer spacing"><img :src="swordLine" alt="A line of four swords" /></div>
             <section v-if="monsters" class="brackets-container">
                 <article v-for="bracket in monsterBrackets" :key="bracket.rank" class="bracket-container">
@@ -259,6 +260,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
 .brackets-container {
     display: flex;
     flex-direction: column;
+    width: 100%;
     gap: 0.5rem;
 }
 
@@ -291,6 +293,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
     gap: 0.5rem;
     width: 100%;
 }
@@ -330,7 +333,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
 
 .goblinCombatant {
     height: auto;
-    width: 20rem;
+    width: 15rem;
 }
 
 .optionSelect {
@@ -400,6 +403,11 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
 @media only screen and (min-width: 650px) {
     .arenaWrapper {
         margin-top: 1rem;
+    }
+
+    .goblinCombatant {
+        height: auto;
+        width: 20rem;
     }
 }
 </style>

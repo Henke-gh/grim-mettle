@@ -1,8 +1,7 @@
 <script setup>
-import swords from "../assets/images/crossedSwords.png"
-import guard from "../assets/images/scout_sharp.png"
-import CustomHeader from "~/components/CustomHeader.vue"
-import CustomFooter from "~/components/CustomFooter.vue"
+import guard from "../assets/images/arenaGuard.png";
+import CustomHeader from "~/components/CustomHeader.vue";
+import CustomFooter from "~/components/CustomFooter.vue";
 const user = useSupabaseUser();
 
 </script>
@@ -30,13 +29,10 @@ const user = useSupabaseUser();
                     the dangers that lie ahead.</p>
             </article>
         </section>
-        <div class="swordlineContainer spacing"><img src="/divider.svg"
-                alt="A line of four swords, with a shield in the middle" /></div>
-        <div class="gradientBorder fitContent gradientLogin">
+        <section>
+            <div class="swordlineContainer spacing"><img src="/divider.svg"
+                    alt="A line of four swords, with a shield in the middle" /></div>
             <section class="loginWrapper">
-                <div class="swordsContainer">
-                    <img :src="swords" alt="Two crossed swords" class="swordsImg" />
-                </div>
                 <div class="loginContainer" v-if="!user">
                     <p class="customP">Start playing</p>
                     <DefaultButton text="Login" routeTo="/login" theme="default" class="" />
@@ -46,13 +42,13 @@ const user = useSupabaseUser();
                     <DefaultButton text="To Game" routeTo="/hero" theme="default" class="" />
                 </div>
             </section>
-        </div>
-        <div class="swordlineContainer spacing"><img src="/divider.svg"
-                alt="A line of four swords, with a shield in the middle" /></div>
-        <div class="ctaRegister" v-if="!user">
-            <p class="customP">Don't have an account? It only takes a moment to set up.</p>
-            <DefaultButton text="Register new user" routeTo="/register" theme="light" type="button" />
-        </div>
+            <div class="swordlineContainer spacing"><img src="/divider.svg"
+                    alt="A line of four swords, with a shield in the middle" /></div>
+            <div class="ctaRegister" v-if="!user">
+                <p>Don't have an account? It's free and only takes a moment to set up.</p>
+                <DefaultButton text="Register new user" routeTo="/register" theme="light" type="button" />
+            </div>
+        </section>
     </div>
     <CustomFooter />
 </template>
@@ -75,17 +71,20 @@ const user = useSupabaseUser();
 }
 
 .news {
-    padding: 1rem;
+    padding: 0rem 1rem 1rem 1rem;
 }
 
 .loginWrapper {
     display: flex;
     flex-direction: row;
+    justify-content: center;
     align-items: center;
-    width: 18rem;
-    padding: 0.4rem 2rem;
+    width: 100%;
+    padding: 1rem 2rem;
+    margin: 1rem 0;
     gap: 2rem;
     background-color: var(--bone-white);
+    border: 5px double var(--dark-green);
 }
 
 .loginContainer {
@@ -94,30 +93,19 @@ const user = useSupabaseUser();
     gap: 0.5rem;
 }
 
-.swordsContainer {
-    background-color: var(--dark-green);
-    border-radius: 50%;
-    padding: 0.2rem;
-    border: 3px dashed var(--yellow);
-}
-
-.swordsImg {
-    height: 4.5rem;
-    width: auto;
-}
-
 .ctaRegister {
+    background-color: var(--dark-green);
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    width: 100%;
-    background-color: var(--dark-green);
-    padding: 2rem 0.4rem;
-    margin-top: 1rem;
-    font-weight: 600;
-    color: var(--bone-white);
     gap: 1rem;
+    padding: 1rem;
+    padding-bottom: 1.5rem;
+    margin: 1rem 0;
+    color: var(--bone-white);
+    border-radius: 5px;
+    border: 5px double var(--bone-white);
 }
 
 .ctaLogin {
@@ -139,7 +127,8 @@ const user = useSupabaseUser();
 }
 
 .customP {
-    font-weight: 400;
+    font-weight: 600;
+    font-size: 0.9rem;
 }
 
 .guardContainer {

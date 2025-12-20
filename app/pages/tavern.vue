@@ -1,10 +1,9 @@
 <template>
     <HeroCard />
     <div class="tavernWrapper">
-        <h1>The Tavern</h1>
+        <h1 class="centerText">The Flying Goat's Head</h1>
         <img class="tavernImg" src="../assets/images/tavernkeeper.png" alt="An image of the barkeep at the Tavern" />
         <article class="tavernFlavourText">
-            <h2 class="centerText">The Flying Goat's Head</h2>
             <p>This mess of a place is Borkh's tavern. It's not for the faint of heart, or those with sensitive
                 stomachs.</p>
             <p>You can find work here, if you're willing. It's of the hard kind, and the pay isn't very good. But every
@@ -27,6 +26,9 @@
                 </div>
             </div>
         </section>
+        <div class="swordlineContainer spacing"><img src="/divider.svg"
+                alt="A line of four swords, with a shield in the middle" />
+        </div>
     </div>
     <HeroNav />
 </template>
@@ -73,6 +75,7 @@ async function workShift(shift_id) {
 .tavernImg {
     width: 20rem;
     height: auto;
+    margin-top: 0.5rem;
 }
 
 .tavernWork {
