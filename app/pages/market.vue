@@ -23,13 +23,13 @@
                     <button @click="toggleCategory(weaponCategory.key)" class="categoryToggle roboto-mono-600"
                         :class="{ active: isCategoryExpanded[weaponCategory.key] }">
                         <span v-if="!isCategoryExpanded[weaponCategory.key]" class="toggleBtnContent">
-                            <p>Browse {{
+                            <p>{{
                                 weaponCategory.label
-                                }}</p>
+                            }}</p>
                             <img src="/ArrowDown.svg" alt="Arrow pointing down" />
                         </span>
                         <span v-else class="toggleBtnContent">
-                            <p>Hide {{ weaponCategory.label }}</p>
+                            <p>{{ weaponCategory.label }}</p>
                             <img src="/ArrowUp.svg" alt="Arrow point up" />
                         </span>
                     </button>
@@ -54,11 +54,11 @@
                 <button @click="toggleCategory('shields')" class="categoryToggle roboto-mono-600"
                     :class="{ active: isCategoryExpanded['shields'] }">
                     <span v-if="!isCategoryExpanded['shields']" class="toggleBtnContent">
-                        <p>Browse Shields</p>
+                        <p>Shields</p>
                         <img src="/ArrowDown.svg" alt="Arrow pointing down" />
                     </span>
                     <span v-else class="toggleBtnContent">
-                        <p>Hide Shields</p>
+                        <p>Shields</p>
                         <img src="/ArrowUp.svg" alt="Arrow point up" />
                     </span>
                 </button>
@@ -81,11 +81,11 @@
                 <button @click="toggleCategory('armour')" class="categoryToggle roboto-mono-600"
                     :class="{ active: isCategoryExpanded['armour'] }">
                     <span v-if="!isCategoryExpanded['armour']" class="toggleBtnContent">
-                        <p>Browse Armour</p>
+                        <p>Armour</p>
                         <img src="/ArrowDown.svg" alt="Arrow pointing down" />
                     </span>
                     <span v-else class="toggleBtnContent">
-                        <p>Hide Armour</p>
+                        <p>Armour</p>
                         <img src="/ArrowUp.svg" alt="Arrow point up" />
                     </span>
                 </button>
@@ -109,11 +109,11 @@
                 <button @click="toggleCategory('trinkets')" class="categoryToggle roboto-mono-600"
                     :class="{ active: isCategoryExpanded['trinkets'] }">
                     <span v-if="!isCategoryExpanded['trinkets']" class="toggleBtnContent">
-                        <p>Browse Trinkets</p>
+                        <p>Trinkets</p>
                         <img src="/ArrowDown.svg" alt="Arrow pointing down" />
                     </span>
                     <span v-else class="toggleBtnContent">
-                        <p>Hide Trinkets</p>
+                        <p>Trinkets</p>
                         <img src="/ArrowUp.svg" alt="Arrow point up" />
                     </span>
                 </button>
@@ -173,11 +173,11 @@
                         selectedItem.damageReduction }}</p>
                     <p v-if="selectedItem.blockValue !== undefined"><strong>Block Value:</strong> {{
                         selectedItem.blockValue
-                        }}
+                    }}
                     </p>
                     <p v-if="selectedItem.weight"><strong>Weight:</strong> {{ selectedItem.weight ?? '—' }}</p>
                     <p v-if="selectedItem.strengthReq"><strong>Strength Req:</strong> {{ selectedItem.strengthReq ?? '—'
-                        }}</p>
+                    }}</p>
                     <p v-if="selectedItem.skillReq"><strong>Skill Req:</strong> <span
                             v-for="value, key in selectedItem.skillReq" :key="key"> {{ capitalise(key) }}: {{ value
                             }}</span></p>
