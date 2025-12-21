@@ -20,9 +20,10 @@
             <div class="category">
                 <h2>Weapons</h2>
                 <div class="weaponCategory" v-for="weaponCategory in weaponCategories" :key="weaponCategory.key">
-                    <button @click="toggleCategory(weaponCategory.key)" class="categoryToggle roboto-mono-600">
+                    <button @click="toggleCategory(weaponCategory.key)" class="categoryToggle roboto-mono-600"
+                        :class="{ active: isCategoryExpanded[weaponCategory.key] }">
                         <span v-if="!isCategoryExpanded[weaponCategory.key]" class="toggleBtnContent">
-                            <p>Show {{
+                            <p>Browse {{
                                 weaponCategory.label
                                 }}</p>
                             <img src="/ArrowDown.svg" alt="Arrow pointing down" />
@@ -47,37 +48,90 @@
                     </Transition>
                 </div>
             </div>
+
             <div class="category">
                 <h2>Shields</h2>
-                <div class="item" v-for="shield in data.items.shields">
-                    <p>{{ shield.name }}</p>
-                    <div class="part">
-                        <p>Cost: {{ shield.goldCost }} gold</p>
-                        <button class="inspectViewBtn bold" @click="openModal(shield, shield.category)">View</button>
+                <button @click="toggleCategory('shields')" class="categoryToggle roboto-mono-600"
+                    :class="{ active: isCategoryExpanded['shields'] }">
+                    <span v-if="!isCategoryExpanded['shields']" class="toggleBtnContent">
+                        <p>Browse Shields</p>
+                        <img src="/ArrowDown.svg" alt="Arrow pointing down" />
+                    </span>
+                    <span v-else class="toggleBtnContent">
+                        <p>Hide Shields</p>
+                        <img src="/ArrowUp.svg" alt="Arrow point up" />
+                    </span>
+                </button>
+                <Transition name="expandBracket">
+                    <div class="categoryList" v-if="isCategoryExpanded['shields']">
+                        <div class="item" v-for="shield in data.items.shields">
+                            <p>{{ shield.name }}</p>
+                            <div class="part">
+                                <p>Cost: {{ shield.goldCost }} gold</p>
+                                <button class="inspectViewBtn bold"
+                                    @click="openModal(shield, shield.category)">View</button>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                </Transition>
             </div>
+
             <div class="category">
                 <h2>Armour</h2>
-                <div class="item" v-for="armour in data.items.armour">
-                    <p>{{ armour.name }}</p>
-                    <div class="part">
-                        <p>Cost: {{ armour.goldCost }} gold</p>
-                        <button class="inspectViewBtn bold" @click="openModal(armour, armour.category)">View</button>
+                <button @click="toggleCategory('armour')" class="categoryToggle roboto-mono-600"
+                    :class="{ active: isCategoryExpanded['armour'] }">
+                    <span v-if="!isCategoryExpanded['armour']" class="toggleBtnContent">
+                        <p>Browse Armour</p>
+                        <img src="/ArrowDown.svg" alt="Arrow pointing down" />
+                    </span>
+                    <span v-else class="toggleBtnContent">
+                        <p>Hide Armour</p>
+                        <img src="/ArrowUp.svg" alt="Arrow point up" />
+                    </span>
+                </button>
+                <Transition name="expandBracket">
+                    <div class="categoryList" v-if="isCategoryExpanded['armour']">
+                        <div class="item" v-for="armour in data.items.armour">
+                            <p>{{ armour.name }}</p>
+                            <div class="part">
+                                <p>Cost: {{ armour.goldCost }} gold</p>
+                                <button class="inspectViewBtn bold"
+                                    @click="openModal(armour, armour.category)">View</button>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                </Transition>
             </div>
+
             <div class="category">
                 <h2>Trinkets</h2>
-                <div class="item" v-for="trinket in data.items.trinkets">
-                    <p>{{ trinket.name }}</p>
-                    <div class="part">
-                        <p>Cost: {{ trinket.goldCost }} gold</p>
-                        <button class="inspectViewBtn bold" @click="openModal(trinket, trinket.category)">View</button>
+                <p class="italic">(You can wear up to 3 unique trinkets at a time.)</p>
+                <button @click="toggleCategory('trinkets')" class="categoryToggle roboto-mono-600"
+                    :class="{ active: isCategoryExpanded['trinkets'] }">
+                    <span v-if="!isCategoryExpanded['trinkets']" class="toggleBtnContent">
+                        <p>Browse Trinkets</p>
+                        <img src="/ArrowDown.svg" alt="Arrow pointing down" />
+                    </span>
+                    <span v-else class="toggleBtnContent">
+                        <p>Hide Trinkets</p>
+                        <img src="/ArrowUp.svg" alt="Arrow point up" />
+                    </span>
+                </button>
+                <Transition name="expandBracket">
+                    <div class="categoryList" v-if="isCategoryExpanded['trinkets']">
+                        <div class="item" v-for="trinket in data.items.trinkets">
+                            <p>{{ trinket.name }}</p>
+                            <div class="part">
+                                <p>Cost: {{ trinket.goldCost }} gold</p>
+                                <button class="inspectViewBtn bold"
+                                    @click="openModal(trinket, trinket.category)">View</button>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                </Transition>
             </div>
         </section>
+
         <!-- Selling of items in Hero Inventory -->
         <section class="storeContainer">
             <div class="category" v-if="!hasInventory || unEquippedItems.length === 0">
@@ -98,6 +152,9 @@
                 <p v-if="successSaleMessage">{{ successSaleMessage }}</p>
             </div>
         </section>
+        <div class="itemBagContainer" style="display: flex; justify-content: center; margin-top: 1.5rem;">
+            <img :src="itemBag" alt="A backpack and various items and weapons." style="width: 15rem; height: auto;" />
+        </div>
     </div>
     <!-- === Buy Item Modal === -->
     <teleport to="body">
@@ -163,6 +220,7 @@ definePageMeta({
 });
 import { ref, onMounted, onBeforeUnmount, computed } from 'vue';
 import { capitalise } from '~~/utils/general';
+import itemBag from "../assets/images/items.png";
 
 const { data } = await useFetch('/api/items/itemCatalog');
 
@@ -180,7 +238,10 @@ const isCategoryExpanded = ref({
     axes: false,
     hammers: false,
     spears: false,
-    daggers: false
+    daggers: false,
+    armour: false,
+    shields: false,
+    trinkets: false,
 });
 
 function toggleCategory(categoryKey) {
@@ -325,7 +386,7 @@ async function sellItem(inventory_id) {
 .categoryList {
     display: flex;
     flex-direction: column;
-    gap: 0.4rem;
+    gap: 0.8rem;
     margin: 1rem 0;
 }
 
@@ -348,6 +409,8 @@ async function sellItem(inventory_id) {
     gap: 0.8rem;
     width: 20rem;
     margin-top: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px dashed var(--brown);
 }
 
 /* MODAL STYLING */

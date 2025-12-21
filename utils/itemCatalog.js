@@ -74,7 +74,7 @@ export const weapons = [
     goldCost: 20,
     bonus: {},
     description: "Includes membership in the Club Clubbers Club.",
-    image: {},
+    image: { src: "/weapons/club.png", alt: "A wooden Club" },
   },
   {
     id: 5,
@@ -90,7 +90,7 @@ export const weapons = [
     goldCost: 25,
     bonus: { initiative: 5 },
     description: "A stick with a pointy end. Decent reach.",
-    image: {},
+    image: { src: "/weapons/short_spear.png", alt: "A shoddy spear" },
   },
   {
     id: 6,
@@ -106,7 +106,7 @@ export const weapons = [
     goldCost: 20,
     bonus: { evasion: 5 },
     description: "It ain't much, but it'll get the job done. If you're lucky.",
-    image: {},
+    image: { src: "/weapons/dagger.png", alt: "A small Dagger" },
   },
   {
     id: 7,
@@ -206,7 +206,7 @@ export const weapons = [
     bonus: { block: 5 },
     description:
       "The longer haft makes it easier to attack while wielding a shield. Made for battle.",
-    image: {},
+    image: { src: "/weapons/war_axe.png", alt: "A War Axe" },
   },
   {
     id: 13,
@@ -286,7 +286,7 @@ export const shields = [
     weight: 2,
     bonus: { block: 5 },
     description: "An iron-shod wooden square. It makes you feel safer.",
-    image: {},
+    image: { src: "/items/small_shield.png", alt: "A wooden small shield" },
   },
   {
     id: 102,
@@ -419,7 +419,7 @@ export const trinkets = [
       strength: 10,
     },
     description: "Various animal teeth on a string. It's pretty savage.",
-    image: {},
+    image: { src: "/items/tooth_row.png", alt: "A necklace with animal teeth" },
   },
   {
     id: 303,
@@ -448,7 +448,7 @@ export const trinkets = [
       block: 10,
     },
     description: "Its back-plates give off a certain radiance.",
-    image: {},
+    image: { src: "/items/scarab.png", alt: "A black-ish scarab" },
   },
   {
     id: 305,

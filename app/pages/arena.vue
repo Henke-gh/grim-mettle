@@ -11,7 +11,7 @@
             <section v-if="monsters" class="brackets-container">
                 <article v-for="bracket in monsterBrackets" :key="bracket.rank" class="bracket-container">
                     <button class="categoryToggle roboto-mono-600 toggleBtnContent"
-                        @click="toggleBracket((bracket.rank))">
+                        @click="toggleBracket((bracket.rank))" :class="{ active: isBracketExpanded[bracket.rank] }">
                         <h4>{{ bracket.rank }} [{{ bracket.lvlSpan }}]</h4>
                         <span class="bracket-controls" v-if="!isBracketExpanded[bracket.rank]">
                             <p>Show</p>

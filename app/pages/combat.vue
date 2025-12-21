@@ -302,7 +302,7 @@ function exitCombatLog() {
     align-items: center;
     justify-content: flex-start;
     text-align: center;
-    gap: 0.5rem;
+    gap: 1rem;
     margin-left: 2rem;
 }
 

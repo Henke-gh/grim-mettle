@@ -16,11 +16,13 @@
                 <NuxtLink to="/game-guide" style="text-decoration: none; color: var(--bone-white);">Game Guide
                 </NuxtLink>
                 <div class="links separation">
-                    <button class="menuButton" @click="logoutUser" v-if="user">Log Out</button>
-                    <NuxtLink to="/login" v-if="!user" style="text-decoration: none; color: var(--bone-white);">
+                    <button class="menuButton" @click="logoutUser" v-if="user" style="cursor: pointer;">Log Out</button>
+                    <NuxtLink to="/login" v-if="!user"
+                        style="text-decoration: none; color: var(--bone-white); cursor: pointer;">
                         Login
                     </NuxtLink>
-                    <NuxtLink to="/register" v-if="!user" style="text-decoration: none; color: var(--bone-white);">
+                    <NuxtLink to="/register" v-if="!user"
+                        style="text-decoration: none; color: var(--bone-white); cursor: pointer;">
                         Register</NuxtLink>
                 </div>
             </div>
@@ -77,11 +79,15 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onEscape));
     right: 0;
     display: flex;
     flex-direction: column;
-    padding: 1rem;
+    padding: 1.5rem;
+    padding-top: 1rem;
     gap: 0.5rem;
     background-color: var(--brown);
     color: var(--bone-white);
     border-bottom-left-radius: 0.5rem;
+    border-left: 3px double var(--bone-white);
+    border-bottom: 3px double var(--bone-white);
+    box-shadow: -2px 2px 10px var(--brown);
 }
 
 .links {

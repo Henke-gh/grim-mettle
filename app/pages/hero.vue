@@ -43,6 +43,34 @@ const unEquippedItems = computed(() => {
     const items = unref(inventoryWithItems) || [];
     return items.filter(e => !isEquipped(e.inventory_id))
 });
+
+/* === Item Modal === */
+
+const showModal = ref(false);
+const selectedItem = ref({});
+const selectedItemType = ref('');
+const modalRef = ref(null);
+
+function openModal(item, itemType) {
+    selectedItem.value = item || {}
+    selectedItemType.value = itemType || ''
+    showModal.value = true
+    //small delay to focus content
+    setTimeout(() => modalRef.value?.focus?.(), 0)
+}
+
+function closeModal() {
+    showModal.value = false
+    selectedItem.value = {}
+    selectedItemType.value = ''
+}
+
+function onKeydown(e) {
+    if (e.key === 'Escape' && showModal.value) closeModal()
+}
+
+onMounted(() => window.addEventListener('keydown', onKeydown));
+onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
 </script>
 
 <template>
@@ -76,28 +104,42 @@ const unEquippedItems = computed(() => {
             </section>
         </div>
         <section class="itemContainer">
-            <h3>Items</h3>
+            <h3>Items <span class="italic" style="font-size: 0.75rem;">- Click an item to inspect it.</span></h3>
             <div class="part">
                 <h4>Equipped Items:</h4>
                 <div class="equippedItem">
-                    <p>Main hand: {{ equippedItems?.mainHand?.name || "- empty -" }}</p>
+                    <p v-if="equippedItems?.mainHand"
+                        @click="openModal(equippedItems?.mainHand, equippedItems?.mainHand?.category)"
+                        style="cursor: pointer;">
+                        Main hand: {{ equippedItems?.mainHand?.name }}
+                    </p>
+                    <p v-else>Main hand: - empty -</p>
                     <button v-if="equippedItems?.mainHand?.name" @click="unequipItem('main_hand')"
                         :disabled="actionLoading" class="inspectViewBtn closeBtn bold">Unequip</button>
                 </div>
                 <div class="equippedItem">
-                    <p>Off-hand: {{ equippedItems?.offHand?.name || "- empty -" }}</p>
+                    <p v-if="equippedItems?.offHand"
+                        @click="openModal(equippedItems?.offHand, equippedItems?.offHand?.category)"
+                        style="cursor: pointer;">
+                        Off-hand: {{ equippedItems?.offHand?.name }}</p>
+                    <p v-else>Off-hand: - empty -</p>
                     <button v-if="equippedItems?.offHand?.name" @click="unequipItem('off_hand')"
                         :disabled="actionLoading" class="inspectViewBtn closeBtn bold">Unequip</button>
                 </div>
                 <div class="equippedItem">
-                    <p>Armour: {{ equippedItems?.armour?.name || "- empty -" }}</p>
+                    <p v-if="equippedItems?.armour"
+                        @click="openModal(equippedItems?.armour, equippedItems?.armour?.category)"
+                        style="cursor: pointer;">
+                        Armour: {{ equippedItems?.armour?.name }}</p>
+                    <p v-else>Armour: - empty -</p>
                     <button v-if="equippedItems?.armour?.name" @click="unequipItem('armour')" :disabled="actionLoading"
                         class="inspectViewBtn closeBtn bold">Unequip</button>
                 </div>
                 <h4>Trinkets:</h4>
                 <p v-if="equippedItems?.trinkets.length === 0">- none -</p>
                 <div class="equippedItem" v-for="(trinket, index) in equippedItems?.trinkets" :key="index">
-                    <p>{{ trinket.item.name }}</p>
+                    <p @click="openModal(trinket.item, trinket.item.category)" style="cursor: pointer;">
+                        {{ trinket.item.name }}</p>
                     <button v-if="equippedItems?.trinkets[index]" @click="unequipItem(trinket.slot)"
                         :disabled="actionLoading" class="inspectViewBtn closeBtn bold">Unequip</button>
                 </div>
@@ -110,7 +152,8 @@ const unEquippedItems = computed(() => {
             <div class="part heroInventory" v-else>
                 <h4>Inventory</h4>
                 <div class="equippedItem" v-for="entry in unEquippedItems" :key="entry.inventory_id">
-                    <p>{{ entry.item.name }}</p>
+                    <p @click="openModal(entry.item, entry.item.category)" style="cursor: pointer;">
+                        {{ entry.item.name }}</p>
                     <button @click="equipItem(entry.item_id, entry.inventory_id, entry.item.slot)"
                         :disabled="actionLoading || !canEquip(entry.item)" class="inspectViewBtn bold"
                         :class="{ 'disabled': !canEquip(entry.item) }">
@@ -154,6 +197,56 @@ const unEquippedItems = computed(() => {
                 </div>
             </div>
         </section>
+
+        <!-- === View Item Modal === -->
+        <teleport to="body">
+            <div v-if="showModal" class="modalOverlay" @click.self="closeModal" role="dialog" aria-modal="true"
+                :aria-label="selectedItem?.name || 'Item details'">
+                <div class="modalContent" ref="modalRef">
+                    <header class="modalHeader">
+                        <h3>{{ selectedItem.name }}</h3>
+                        <button class="closeByXBtn" @click="closeModal" aria-label="Close">&times;</button>
+                    </header>
+                    <section class="modalBody">
+                        <p><strong>Category:</strong> {{ capitalise(selectedItem.category) || '—' }}</p>
+                        <p v-if="selectedItem.minDmg !== undefined"><strong>Damage:</strong> {{ selectedItem.minDmg }} -
+                            {{
+                                selectedItem.maxDmg }}</p>
+                        <p v-if="selectedItem.damageReduction !== undefined"><strong>Damage Reduction:</strong> {{
+                            selectedItem.damageReduction }}</p>
+                        <p v-if="selectedItem.blockValue !== undefined"><strong>Block Value:</strong> {{
+                            selectedItem.blockValue
+                            }}
+                        </p>
+                        <p v-if="selectedItem.weight"><strong>Weight:</strong> {{ selectedItem.weight ?? '—' }}</p>
+                        <p v-if="selectedItem.strengthReq"><strong>Strength Req:</strong> {{ selectedItem.strengthReq ??
+                            '—'
+                            }}</p>
+                        <p v-if="selectedItem.skillReq"><strong>Skill Req:</strong> <span
+                                v-for="value, key in selectedItem.skillReq" :key="key"> {{ capitalise(key) }}: {{ value
+                                }}</span></p>
+                        <template v-if="Object.keys(selectedItem.bonus ?? {}).length">
+                            <p><strong>Bonus:</strong>
+                                <li style="list-style-type: none;" v-for="value, key in selectedItem.bonus" :key="key">
+                                    {{
+                                        capitalise(key) }}: {{ value
+                                    }}</li>
+                            </p>
+                        </template>
+                        <p class="descriptionLine">{{ selectedItem.description }}</p>
+                    </section>
+                    <div v-if="selectedItem.image.src" class="itemImgContainer">
+                        <img :src="selectedItem.image.src" :alt="selectedItem.image.alt" class="itemImg"
+                            style="height: 3rem; width: auto;" />
+                    </div>
+                    <footer class="modalFooter">
+                        <div class="modalFooterBtnContainer">
+                            <button class="inspectViewBtn biggerBtn bold closeBtn" @click="closeModal">Close</button>
+                        </div>
+                    </footer>
+                </div>
+            </div>
+        </teleport>
     </div>
     <HeroNav />
 </template>
@@ -215,7 +308,7 @@ const unEquippedItems = computed(() => {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    width: 18rem;
+    width: 20rem;
 }
 
 .skillWrapper {
@@ -239,6 +332,76 @@ const unEquippedItems = computed(() => {
     align-items: center;
     text-align: center;
     gap: 0.5rem;
+}
+
+/* MODAL STYLING */
+.modalOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 60;
+    padding: 1rem;
+}
+
+.modalContent {
+    background: var(--bone-white);
+    color: var(--dark-green);
+    width: min(90%, 640px);
+    max-height: 90vh;
+    overflow: auto;
+    border-radius: 8px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    outline: none;
+    padding: 1rem;
+}
+
+.modalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px dashed var(--brown);
+}
+
+.closeByXBtn {
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--dark-green);
+}
+
+.modalBody p {
+    margin: 0.4rem 0;
+}
+
+.itemImgContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: 0.5rem 0rem;
+}
+
+.descriptionLine {
+    font-style: italic;
+}
+
+.modalFooter {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    margin-top: 0.5rem;
+    padding-top: 0.75rem;
+    border-top: 1px dashed var(--brown);
+}
+
+.modalFooterBtnContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-bottom: 0.5rem;
 }
 
 @media only screen and (min-width: 650px) {
