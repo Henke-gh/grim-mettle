@@ -7,7 +7,7 @@
             <p class="centerText">This guide provides a quick run down of the skills and mechanics of Grim Mettle.</p>
             <div class="swordlineContainer spacing"><img src="/divider.svg"
                     alt="A line of four swords, with a shield in the middle" /></div>
-            <h2 class="headline bold">- Character Stats -</h2>
+            <h2 class="headline bold centerText">- Character Stats -</h2>
             <h3 class="headline bold">[Hitpoints]</h3>
             <p>Everyone knows what these are, they represent your life total. The beating heart.
                 If you loose them all in battle your hero will perish. Actually die. Really, be careful.</p>
@@ -50,7 +50,7 @@
             <p>Sword and board! Hide behind a shield and reduce incoming damage. Pretty similar to Evasion,
                 except it reduces damage based off of the equipped shield's damage reduction value.</p>
 
-            <h2 class="headline">- Combat -</h2>
+            <h2 class="headline centerText">- Combat -</h2>
             <p>Just a couple of things, not too much to divulge here.</p>
 
             <h3 class="bold headline">[Stances]</h3>

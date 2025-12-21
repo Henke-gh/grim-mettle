@@ -24,7 +24,7 @@
                         <span v-if="!isCategoryExpanded[weaponCategory.key]" class="toggleBtnContent">
                             <p>Show {{
                                 weaponCategory.label
-                                }}</p>
+                            }}</p>
                             <img src="/ArrowDown.svg" alt="Arrow pointing down" />
                         </span>
                         <span v-else class="toggleBtnContent">
@@ -47,6 +47,7 @@
                     </Transition>
                 </div>
             </div>
+
             <div class="category">
                 <h2>Shields</h2>
                 <div class="item" v-for="shield in data.items.shields">
@@ -57,6 +58,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="category">
                 <h2>Armour</h2>
                 <div class="item" v-for="armour in data.items.armour">
@@ -67,6 +69,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="category">
                 <h2>Trinkets</h2>
                 <div class="item" v-for="trinket in data.items.trinkets">
@@ -78,6 +81,7 @@
                 </div>
             </div>
         </section>
+
         <!-- Selling of items in Hero Inventory -->
         <section class="storeContainer">
             <div class="category" v-if="!hasInventory || unEquippedItems.length === 0">
@@ -98,6 +102,9 @@
                 <p v-if="successSaleMessage">{{ successSaleMessage }}</p>
             </div>
         </section>
+        <div class="itemBagContainer" style="display: flex; justify-content: center; margin-top: 1.5rem;">
+            <img :src="itemBag" alt="A backpack and various items and weapons." style="width: 15rem; height: auto;" />
+        </div>
     </div>
     <!-- === Buy Item Modal === -->
     <teleport to="body">
@@ -116,11 +123,11 @@
                         selectedItem.damageReduction }}</p>
                     <p v-if="selectedItem.blockValue !== undefined"><strong>Block Value:</strong> {{
                         selectedItem.blockValue
-                        }}
+                    }}
                     </p>
                     <p v-if="selectedItem.weight"><strong>Weight:</strong> {{ selectedItem.weight ?? '—' }}</p>
                     <p v-if="selectedItem.strengthReq"><strong>Strength Req:</strong> {{ selectedItem.strengthReq ?? '—'
-                        }}</p>
+                    }}</p>
                     <p v-if="selectedItem.skillReq"><strong>Skill Req:</strong> <span
                             v-for="value, key in selectedItem.skillReq" :key="key"> {{ capitalise(key) }}: {{ value
                             }}</span></p>
@@ -163,6 +170,7 @@ definePageMeta({
 });
 import { ref, onMounted, onBeforeUnmount, computed } from 'vue';
 import { capitalise } from '~~/utils/general';
+import itemBag from "../assets/images/items.png";
 
 const { data } = await useFetch('/api/items/itemCatalog');
 
@@ -348,6 +356,8 @@ async function sellItem(inventory_id) {
     gap: 0.8rem;
     width: 20rem;
     margin-top: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px dashed var(--brown);
 }
 
 /* MODAL STYLING */
