@@ -22,7 +22,7 @@
                 <div class="weaponCategory" v-for="weaponCategory in weaponCategories" :key="weaponCategory.key">
                     <button @click="toggleCategory(weaponCategory.key)" class="categoryToggle roboto-mono-600">
                         <span v-if="!isCategoryExpanded[weaponCategory.key]" class="toggleBtnContent">
-                            <p>Show {{
+                            <p>Browse {{
                                 weaponCategory.label
                             }}</p>
                             <img src="/ArrowDown.svg" alt="Arrow pointing down" />
