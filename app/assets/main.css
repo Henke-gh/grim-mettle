@@ -138,6 +138,11 @@ section {
   border: none;
   box-shadow: 2px 2px 2px var(--warm-black);
   padding: 0.5rem;
+  transition: background-color 0.2s ease;
+}
+
+.categoryToggle.active {
+  background-color: var(--dark-green);
 }
 
 .toggleBtnContent {

@@ -1,7 +1,7 @@
 import { supabaseAdmin } from "~~/server/utils/supabaseAdmin";
 import { serverSupabaseClient } from "#supabase/server";
 import { getItemById } from "~~/utils/itemCatalog";
-import { z } from "zod";
+import { boolean, z } from "zod";
 
 const itemSchema = z.object({
   item_id: z.number(),
@@ -87,6 +87,13 @@ export default defineEventHandler(async (event) => {
         throw createError({ statusCode: 400, message: "No hero equipment." });
       }
 
+      /* Also check if a particular trinket is already equipped, can only have one of a certain id/type at once. */
+      /*  const equippedTrinketIds = [
+        equippedTrinkets.trinket_1,
+        equippedTrinkets.trinket_2,
+        equippedTrinkets.trinket_3,
+      ].filter(boolean);
+ */
       if (equippedTrinkets.trinket_1 === null) {
         item_slot = "trinket_1";
       } else if (equippedTrinkets.trinket_2 === null) {

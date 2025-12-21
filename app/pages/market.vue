@@ -20,11 +20,12 @@
             <div class="category">
                 <h2>Weapons</h2>
                 <div class="weaponCategory" v-for="weaponCategory in weaponCategories" :key="weaponCategory.key">
-                    <button @click="toggleCategory(weaponCategory.key)" class="categoryToggle roboto-mono-600">
+                    <button @click="toggleCategory(weaponCategory.key)" class="categoryToggle roboto-mono-600"
+                        :class="{ active: isCategoryExpanded[weaponCategory.key] }">
                         <span v-if="!isCategoryExpanded[weaponCategory.key]" class="toggleBtnContent">
                             <p>Browse {{
                                 weaponCategory.label
-                            }}</p>
+                                }}</p>
                             <img src="/ArrowDown.svg" alt="Arrow pointing down" />
                         </span>
                         <span v-else class="toggleBtnContent">
@@ -50,35 +51,84 @@
 
             <div class="category">
                 <h2>Shields</h2>
-                <div class="item" v-for="shield in data.items.shields">
-                    <p>{{ shield.name }}</p>
-                    <div class="part">
-                        <p>Cost: {{ shield.goldCost }} gold</p>
-                        <button class="inspectViewBtn bold" @click="openModal(shield, shield.category)">View</button>
+                <button @click="toggleCategory('shields')" class="categoryToggle roboto-mono-600"
+                    :class="{ active: isCategoryExpanded['shields'] }">
+                    <span v-if="!isCategoryExpanded['shields']" class="toggleBtnContent">
+                        <p>Browse Shields</p>
+                        <img src="/ArrowDown.svg" alt="Arrow pointing down" />
+                    </span>
+                    <span v-else class="toggleBtnContent">
+                        <p>Hide Shields</p>
+                        <img src="/ArrowUp.svg" alt="Arrow point up" />
+                    </span>
+                </button>
+                <Transition name="expandBracket">
+                    <div class="categoryList" v-if="isCategoryExpanded['shields']">
+                        <div class="item" v-for="shield in data.items.shields">
+                            <p>{{ shield.name }}</p>
+                            <div class="part">
+                                <p>Cost: {{ shield.goldCost }} gold</p>
+                                <button class="inspectViewBtn bold"
+                                    @click="openModal(shield, shield.category)">View</button>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                </Transition>
             </div>
 
             <div class="category">
                 <h2>Armour</h2>
-                <div class="item" v-for="armour in data.items.armour">
-                    <p>{{ armour.name }}</p>
-                    <div class="part">
-                        <p>Cost: {{ armour.goldCost }} gold</p>
-                        <button class="inspectViewBtn bold" @click="openModal(armour, armour.category)">View</button>
+                <button @click="toggleCategory('armour')" class="categoryToggle roboto-mono-600"
+                    :class="{ active: isCategoryExpanded['armour'] }">
+                    <span v-if="!isCategoryExpanded['armour']" class="toggleBtnContent">
+                        <p>Browse Armour</p>
+                        <img src="/ArrowDown.svg" alt="Arrow pointing down" />
+                    </span>
+                    <span v-else class="toggleBtnContent">
+                        <p>Hide Armour</p>
+                        <img src="/ArrowUp.svg" alt="Arrow point up" />
+                    </span>
+                </button>
+                <Transition name="expandBracket">
+                    <div class="categoryList" v-if="isCategoryExpanded['armour']">
+                        <div class="item" v-for="armour in data.items.armour">
+                            <p>{{ armour.name }}</p>
+                            <div class="part">
+                                <p>Cost: {{ armour.goldCost }} gold</p>
+                                <button class="inspectViewBtn bold"
+                                    @click="openModal(armour, armour.category)">View</button>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                </Transition>
             </div>
 
             <div class="category">
                 <h2>Trinkets</h2>
-                <div class="item" v-for="trinket in data.items.trinkets">
-                    <p>{{ trinket.name }}</p>
-                    <div class="part">
-                        <p>Cost: {{ trinket.goldCost }} gold</p>
-                        <button class="inspectViewBtn bold" @click="openModal(trinket, trinket.category)">View</button>
+                <p class="italic">(You can wear up to 3 unique trinkets at a time.)</p>
+                <button @click="toggleCategory('trinkets')" class="categoryToggle roboto-mono-600"
+                    :class="{ active: isCategoryExpanded['trinkets'] }">
+                    <span v-if="!isCategoryExpanded['trinkets']" class="toggleBtnContent">
+                        <p>Browse Trinkets</p>
+                        <img src="/ArrowDown.svg" alt="Arrow pointing down" />
+                    </span>
+                    <span v-else class="toggleBtnContent">
+                        <p>Hide Trinkets</p>
+                        <img src="/ArrowUp.svg" alt="Arrow point up" />
+                    </span>
+                </button>
+                <Transition name="expandBracket">
+                    <div class="categoryList" v-if="isCategoryExpanded['trinkets']">
+                        <div class="item" v-for="trinket in data.items.trinkets">
+                            <p>{{ trinket.name }}</p>
+                            <div class="part">
+                                <p>Cost: {{ trinket.goldCost }} gold</p>
+                                <button class="inspectViewBtn bold"
+                                    @click="openModal(trinket, trinket.category)">View</button>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                </Transition>
             </div>
         </section>
 
@@ -123,11 +173,11 @@
                         selectedItem.damageReduction }}</p>
                     <p v-if="selectedItem.blockValue !== undefined"><strong>Block Value:</strong> {{
                         selectedItem.blockValue
-                    }}
+                        }}
                     </p>
                     <p v-if="selectedItem.weight"><strong>Weight:</strong> {{ selectedItem.weight ?? '—' }}</p>
                     <p v-if="selectedItem.strengthReq"><strong>Strength Req:</strong> {{ selectedItem.strengthReq ?? '—'
-                    }}</p>
+                        }}</p>
                     <p v-if="selectedItem.skillReq"><strong>Skill Req:</strong> <span
                             v-for="value, key in selectedItem.skillReq" :key="key"> {{ capitalise(key) }}: {{ value
                             }}</span></p>
@@ -188,7 +238,10 @@ const isCategoryExpanded = ref({
     axes: false,
     hammers: false,
     spears: false,
-    daggers: false
+    daggers: false,
+    armour: false,
+    shields: false,
+    trinkets: false,
 });
 
 function toggleCategory(categoryKey) {
@@ -333,7 +386,7 @@ async function sellItem(inventory_id) {
 .categoryList {
     display: flex;
     flex-direction: column;
-    gap: 0.4rem;
+    gap: 0.8rem;
     margin: 1rem 0;
 }
 
