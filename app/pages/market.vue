@@ -39,7 +39,7 @@
                                 :key="weapon.id">
                                 <p>{{ weapon.name }}</p>
                                 <div class="part">
-                                    <p>Cost: {{ weapon.goldCost }} gold</p>
+                                    <p>{{ weapon.goldCost }} gold</p>
                                     <button class="inspectViewBtn bold"
                                         @click="openModal(weapon, 'weapons')">View</button>
                                 </div>
@@ -67,7 +67,7 @@
                         <div class="item" v-for="shield in data.items.shields">
                             <p>{{ shield.name }}</p>
                             <div class="part">
-                                <p>Cost: {{ shield.goldCost }} gold</p>
+                                <p>{{ shield.goldCost }} gold</p>
                                 <button class="inspectViewBtn bold"
                                     @click="openModal(shield, shield.category)">View</button>
                             </div>
@@ -94,7 +94,7 @@
                         <div class="item" v-for="armour in data.items.armour">
                             <p>{{ armour.name }}</p>
                             <div class="part">
-                                <p>Cost: {{ armour.goldCost }} gold</p>
+                                <p>{{ armour.goldCost }} gold</p>
                                 <button class="inspectViewBtn bold"
                                     @click="openModal(armour, armour.category)">View</button>
                             </div>
@@ -122,7 +122,7 @@
                         <div class="item" v-for="trinket in data.items.trinkets">
                             <p>{{ trinket.name }}</p>
                             <div class="part">
-                                <p>Cost: {{ trinket.goldCost }} gold</p>
+                                <p>{{ trinket.goldCost }} gold</p>
                                 <button class="inspectViewBtn bold"
                                     @click="openModal(trinket, trinket.category)">View</button>
                             </div>
@@ -394,6 +394,8 @@ async function sellItem(inventory_id) {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
+    margin-left: 4px;
 }
 
 .part {
