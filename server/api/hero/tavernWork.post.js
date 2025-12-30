@@ -83,6 +83,7 @@ export default defineEventHandler(async (event) => {
     return {
       success: true,
       hero: updatedHero,
+      payout: shift.payout,
     };
   } catch (err) {
     throw err;
