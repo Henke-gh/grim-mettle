@@ -67,11 +67,12 @@ export default defineEventHandler(async (event) => {
     }
 
     let newCurrentGrit = hero.grit_current - shift.gritCost;
+    let newGold = hero.gold + shift.payout;
 
     //Add gold to player hero and update grit_current
-    const { data: updatedHero, error: updateError } = await supabaseAdmin
+    const { error: updateError } = await supabaseAdmin
       .from("heroes")
-      .update({ gold: hero.gold + shift.payout, grit_current: newCurrentGrit })
+      .update({ gold: newGold, grit_current: newCurrentGrit })
       .eq("id", hero.id)
       .select()
       .maybeSingle();
@@ -82,7 +83,6 @@ export default defineEventHandler(async (event) => {
 
     return {
       success: true,
-      hero: updatedHero,
       payout: shift.payout,
     };
   } catch (err) {

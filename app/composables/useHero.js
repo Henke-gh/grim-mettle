@@ -4,9 +4,9 @@ export const useHero = () => {
   const user = useSupabaseUser();
   const router = useRouter();
 
-  const hero = ref(null);
-  const loading = ref(false);
-  const error = ref(null);
+  const hero = useState("hero", () => null);
+  const loading = useState("heroLoading", () => false);
+  const error = useState("heroError", () => null);
 
   const fetchHero = async () => {
     if (!user.value) {
