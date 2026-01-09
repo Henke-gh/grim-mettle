@@ -14,11 +14,9 @@
                         @click="toggleBracket((bracket.rank))" :class="{ active: isBracketExpanded[bracket.rank] }">
                         <h4>{{ bracket.rank }} [{{ bracket.lvlSpan }}]</h4>
                         <span class="bracket-controls" v-if="!isBracketExpanded[bracket.rank]">
-                            <p>Show</p>
                             <img src="/ArrowDown.svg" alt="Arrow point down" />
                         </span>
                         <span class="bracket-controls" v-else>
-                            <p>Hide</p>
                             <img src="/ArrowUp.svg" alt="Arrow point up" />
                         </span>
                     </button>

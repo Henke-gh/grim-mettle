@@ -7,26 +7,26 @@ const error = ref('');
 const loading = ref(null);
 const success = ref('');
 const submitHero = async () => {
-    loading.value = true
-    error.value = ''
-    success.value = ''
+    loading.value = true;
+    error.value = '';
+    success.value = '';
     if (hero.statPointsRemaining !== 0) {
-        error.value = "Spend all your starting points"
-        loading.value = false
+        error.value = "Spend all your starting points";
+        loading.value = false;
     } else {
         try {
             const res = await $fetch('/api/hero/create', {
                 method: 'POST',
                 body: hero.getCreatePayload(),
-            })
-            success.value = res.message
+            });
+            success.value = res.message;
             hero.reset();
             navigateTo('/hero');
         } catch (err) {
-            error.value = err?.data?.message || 'Something went wrong'
+            error.value = err?.data?.message || 'Something went wrong';
         }
 
-        loading.value = false
+        loading.value = false;
     }
 }
 
@@ -144,8 +144,9 @@ const submitHero = async () => {
             </div>
             <p v-if="error">{{ error }}</p>
         </form>
-        <div class="swordlineContainer spacing"><img src="/divider.svg"
-                alt="A line of four swords, with a shield in the middle" /></div>
+        <div class="swordlineContainer spacing">
+            <img src='/divider.svg' alt="A line of four swords, with a shield in the middle" />
+        </div>
     </section>
 </template>
 
@@ -229,7 +230,8 @@ const submitHero = async () => {
 
 @media only screen and (min-width: 650px) {
     .statInput {
-        width: 2rem;
+        width: 2.5rem;
+        max-width: 2.5rem;
     }
 }
 </style>
