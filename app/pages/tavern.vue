@@ -129,7 +129,7 @@ async function workShift(shift_id, gritCost) {
 }
 
 .shift-success {
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     border: 2px dotted var(--yellow);
     background-color: var(--dark-green);
     color: var(--bone-white);
@@ -139,7 +139,7 @@ async function workShift(shift_id, gritCost) {
 }
 
 .shift-failure {
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     border: 2px dotted var(--yellow);
     background-color: var(--brown);
     color: var(--bone-white);
