@@ -25,7 +25,7 @@
                         <span v-if="!isCategoryExpanded[weaponCategory.key]" class="toggleBtnContent">
                             <p>{{
                                 weaponCategory.label
-                            }}</p>
+                                }}</p>
                             <img src="/ArrowDown.svg" alt="Arrow pointing down" />
                         </span>
                         <span v-else class="toggleBtnContent">
@@ -173,11 +173,11 @@
                         selectedItem.damageReduction }}</p>
                     <p v-if="selectedItem.blockValue !== undefined"><strong>Block Value:</strong> {{
                         selectedItem.blockValue
-                    }}
+                        }}
                     </p>
                     <p v-if="selectedItem.weight"><strong>Weight:</strong> {{ selectedItem.weight ?? '—' }}</p>
                     <p v-if="selectedItem.strengthReq"><strong>Strength Req:</strong> {{ selectedItem.strengthReq ?? '—'
-                    }}</p>
+                        }}</p>
                     <p v-if="selectedItem.skillReq"><strong>Skill Req:</strong> <span
                             v-for="value, key in selectedItem.skillReq" :key="key"> {{ capitalise(key) }}: {{ value
                             }}</span></p>
@@ -193,7 +193,7 @@
                 </section>
                 <div v-if="selectedItem.image.src" class="itemImgContainer">
                     <img :src="selectedItem.image.src" :alt="selectedItem.image.alt" class="itemImg"
-                        style="height: 3rem; width: auto;" />
+                        style="height: auto; width: 8rem;" />
                 </div>
                 <footer class="modalFooter">
                     <div class="modalFooterBtnContainer">

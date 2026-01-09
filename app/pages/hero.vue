@@ -237,7 +237,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
                     </section>
                     <div v-if="selectedItem.image.src" class="itemImgContainer">
                         <img :src="selectedItem.image.src" :alt="selectedItem.image.alt" class="itemImg"
-                            style="height: 3rem; width: auto;" />
+                            style="height: auto; width: 8rem;" />
                     </div>
                     <footer class="modalFooter">
                         <div class="modalFooterBtnContainer">

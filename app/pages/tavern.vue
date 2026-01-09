@@ -12,7 +12,7 @@
         <section class="tavernWork">
             <h3>Legitimate Honest Work</h3>
             <p v-if="successMessage" class="shift-success">{{ successMessage }}</p>
-            <p v-if="errorMessage">{{ errorMessage }}</p>
+            <p v-if="errorMessage" class="shift-failure">{{ errorMessage }}</p>
             <div class="tavernOptions" v-for="shift in tavernShifts" :key="shift.id">
                 <div class="shiftContainer">
                     <p class="bold">{{ shift.name }}</p>
@@ -21,7 +21,7 @@
                     <p>Spend: {{ shift.gritCost }} grit</p>
                     <div class="part">
                         <p>Receive: {{ shift.payout }} gold</p>
-                        <button class="inspectViewBtn" v-on:click="workShift(shift.id)">Work</button>
+                        <button class="inspectViewBtn" v-on:click="workShift(shift.id, shift.gritCost)">Work</button>
                     </div>
                 </div>
             </div>
@@ -40,27 +40,39 @@ definePageMeta({
 import { tavernShifts } from "../../utils/tavernShifts";
 import { ref } from "vue";
 
-const { hero, fetchHero } = useHero();
+const { fetchHero, hero } = useHero();
 const workingShift = ref(false);
 const errorMessage = ref('');
 const successMessage = ref('');
 
-async function workShift(shift_id) {
-    try {
-        const payload = { shift_id: shift_id };
-        const response = await $fetch('/api/hero/tavernWork', { method: 'POST', body: payload })
-        const payment = response?.payout;
-        successMessage.value = 'Work Completed! You earned ' + payment + ' gold.';
-
-        await fetchHero();
+async function workShift(shift_id, gritCost) {
+    if (gritCost > hero.value.grit_current) {
+        errorMessage.value = 'You are too tired to work this shift.'
 
         setTimeout(() => {
-            successMessage.value = '';
+            errorMessage.value = '';
         }, 3000)
-    } catch (err) {
-        errorMessage.value = (err?.data?.message || err?.message || 'Tavern work failed.')
-    } finally {
-        workingShift.value = false;
+    } else {
+        try {
+            const payload = { shift_id: shift_id };
+            const response = await $fetch('/api/hero/tavernWork', { method: 'POST', body: payload })
+            const payment = response?.payout;
+            successMessage.value = 'Work Completed! You earned ' + payment + ' gold.';
+
+            await fetchHero();
+
+            setTimeout(() => {
+                successMessage.value = '';
+            }, 3000)
+        } catch (err) {
+            errorMessage.value = (err?.data?.message || err?.message || 'Tavern work failed.')
+
+            setTimeout(() => {
+                errorMessage.value = '';
+            }, 3000)
+        } finally {
+            workingShift.value = false;
+        }
     }
 }
 </script>
@@ -117,8 +129,23 @@ async function workShift(shift_id) {
 }
 
 .shift-success {
-    font-size: 1rem;
-    font-weight: 600;
+    font-size: 0.7rem;
+    border: 2px dotted var(--yellow);
+    background-color: var(--dark-green);
+    color: var(--bone-white);
+    padding: 0.5rem;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.shift-failure {
+    font-size: 0.7rem;
+    border: 2px dotted var(--yellow);
+    background-color: var(--brown);
+    color: var(--bone-white);
+    padding: 0.5rem;
+    border-radius: 5px;
+    text-align: center;
 }
 
 @media only screen and (min-width: 650px) {
