@@ -25,7 +25,7 @@
                         <span v-if="!isCategoryExpanded[weaponCategory.key]" class="toggleBtnContent">
                             <p>{{
                                 weaponCategory.label
-                                }}</p>
+                            }}</p>
                             <img src="/ArrowDown.svg" alt="Arrow pointing down" />
                         </span>
                         <span v-else class="toggleBtnContent">
@@ -144,8 +144,8 @@
                     <p>{{ entry.item.name }}</p>
                     <div class="part">
                         <p>Sell: {{ getResellValue(entry.item.goldCost) }} gold</p>
-                        <button class="inspectViewBtn bold closeBtn" @click="sellItem(entry.inventory_id)"
-                            :disabled="sellingItem">Sell</button>
+                        <button class="inspectViewBtn bold closeBtn"
+                            @click="sellItem(entry.inventory_id, entry.item.name)" :disabled="sellingItem">Sell</button>
                     </div>
                 </div>
                 <p v-if="sellingItem">Selling item..</p>
@@ -173,11 +173,11 @@
                         selectedItem.damageReduction }}</p>
                     <p v-if="selectedItem.blockValue !== undefined"><strong>Block Value:</strong> {{
                         selectedItem.blockValue
-                        }}
+                    }}
                     </p>
                     <p v-if="selectedItem.weight"><strong>Weight:</strong> {{ selectedItem.weight ?? '—' }}</p>
                     <p v-if="selectedItem.strengthReq"><strong>Strength Req:</strong> {{ selectedItem.strengthReq ?? '—'
-                        }}</p>
+                    }}</p>
                     <p v-if="selectedItem.skillReq"><strong>Skill Req:</strong> <span
                             v-for="value, key in selectedItem.skillReq" :key="key"> {{ capitalise(key) }}: {{ value
                             }}</span></p>
@@ -223,6 +223,7 @@ import { capitalise } from '~~/utils/general';
 import itemBag from "../assets/images/items.png";
 
 const { data } = await useFetch('/api/items/itemCatalog');
+const { fetchHero } = useHero();
 
 /* === Item Display === */
 const weaponCategories = [
@@ -292,14 +293,21 @@ async function buyItem() {
     try {
         const payload = { id: selectedItem.value.id, itemType: selectedItemType.value };
         await $fetch('/api/hero/buyItem', { method: 'POST', body: payload })
-        successMessage.value = 'Purchase Succesful'
+        successMessage.value = 'You bought a ' + selectedItem.value.name + '.';
+
+        await fetchInventory();
+        await fetchHero();
 
         setTimeout(() => {
-            closeModal()
-            window.location.reload();
-        }, 700)
+            successMessage.value = '';
+            closeModal();
+        }, 750);
     } catch (err) {
-        errorMessage.value = (err?.data?.message || err?.message || 'Purchase Failed')
+        errorMessage.value = (err?.data?.message || err?.message || 'Purchase Failed');
+
+        setTimeout(() => {
+            errorMessage.value = '';
+        }, 2500);
     } finally {
         buyingItem.value = false;
     }
@@ -332,8 +340,8 @@ function getResellValue(goldCost) {
 }
 
 //Add sell-API route
-async function sellItem(inventory_id) {
-    if (sellingItem.value) return
+async function sellItem(inventory_id, itemName) {
+    if (sellingItem.value) return;
     sellingItem.value = true;
     errorMessage.value = '';
     successSaleMessage.value = '';
@@ -341,14 +349,20 @@ async function sellItem(inventory_id) {
     try {
         const payload = { inventory_id };
         await $fetch('/api/hero/sellItem', { method: 'POST', body: payload })
-        successSaleMessage.value = 'Sale Succesful'
+        successSaleMessage.value = 'Sold ' + itemName + '.';
+
+        await fetchInventory();
+        await fetchHero();
 
         setTimeout(() => {
-            window.location.reload();
-        }, 700)
+            successSaleMessage.value = '';
+        }, 750);
 
     } catch (err) {
         errorMessage.value = (err?.data?.message || err?.message || 'Purchase Failed')
+        setTimeout(() => {
+            errorMessage.value = '';
+        }, 2000);
     } finally { sellingItem.value = false; }
 
 }

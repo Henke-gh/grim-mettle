@@ -2,9 +2,9 @@ export const useInventory = () => {
   const supabase = useSupabaseClient();
   const user = useSupabaseUser();
 
-  const inventory = ref(null);
-  const loading = ref(false);
-  const error = ref(null);
+  const inventory = useState("inventory", () => []);
+  const loading = useState("inventoryLoading", () => null);
+  const error = useState("inventoryError", () => null);
 
   const fetchInventory = async () => {
     loading.value = true;
