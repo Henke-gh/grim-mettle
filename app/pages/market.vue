@@ -23,13 +23,13 @@
                     <button @click="toggleCategory(weaponCategory.key)" class="categoryToggle roboto-mono-600"
                         :class="{ active: isCategoryExpanded[weaponCategory.key] }">
                         <span v-if="!isCategoryExpanded[weaponCategory.key]" class="toggleBtnContent">
-                            <p>Browse {{
+                            <p>{{
                                 weaponCategory.label
                                 }}</p>
                             <img src="/ArrowDown.svg" alt="Arrow pointing down" />
                         </span>
                         <span v-else class="toggleBtnContent">
-                            <p>Hide {{ weaponCategory.label }}</p>
+                            <p>{{ weaponCategory.label }}</p>
                             <img src="/ArrowUp.svg" alt="Arrow point up" />
                         </span>
                     </button>
@@ -39,7 +39,7 @@
                                 :key="weapon.id">
                                 <p>{{ weapon.name }}</p>
                                 <div class="part">
-                                    <p>Cost: {{ weapon.goldCost }} gold</p>
+                                    <p>{{ weapon.goldCost }} gold</p>
                                     <button class="inspectViewBtn bold"
                                         @click="openModal(weapon, 'weapons')">View</button>
                                 </div>
@@ -54,11 +54,11 @@
                 <button @click="toggleCategory('shields')" class="categoryToggle roboto-mono-600"
                     :class="{ active: isCategoryExpanded['shields'] }">
                     <span v-if="!isCategoryExpanded['shields']" class="toggleBtnContent">
-                        <p>Browse Shields</p>
+                        <p>Shields</p>
                         <img src="/ArrowDown.svg" alt="Arrow pointing down" />
                     </span>
                     <span v-else class="toggleBtnContent">
-                        <p>Hide Shields</p>
+                        <p>Shields</p>
                         <img src="/ArrowUp.svg" alt="Arrow point up" />
                     </span>
                 </button>
@@ -67,7 +67,7 @@
                         <div class="item" v-for="shield in data.items.shields">
                             <p>{{ shield.name }}</p>
                             <div class="part">
-                                <p>Cost: {{ shield.goldCost }} gold</p>
+                                <p>{{ shield.goldCost }} gold</p>
                                 <button class="inspectViewBtn bold"
                                     @click="openModal(shield, shield.category)">View</button>
                             </div>
@@ -81,11 +81,11 @@
                 <button @click="toggleCategory('armour')" class="categoryToggle roboto-mono-600"
                     :class="{ active: isCategoryExpanded['armour'] }">
                     <span v-if="!isCategoryExpanded['armour']" class="toggleBtnContent">
-                        <p>Browse Armour</p>
+                        <p>Armour</p>
                         <img src="/ArrowDown.svg" alt="Arrow pointing down" />
                     </span>
                     <span v-else class="toggleBtnContent">
-                        <p>Hide Armour</p>
+                        <p>Armour</p>
                         <img src="/ArrowUp.svg" alt="Arrow point up" />
                     </span>
                 </button>
@@ -94,7 +94,7 @@
                         <div class="item" v-for="armour in data.items.armour">
                             <p>{{ armour.name }}</p>
                             <div class="part">
-                                <p>Cost: {{ armour.goldCost }} gold</p>
+                                <p>{{ armour.goldCost }} gold</p>
                                 <button class="inspectViewBtn bold"
                                     @click="openModal(armour, armour.category)">View</button>
                             </div>
@@ -109,11 +109,11 @@
                 <button @click="toggleCategory('trinkets')" class="categoryToggle roboto-mono-600"
                     :class="{ active: isCategoryExpanded['trinkets'] }">
                     <span v-if="!isCategoryExpanded['trinkets']" class="toggleBtnContent">
-                        <p>Browse Trinkets</p>
+                        <p>Trinkets</p>
                         <img src="/ArrowDown.svg" alt="Arrow pointing down" />
                     </span>
                     <span v-else class="toggleBtnContent">
-                        <p>Hide Trinkets</p>
+                        <p>Trinkets</p>
                         <img src="/ArrowUp.svg" alt="Arrow point up" />
                     </span>
                 </button>
@@ -122,7 +122,7 @@
                         <div class="item" v-for="trinket in data.items.trinkets">
                             <p>{{ trinket.name }}</p>
                             <div class="part">
-                                <p>Cost: {{ trinket.goldCost }} gold</p>
+                                <p>{{ trinket.goldCost }} gold</p>
                                 <button class="inspectViewBtn bold"
                                     @click="openModal(trinket, trinket.category)">View</button>
                             </div>
@@ -193,7 +193,7 @@
                 </section>
                 <div v-if="selectedItem.image.src" class="itemImgContainer">
                     <img :src="selectedItem.image.src" :alt="selectedItem.image.alt" class="itemImg"
-                        style="height: 3rem; width: auto;" />
+                        style="height: auto; width: 8rem;" />
                 </div>
                 <footer class="modalFooter">
                     <div class="modalFooterBtnContainer">
@@ -394,6 +394,8 @@ async function sellItem(inventory_id) {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
+    margin-left: 4px;
 }
 
 .part {

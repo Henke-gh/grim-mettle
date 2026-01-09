@@ -4,12 +4,12 @@
     </header>
     <div class="combatWrapper">
         <!-- Versus animation -->
-        <div class="versus-container" v-if="log && heroAvatar">
+        <div class="versus-container" v-if="log && heroPortrait">
             <div class="contestant left">
-                <img :src="heroAvatar.src" class="avatarImg hero-avatar" />
+                <img :src="heroPortrait.src" class="avatarImg hero-avatar" />
                 <div class="contestant-info">
                     <p class="hero-name custom-vs-txt">[ {{ log[0].data.hero }} ]</p>
-                    <p class="hero-name custom-vs-txt">Level: {{ hero.level }}</p>
+                    <p class="hero-name custom-vs-txt">Level: {{ heroLevel }}</p>
                 </div>
             </div>
             <p class="versus-text custom-vs-txt italic">Versus..</p>
@@ -21,7 +21,7 @@
                 </div>
             </div>
         </div>
-        <p v-if="log && heroAvatar" class="italic centerText audience-text">An audience of {{ audience }} attendees
+        <p v-if="log && heroPortrait" class="italic centerText audience-text">An audience of {{ audience }} attendees
             cheer you on!
         </p>
         <template v-if="showLogs">
@@ -170,9 +170,10 @@ import defeatImg from "../assets/images/defeat_small.png"
 import monsterAvatar from "../assets/images/monster_Avatar.png"
 import { getAudience, delay } from "~~/utils/general";
 
-const { heroAvatar, hero, fetchHero } = useHeroView();
 const combatResult = useCombatResult();
 const log = combatResult.combatLog.value;
+const heroPortrait = combatResult.avatar.value;
+const heroLevel = combatResult.heroLevel;
 const audience = getAudience();
 const showLogs = ref(false);
 
@@ -180,7 +181,6 @@ onMounted(async () => {
     if (!log) {
         return navigateTo('/arena');
     }
-    await fetchHero();
     combatIntroAnimation();
     await delay(3800);
     showLogs.value = true;
