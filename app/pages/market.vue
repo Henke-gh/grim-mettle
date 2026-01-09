@@ -223,7 +223,7 @@ import { capitalise } from '~~/utils/general';
 import itemBag from "../assets/images/items.png";
 
 const { data } = await useFetch('/api/items/itemCatalog');
-const { fetchHero } = useHero();
+const { fetchHero, hero } = useHero();
 
 /* === Item Display === */
 const weaponCategories = [
@@ -290,26 +290,35 @@ async function buyItem() {
     buyingItem.value = true;
     errorMessage.value = '';
     successMessage.value = '';
-    try {
-        const payload = { id: selectedItem.value.id, itemType: selectedItemType.value };
-        await $fetch('/api/hero/buyItem', { method: 'POST', body: payload })
-        successMessage.value = 'You bought a ' + selectedItem.value.name + '.';
-
-        await fetchInventory();
-        await fetchHero();
-
-        setTimeout(() => {
-            successMessage.value = '';
-            closeModal();
-        }, 750);
-    } catch (err) {
-        errorMessage.value = (err?.data?.message || err?.message || 'Purchase Failed');
+    if (selectedItem.value.goldCost > hero.value.gold) {
+        errorMessage.value = "Not enough gold.";
+        buyingItem.value = false;
 
         setTimeout(() => {
             errorMessage.value = '';
         }, 2500);
-    } finally {
-        buyingItem.value = false;
+    } else {
+        try {
+            const payload = { id: selectedItem.value.id, itemType: selectedItemType.value };
+            await $fetch('/api/hero/buyItem', { method: 'POST', body: payload })
+            successMessage.value = 'You bought a ' + selectedItem.value.name + '.';
+
+            await fetchInventory();
+            await fetchHero();
+
+            setTimeout(() => {
+                successMessage.value = '';
+                closeModal();
+            }, 750);
+        } catch (err) {
+            errorMessage.value = (err?.data?.message || err?.message || 'Purchase Failed');
+
+            setTimeout(() => {
+                errorMessage.value = '';
+            }, 2500);
+        } finally {
+            buyingItem.value = false;
+        }
     }
 }
 
