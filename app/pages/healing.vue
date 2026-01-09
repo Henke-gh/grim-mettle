@@ -8,8 +8,8 @@
         </article>
         <section class="healingItems">
             <h3>Forhild's Remedies</h3>
-            <p v-if="successMessage">{{ successMessage }}</p>
-            <p v-if="errorMessage">{{ errorMessage }}</p>
+            <p v-if="successMessage" class="healing-success">{{ successMessage }}</p>
+            <p v-if="errorMessage" class="healing-failure">{{ errorMessage }}</p>
             <div class="healingShop" v-for="item in healingItems" :key="item.id">
                 <div class="itemContainer">
                     <p class="bold">{{ item.name }}</p>
@@ -18,7 +18,8 @@
                 <div class="healingItems">
                     <div class="part">
                         <p>Recovery: {{ item.healingValue }} hp</p>
-                        <button class="inspectViewBtn" v-on:click="buyHealing(item.id)">Buy</button>
+                        <button class="inspectViewBtn"
+                            v-on:click="buyHealing(item.id, item.healingValue, item.cost)">Buy</button>
                     </div>
                     <p class="italic">Description: {{ item.description }}</p>
                 </div>
@@ -38,23 +39,36 @@ definePageMeta({
 import { ref } from "vue";
 import { healingItems } from "../../utils/healingItems";
 
+const { fetchHero, hero } = useHero();
 const buyingHealing = ref(false);
 const errorMessage = ref('');
 const successMessage = ref('');
 
-async function buyHealing(item_id) {
-    try {
-        const payload = { item_id: item_id };
-        await $fetch('/api/hero/buyHealing', { method: 'POST', body: payload })
-        successMessage.value = 'Purchase Succesful'
-
+async function buyHealing(item_id, healValue, goldCost) {
+    if (goldCost > hero.value.gold) {
+        errorMessage.value = ("You can't afford this treatment.");
         setTimeout(() => {
-            window.location.reload();
-        }, 700)
-    } catch (err) {
-        errorMessage.value = (err?.data?.message || err?.message || 'Purchase Failed')
-    } finally {
-        buyingHealing.value = false;
+            errorMessage.value = '';
+        }, 3000);
+    } else {
+        try {
+            const payload = { item_id: item_id };
+            await $fetch('/api/hero/buyHealing', { method: 'POST', body: payload })
+            successMessage.value = 'You gained +' + healValue + ' hp.';
+
+            await fetchHero();
+
+            setTimeout(() => {
+                successMessage.value = '';
+            }, 3000)
+        } catch (err) {
+            errorMessage.value = (err?.data?.message || err?.message || 'Purchase Failed');
+            setTimeout(() => {
+                errorMessage.value = '';
+            }, 3000)
+        } finally {
+            buyingHealing.value = false;
+        }
     }
 }
 </script>
@@ -106,6 +120,26 @@ async function buyHealing(item_id) {
     justify-content: space-between;
     gap: 0.5rem;
     margin-top: 0.4rem;
+}
+
+.healing-success {
+    font-size: 0.8rem;
+    border: 2px dotted var(--yellow);
+    background-color: var(--dark-green);
+    color: var(--bone-white);
+    padding: 0.5rem;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.healing-failure {
+    font-size: 0.8rem;
+    border: 2px dotted var(--yellow);
+    background-color: var(--brown);
+    color: var(--bone-white);
+    padding: 0.5rem;
+    border-radius: 5px;
+    text-align: center;
 }
 
 @media only screen and (min-width: 650px) {

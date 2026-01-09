@@ -2,9 +2,9 @@ export const useEquipment = () => {
   const supabase = useSupabaseClient();
   const user = useSupabaseUser();
 
-  const equipment = ref(null);
-  const equipLoading = ref(false);
-  const equipError = ref(null);
+  const equipment = useState("equipment", () => []);
+  const equipLoading = useState("equipLoading", () => null);
+  const equipError = useState("equipError", () => null);
 
   const fetchEquipment = async () => {
     equipLoading.value = true;
