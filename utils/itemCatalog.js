@@ -257,6 +257,23 @@ export const weapons = [
       "An exotic weapon often carried by the nomads of the Kariul Plains.",
     image: {},
   },
+  {
+    id: 16,
+    category: "hammers",
+    slot: "main_hand",
+    twoHanded: true,
+    name: "War Club",
+    minDmg: 10,
+    maxDmg: 25,
+    skillReq: { hammers: 40 },
+    strengthReq: 80,
+    weight: 1,
+    goldCost: 600,
+    bonus: { initiative: 5 },
+    description:
+      "An immense two-handed club designed to pound goblins back into the ground.",
+    image: {},
+  },
 ];
 
 export const shields = [
