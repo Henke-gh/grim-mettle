@@ -401,9 +401,9 @@ export const trinkets = [
     category: "trinkets",
     slot: "trinket",
     name: "Silver Leaf",
-    goldCost: 200,
+    goldCost: 300,
     bonus: {
-      initiative: 5,
+      initiative: 10,
     },
     description:
       "Worn like a pin or a badge, it gleams an almost pure white in the sun.",
