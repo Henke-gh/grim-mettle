@@ -122,6 +122,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
                         @click="openModal(equippedItems?.offHand, equippedItems?.offHand?.category)"
                         style="cursor: pointer;">
                         Off-hand: {{ equippedItems?.offHand?.name }}</p>
+                    <p v-else-if="equippedItems?.mainHand?.twoHanded">Off-hand: {{ equippedItems?.mainHand?.name }}</p>
                     <p v-else>Off-hand: - empty -</p>
                     <button v-if="equippedItems?.offHand?.name" @click="unequipItem('off_hand')"
                         :disabled="actionLoading" class="inspectViewBtn closeBtn bold">Unequip</button>
@@ -208,7 +209,8 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
                         <button class="closeByXBtn" @click="closeModal" aria-label="Close">&times;</button>
                     </header>
                     <section class="modalBody">
-                        <p><strong>Category:</strong> {{ capitalise(selectedItem.category) || '—' }}</p>
+                        <p><strong>Category:</strong> {{ capitalise(selectedItem.category) || '—' }} <span
+                                v-if="selectedItem.twoHanded">- Two Handed</span></p>
                         <p v-if="selectedItem.minDmg !== undefined"><strong>Damage:</strong> {{ selectedItem.minDmg }} -
                             {{
                                 selectedItem.maxDmg }}</p>
@@ -308,7 +310,9 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
     width: 20rem;
+    height: 1.7rem;
 }
 
 .skillWrapper {
