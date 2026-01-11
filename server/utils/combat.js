@@ -468,7 +468,6 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
         heroEquipment.armour,
         heroEquipment.main_hand
       );
-      console.log("Monster Attack", monsterAttack);
       const heroBlocked = monsterAttack.blocked;
 
       turn.actions.push(
@@ -517,14 +516,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
           break;
         }
       }
-      console.log("NEW");
-      console.log(heroEquipment.main_hand);
-      console.log(
-        "weapon is twohand",
-        isWeaponTwoHanded(heroEquipment.main_hand)
-      );
-      console.log("hero blocked", heroBlocked);
-      console.log("END");
+
       // === HERO COUNTER-ATTACKS ===
       if (
         (isWeaponTwoHanded(heroEquipment.main_hand) && !heroBlocked) ||
