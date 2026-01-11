@@ -166,7 +166,8 @@
                     <button class="closeByXBtn" @click="closeModal" aria-label="Close">&times;</button>
                 </header>
                 <section class="modalBody">
-                    <p><strong>Category:</strong> {{ capitalise(selectedItem.category) || '—' }}</p>
+                    <p><strong>Category:</strong> {{ capitalise(selectedItem.category) || '—' }} <span
+                            v-if="selectedItem.twoHanded">- Two Handed</span></p>
                     <p v-if="selectedItem.minDmg !== undefined"><strong>Damage:</strong> {{ selectedItem.minDmg }} - {{
                         selectedItem.maxDmg }}</p>
                     <p v-if="selectedItem.damageReduction !== undefined"><strong>Damage Reduction:</strong> {{

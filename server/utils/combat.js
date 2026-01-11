@@ -54,6 +54,14 @@ function isCritical() {
   }
 }
 
+function isWeaponTwoHanded(weapon) {
+  if (weapon.twoHanded) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 //Determine if attacker hits or if defender evades
 function makeAttack(attacker, defender, weapon) {
   const attackSkill = weapon.category;
@@ -86,34 +94,70 @@ function makeAttack(attacker, defender, weapon) {
 }
 //Determine if defender blocks if a shield is present in the off hand.
 //Has to handle hero off-hand empty/ null!
-function attemptBlock(attacker, defender, defenderShield, attackerWeapon) {
-  if (!defenderShield) {
+function attemptBlock(
+  attacker,
+  defender,
+  defenderShield,
+  attackerWeapon,
+  defenderWeapon
+) {
+  //No shield, no 2-handed weapon. Defender can't block.
+  if (!defenderShield && !isWeaponTwoHanded(defenderWeapon)) {
     return false;
   }
+
   const attackSkill = attackerWeapon.category;
-  let skillDiff = defender.block - Math.floor(attacker[attackSkill] / 2);
-  //Calc block penalty if blocker skill < shield block req
-  if (defenderShield.skillReq && defenderShield.skillReq > defender.block) {
-    const penalty = defenderShield.skillReq - defender.block;
-    skillDiff -= penalty * 2;
-  }
+  const defenderAttackSkill = defenderWeapon.category;
 
-  let blockChance;
-  if (skillDiff >= 40) blockChance = 95;
-  else if (skillDiff >= 20) blockChance = 80;
-  else if (skillDiff >= 10) blockChance = 70;
-  else if (skillDiff >= 0) blockChance = 60;
-  else if (skillDiff >= -10) blockChance = 50;
-  else if (skillDiff >= -20) blockChance = 35;
-  else if (skillDiff >= -30) blockChance = 20;
-  else blockChance = 10;
+  //Defender has a two-handed weapon, can attempt block using their weapon skill to help determine successful block.
+  if (!defenderShield && isWeaponTwoHanded(defenderWeapon)) {
+    let skillDiff =
+      Math.floor(defender.block + defender[defenderAttackSkill] / 2) -
+      Math.floor(attacker[attackSkill] / 2);
 
-  const rollBlockTarget = Math.random() * 100;
+    let blockChance;
+    if (skillDiff >= 40) blockChance = 95;
+    else if (skillDiff >= 20) blockChance = 80;
+    else if (skillDiff >= 10) blockChance = 70;
+    else if (skillDiff >= 0) blockChance = 60;
+    else if (skillDiff >= -10) blockChance = 50;
+    else if (skillDiff >= -20) blockChance = 35;
+    else if (skillDiff >= -30) blockChance = 20;
+    else blockChance = 10;
 
-  if (rollBlockTarget <= blockChance) {
-    return true;
+    const rollBlockTarget = Math.random() * 100;
+
+    if (rollBlockTarget <= blockChance) {
+      return true;
+    } else {
+      return false;
+    }
   } else {
-    return false;
+    //Defender has a shield and attempts to block.
+    let skillDiff = defender.block - Math.floor(attacker[attackSkill] / 2);
+    //Calc block penalty if blocker skill < shield block req
+    if (defenderShield.skillReq && defenderShield.skillReq > defender.block) {
+      const penalty = defenderShield.skillReq - defender.block;
+      skillDiff -= penalty * 2;
+    }
+
+    let blockChance;
+    if (skillDiff >= 40) blockChance = 95;
+    else if (skillDiff >= 20) blockChance = 80;
+    else if (skillDiff >= 10) blockChance = 70;
+    else if (skillDiff >= 0) blockChance = 60;
+    else if (skillDiff >= -10) blockChance = 50;
+    else if (skillDiff >= -20) blockChance = 35;
+    else if (skillDiff >= -30) blockChance = 20;
+    else blockChance = 10;
+
+    const rollBlockTarget = Math.random() * 100;
+
+    if (rollBlockTarget <= blockChance) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }
 
@@ -123,7 +167,8 @@ function combatAction(
   attackerWeapon,
   defender,
   defenderShield,
-  defenderArmour
+  defenderArmour,
+  defenderWeapon
 ) {
   const damage = doDamage(attackerWeapon, attacker.strength);
   const attackHits = makeAttack(attacker, defender, attackerWeapon);
@@ -137,9 +182,19 @@ function combatAction(
     damageReduction = 0;
     finalDamage = Math.floor(damage * 1.5); //Damage multiplier on critical hit! Always hits, bypasses all dmg reduction and block.
   } else if (!criticalHit && attackHits) {
-    blocked = attemptBlock(attacker, defender, defenderShield, attackerWeapon);
+    blocked = attemptBlock(
+      attacker,
+      defender,
+      defenderShield,
+      attackerWeapon,
+      defenderWeapon
+    );
     if (blocked) {
-      damageReduction += defenderShield?.blockValue || 0;
+      if (isWeaponTwoHanded(defenderWeapon)) {
+        damageReduction += 2; //Two-handed weapons reduce incoming damage by 2 on a successful block, this will need TWEAKING.
+      } else {
+        damageReduction += defenderShield?.blockValue || 0;
+      }
     }
 
     finalDamage = applyDamageReduction(damage, damageReduction);
@@ -289,8 +344,11 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
         heroEquipment.main_hand,
         monster,
         monster.shield,
-        monster.armour
+        monster.armour,
+        monster.weapon
       );
+
+      const monsterBlocked = heroAttack.blocked;
 
       turn.actions.push(
         addLogEntry("attack", {
@@ -301,7 +359,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
           weapon: heroEquipment.main_hand.name,
           hit: heroAttack.attackHits,
           blocked: heroAttack.blocked,
-          shield: monster.shield?.name || null,
+          shield: monster.shield?.name || monster.weapon?.name || null,
           baseDamage: heroAttack.damage,
           damage: heroAttack.finalDamage,
           damageReduction: heroAttack.damageReduction,
@@ -339,56 +397,65 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
         }
       }
       /* ===== Monster Counter-Attacks ===== */
+      //If the monster has a Two-handed weapon and already made a successful block, no counter-attack can be made.
+      if (
+        (isWeaponTwoHanded(monster.weapon) && !monsterBlocked) ||
+        !isWeaponTwoHanded(monster.weapon)
+      ) {
+        const monsterAttack = combatAction(
+          monster,
+          monster.weapon,
+          hero,
+          heroEquipment.off_hand,
+          heroEquipment.armour,
+          heroEquipment.main_hand
+        );
 
-      const monsterAttack = combatAction(
-        monster,
-        monster.weapon,
-        hero,
-        heroEquipment.off_hand,
-        heroEquipment.armour
-      );
+        turn.actions.push(
+          addLogEntry("attack", {
+            attacker: monster.name,
+            attackerType: "monster",
+            defender: hero.hero_name,
+            defenderType: "hero",
+            weapon: monster.weapon.name,
+            hit: monsterAttack.attackHits,
+            blocked: monsterAttack.blocked,
+            shield:
+              heroEquipment.off_hand?.name ||
+              heroEquipment.main_hand?.name ||
+              null,
+            baseDamage: monsterAttack.baseDamage,
+            damage: monsterAttack.finalDamage,
+            damageReduction: monsterAttack.damageReduction,
+            critical: monsterAttack.criticalHit,
+          })
+        );
 
-      turn.actions.push(
-        addLogEntry("attack", {
-          attacker: monster.name,
-          attackerType: "monster",
-          defender: hero.hero_name,
-          defenderType: "hero",
-          weapon: monster.weapon.name,
-          hit: monsterAttack.attackHits,
-          blocked: monsterAttack.blocked,
-          shield: heroEquipment.off_hand?.name || null,
-          baseDamage: monsterAttack.baseDamage,
-          damage: monsterAttack.finalDamage,
-          damageReduction: monsterAttack.damageReduction,
-          critical: monsterAttack.criticalHit,
-        })
-      );
+        if (monsterAttack.criticalHit || monsterAttack.attackHits) {
+          heroHP -= monsterAttack.finalDamage;
 
-      if (monsterAttack.criticalHit || monsterAttack.attackHits) {
-        heroHP -= monsterAttack.finalDamage;
+          if (heroHP <= heroRetreatsAt) {
+            turn.actions.push(
+              addLogEntry("defeat", {
+                defeated: hero.hero_name,
+                defeatedType: "hero",
+                victor: monster.name,
+                slain: heroHP <= 0,
+              })
+            );
 
-        if (heroHP <= heroRetreatsAt) {
-          turn.actions.push(
-            addLogEntry("defeat", {
-              defeated: hero.hero_name,
-              defeatedType: "hero",
-              victor: monster.name,
-              slain: heroHP <= 0,
-            })
-          );
-
-          combatLog.push(addLogEntry("turn", turn));
-          combatLog.push(
-            addLogEntry("combat_end", {
-              result: heroHP <= 0 ? "death" : "retreat",
-              turns: turnCounter,
-              hero: hero.hero_name,
-              monster: monster.name,
-            })
-          );
-          heroWon = false;
-          break;
+            combatLog.push(addLogEntry("turn", turn));
+            combatLog.push(
+              addLogEntry("combat_end", {
+                result: heroHP <= 0 ? "death" : "retreat",
+                turns: turnCounter,
+                hero: hero.hero_name,
+                monster: monster.name,
+              })
+            );
+            heroWon = false;
+            break;
+          }
         }
       }
     } else {
@@ -398,8 +465,11 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
         monster.weapon,
         hero,
         heroEquipment.off_hand,
-        heroEquipment.armour
+        heroEquipment.armour,
+        heroEquipment.main_hand
       );
+      console.log("Monster Attack", monsterAttack);
+      const heroBlocked = monsterAttack.blocked;
 
       turn.actions.push(
         addLogEntry("attack", {
@@ -410,7 +480,10 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
           weapon: monster.weapon.name,
           hit: monsterAttack.attackHits,
           blocked: monsterAttack.blocked,
-          shield: heroEquipment.off_hand?.name || null,
+          shield:
+            heroEquipment.off_hand?.name ||
+            heroEquipment.main_hand?.name ||
+            null,
           baseDamage: monsterAttack.baseDamage,
           damage: monsterAttack.finalDamage,
           damageReduction: monsterAttack.damageReduction,
@@ -444,61 +517,74 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
           break;
         }
       }
-
+      console.log("NEW");
+      console.log(heroEquipment.main_hand);
+      console.log(
+        "weapon is twohand",
+        isWeaponTwoHanded(heroEquipment.main_hand)
+      );
+      console.log("hero blocked", heroBlocked);
+      console.log("END");
       // === HERO COUNTER-ATTACKS ===
-      const heroAttack = combatAction(
-        hero,
-        heroEquipment.main_hand,
-        monster,
-        monster.shield,
-        monster.armour
-      );
+      if (
+        (isWeaponTwoHanded(heroEquipment.main_hand) && !heroBlocked) ||
+        !isWeaponTwoHanded(heroEquipment.main_hand)
+      ) {
+        const heroAttack = combatAction(
+          hero,
+          heroEquipment.main_hand,
+          monster,
+          monster.shield,
+          monster.armour,
+          monster.weapon
+        );
 
-      turn.actions.push(
-        addLogEntry("attack", {
-          attacker: hero.hero_name,
-          attackerType: "hero",
-          defender: monster.name,
-          defenderType: "monster",
-          weapon: heroEquipment.main_hand.name,
-          hit: heroAttack.attackHits,
-          blocked: heroAttack.blocked,
-          shield: monster.shield?.name || null,
-          baseDamage: heroAttack.baseDamage,
-          damage: heroAttack.finalDamage,
-          damageReduction: heroAttack.damageReduction,
-          critical: heroAttack.criticalHit,
-        })
-      );
+        turn.actions.push(
+          addLogEntry("attack", {
+            attacker: hero.hero_name,
+            attackerType: "hero",
+            defender: monster.name,
+            defenderType: "monster",
+            weapon: heroEquipment.main_hand.name,
+            hit: heroAttack.attackHits,
+            blocked: heroAttack.blocked,
+            shield: monster.shield?.name || monster.weapon?.name || null,
+            baseDamage: heroAttack.baseDamage,
+            damage: heroAttack.finalDamage,
+            damageReduction: heroAttack.damageReduction,
+            critical: heroAttack.criticalHit,
+          })
+        );
 
-      if (monsterAttack.criticalHit || heroAttack.attackHits) {
-        monsterHP -= heroAttack.finalDamage;
+        if (monsterAttack.criticalHit || heroAttack.attackHits) {
+          monsterHP -= heroAttack.finalDamage;
 
-        if (monsterHP <= 0) {
-          const getReward = giveRewards(monster, hero);
-          rewards.gold = getReward.gold;
-          rewards.xp = getReward.xp;
+          if (monsterHP <= 0) {
+            const getReward = giveRewards(monster, hero);
+            rewards.gold = getReward.gold;
+            rewards.xp = getReward.xp;
 
-          turn.actions.push(
-            addLogEntry("defeat", {
-              defeated: monster.name,
-              defeatedType: "monster",
-              victor: hero.hero_name,
-            })
-          );
+            turn.actions.push(
+              addLogEntry("defeat", {
+                defeated: monster.name,
+                defeatedType: "monster",
+                victor: hero.hero_name,
+              })
+            );
 
-          combatLog.push(addLogEntry("turn", turn));
-          combatLog.push(
-            addLogEntry("combat_end", {
-              result: "victory",
-              turns: turnCounter,
-              hero: hero.hero_name,
-              monster: monster.name,
-              rewards: { gold: rewards.gold, xp: rewards.xp },
-            })
-          );
-          heroWon = true;
-          break;
+            combatLog.push(addLogEntry("turn", turn));
+            combatLog.push(
+              addLogEntry("combat_end", {
+                result: "victory",
+                turns: turnCounter,
+                hero: hero.hero_name,
+                monster: monster.name,
+                rewards: { gold: rewards.gold, xp: rewards.xp },
+              })
+            );
+            heroWon = true;
+            break;
+          }
         }
       }
     }
