@@ -1,21 +1,20 @@
 <script setup>
+import { ref } from "vue";
 import guard from "../assets/images/arenaGuard.png";
 import CustomHeader from "~/components/CustomHeader.vue";
 import CustomFooter from "~/components/CustomFooter.vue";
 const user = useSupabaseUser();
+const showOldNews = ref(false);
 
+function toggleNews() {
+    showOldNews.value = true;
+}
 </script>
 
 <template>
     <CustomHeader />
     <div class="indexWrapper">
         <section class="welcome">
-            <div class="news">
-                <p class="centerText">* <span class="bold">News:</span> Critical hits are now possible. Both the player
-                    and monsters might hit *significantly* harder than before.
-                    <span class="italic">19/12-25</span> *
-                </p>
-            </div>
             <div class="guardContainer">
                 <img :src="guard" alt="A hooded guard watching the gates of an arena" class="guardImg" />
             </div>
@@ -32,6 +31,20 @@ const user = useSupabaseUser();
         <section style="width: 100%;">
             <div class="swordlineContainer spacing"><img src="/divider.svg"
                     alt="A line of four swords, with a shield in the middle" /></div>
+            <div class="news">
+                <p class="centerText">* <span class="bold">News:</span> Two-handed weapons are live. Invest in some
+                    initiative!
+                    <span class="italic">11/1-26</span> *
+                </p>
+                <button v-on:click="toggleNews" v-if="!showOldNews" class="newsButton">More News</button>
+                <div class="olderNews" v-if="showOldNews">
+                    <p class="centerText">* <span class="bold">News:</span> Critical hits are now possible. Both the
+                        player
+                        and monsters might hit *significantly* harder than before.
+                        <span class="italic">19/12-25</span> *
+                    </p>
+                </div>
+            </div>
             <section class="loginWrapper">
                 <div class="loginContainer" v-if="!user">
                     <p class="customP">Start playing</p>
@@ -64,6 +77,7 @@ const user = useSupabaseUser();
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    padding: 0rem 1rem;
 }
 
 .introText p {
@@ -71,7 +85,23 @@ const user = useSupabaseUser();
 }
 
 .news {
-    padding: 0rem 1rem 1rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1rem 1rem 1rem;
+}
+
+.newsButton {
+    width: fit-content;
+    background: none;
+    box-shadow: none;
+    border: 2px solid var(--dark-green);
+    border-radius: 5px;
+    padding: 0.2rem 0.8rem;
+    cursor: pointer;
+    font-family: "Roboto Mono", monospace;
+    font-weight: 600;
 }
 
 .loginWrapper {
