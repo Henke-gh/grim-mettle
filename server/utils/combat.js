@@ -348,7 +348,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
         monster.weapon
       );
 
-      const monsterBlocked = heroAttack.blocked;
+      const monsterGotHit = heroAttack.attackHits;
 
       turn.actions.push(
         addLogEntry("attack", {
@@ -399,7 +399,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
       /* ===== Monster Counter-Attacks ===== */
       //If the monster has a Two-handed weapon and already made a successful block, no counter-attack can be made.
       if (
-        (isWeaponTwoHanded(monster.weapon) && !monsterBlocked) ||
+        (isWeaponTwoHanded(monster.weapon) && !monsterGotHit) ||
         !isWeaponTwoHanded(monster.weapon)
       ) {
         const monsterAttack = combatAction(
@@ -468,7 +468,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
         heroEquipment.armour,
         heroEquipment.main_hand
       );
-      const heroBlocked = monsterAttack.blocked;
+      const heroGotHit = monsterAttack.attackHits;
 
       turn.actions.push(
         addLogEntry("attack", {
@@ -519,7 +519,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
 
       // === HERO COUNTER-ATTACKS ===
       if (
-        (isWeaponTwoHanded(heroEquipment.main_hand) && !heroBlocked) ||
+        (isWeaponTwoHanded(heroEquipment.main_hand) && !heroGotHit) ||
         !isWeaponTwoHanded(heroEquipment.main_hand)
       ) {
         const heroAttack = combatAction(
