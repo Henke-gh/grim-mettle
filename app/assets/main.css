@@ -98,10 +98,10 @@ section {
 }
 
 .inspectViewBtn {
-  border: none;
+  border: 3px double var(--bone-white);
+  border-radius: 4px;
   font-family: monospace;
   padding: 0.2rem 0.4rem 0.2rem;
-  box-shadow: 2px 2px 2px var(--warm-black);
   cursor: pointer;
   color: var(--bone-white);
   background-color: var(--dark-green);

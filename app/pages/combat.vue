@@ -4,12 +4,12 @@
     </header>
     <div class="combatWrapper">
         <!-- Versus animation -->
-        <div class="versus-container" v-if="log && heroAvatar">
+        <div class="versus-container" v-if="log && heroPortrait">
             <div class="contestant left">
-                <img :src="heroAvatar.src" class="avatarImg hero-avatar" />
+                <img :src="heroPortrait.src" class="avatarImg hero-avatar" />
                 <div class="contestant-info">
                     <p class="hero-name custom-vs-txt">[ {{ log[0].data.hero }} ]</p>
-                    <p class="hero-name custom-vs-txt">Level: {{ hero.level }}</p>
+                    <p class="hero-name custom-vs-txt">Level: {{ heroLevel }}</p>
                 </div>
             </div>
             <p class="versus-text custom-vs-txt italic">Versus..</p>
@@ -21,7 +21,7 @@
                 </div>
             </div>
         </div>
-        <p v-if="log && heroAvatar" class="italic centerText audience-text">An audience of {{ audience }} attendees
+        <p v-if="log && heroPortrait" class="italic centerText audience-text">An audience of {{ audience }} attendees
             cheer you on!
         </p>
         <template v-if="showLogs">
@@ -156,6 +156,35 @@
         <div class="swordlineContainer spacing topMargin"><img src="/divider.svg"
                 alt="A line of four swords, with a shield in the middle" /></div>
     </div>
+    <!-- === Hero Death Modal === -->
+    <teleport to="body">
+        <div v-if="showDeathModal" class="modalOverlay" role="dialog" aria-modal="true" :aria-label="'Hero Death'">
+            <div class="modalContent" ref="modalRef">
+                <header class="modalHeader">
+                    <h2 style="text-align: center;">You have perished.</h2>
+                </header>
+                <section class="modalBody">
+                    <article>
+                        <p>Your hero has died. A grim fate, but not uncommon.</p>
+                        <p>While this particular adventure is over perhaps there are other adventurers looking to stake
+                            their claim?</p>
+                    </article>
+                    <button class="defaultButton default" @click="createNewHero">New Hero</button>
+                    <div class="deathImageContainer">
+                        <img :src="death" alt="Skulls and weapons piled around each other. Your hero has died."
+                            class="deathImage" />
+                    </div>
+                    <div class="swordlineContainer spacing topMargin"><img src="/divider.svg"
+                            alt="A line of four swords, with a shield in the middle" /></div>
+                </section>
+                <footer class="modalFooter">
+                    <div class="modalFooterBtnContainer">
+
+                    </div>
+                </footer>
+            </div>
+        </div>
+    </teleport>
     <HeroNav />
 </template>
 
@@ -170,17 +199,18 @@ import defeatImg from "../assets/images/defeat_small.png"
 import monsterAvatar from "../assets/images/monster_Avatar.png"
 import { getAudience, delay } from "~~/utils/general";
 
-const { heroAvatar, hero, fetchHero } = useHeroView();
 const combatResult = useCombatResult();
 const log = combatResult.combatLog.value;
+const heroPortrait = combatResult.avatar.value;
+const heroLevel = combatResult.heroLevel;
 const audience = getAudience();
 const showLogs = ref(false);
+const showDeathModal = ref(false);
 
 onMounted(async () => {
     if (!log) {
         return navigateTo('/arena');
     }
-    await fetchHero();
     combatIntroAnimation();
     await delay(3800);
     showLogs.value = true;
@@ -218,10 +248,15 @@ function exitCombatLog() {
     combatResult.combatLog.value = null;
 
     if (combatEnd?.data.result === 'death') {
-        navigateTo('/create-hero');
+        showDeathModal.value = true;
     } else {
         navigateTo('/arena');
     }
+
+}
+
+function createNewHero() {
+    navigateTo('/create-hero');
 }
 </script>
 
@@ -325,6 +360,70 @@ function exitCombatLog() {
 .custom-vs-txt {
     font-weight: 600;
     font-family: 1.2rem;
+}
+
+/* Hero Death Modal */
+
+.modalOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 60;
+    padding: 1rem;
+}
+
+.modalContent {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    background: var(--bone-white);
+    color: var(--warm-black);
+    width: min(90%, 640px);
+    max-width: 700px;
+    max-height: 90vh;
+    overflow: auto;
+    border-radius: 8px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    outline: none;
+    padding: 1rem;
+}
+
+.modalHeader {
+    text-align: center;
+}
+
+.modalBody {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+.modalBody p {
+    margin: 0.4rem 0;
+}
+
+.deathImage {
+    width: 8rem;
+    height: auto;
+}
+
+.modalFooter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 0.5rem;
+    padding-top: 0.75rem;
+}
+
+.modalFooterBtnContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
 }
 
 @media only screen and (min-width: 650px) {

@@ -57,11 +57,13 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onEscape));
     display: flex;
     flex-direction: column;
     align-items: center;
+    cursor: pointer;
 }
 
 .burgerBtn {
     border: none;
     background: none;
+    cursor: pointer;
 }
 
 .gameNavModalWrapper {

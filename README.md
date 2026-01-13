@@ -1,83 +1,19 @@
 # Grim Mettle
 
-![The gate guard](https://github.com/Henke-gh/grim-mettle/blob/develop/app/assets/images/scout_sharp.png)
+![The gate guard](https://github.com/Henke-gh/grim-mettle/blob/develop/app/assets/images/arenaGuard.png)
 
 Where heroes live forever - until they die. A text-based gladiatorial adventure.
 
 Create your hero, specialise in weapon skills, gear up and take on the threats challenging you.
 
-# Nuxt Minimal Starter
+# About
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Grim Mettle is a browser game, primarily developed with mobiles and smaller devices in mind. It lets you create a classic RPG-style hero complete with stats and various gear pieces.
 
-## Setup
+Designed to be played in short intervals over time the game makes use of a couple of different resources which regenerate every 3 minutes.
 
-Make sure to install dependencies:
+The game offers multiple weapons and armours along with matching skills, allowing you to customise and build your hero as you wish as you strive to take down every stronger foes.
 
-```bash
-# npm
-npm install
+Grim Mettle is still in the early stages of development with features being added as they reach a playable and polished enough state. Being a hobby solo project aimed at improving my own skills as a coder a lot of time is spent exploring and trying out various solutions and ideas.
 
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+Henrik Andersen 2026

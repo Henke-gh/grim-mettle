@@ -10,6 +10,7 @@ const combatSubmitSchema = z.object({
   monsterID: z.number(),
   stance: z.enum(["balanced", "offensive", "defensive"]),
   retreatValue: z.number().min(0).max(100),
+  avatar: z.object({ id: z.number(), src: z.string(), alt: z.string() }),
 });
 
 export default defineEventHandler(async (event) => {
@@ -211,7 +212,11 @@ export default defineEventHandler(async (event) => {
         });
       }
 
-      return combatResult.combatLog;
+      return {
+        log: combatResult.combatLog,
+        avatar: combatSettings.avatar,
+        heroLevel: hero.level,
+      };
     }
 
     const heroWin = combatResult.heroWon;
@@ -242,7 +247,11 @@ export default defineEventHandler(async (event) => {
       throw createError({ statusCode: 500, message: updateError.message });
     }
 
-    return combatResult.combatLog;
+    return {
+      log: combatResult.combatLog,
+      avatar: combatSettings.avatar,
+      heroLevel: hero.level,
+    };
   } catch (err) {
     throw err;
   }

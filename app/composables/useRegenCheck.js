@@ -11,7 +11,7 @@ export const useRegenCheck = () => {
   //Make a server-side update request if update is due.
   const checkAndTriggerRegen = async (hero) => {
     //No hero, no update.
-    if (!hero.id) return;
+    if (!hero) return;
     //Last update is less than 3 minutes ago, no update. Such denial.
     if (!needsRegen(hero.last_regen)) return;
 

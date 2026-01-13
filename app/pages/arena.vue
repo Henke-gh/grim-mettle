@@ -14,11 +14,9 @@
                         @click="toggleBracket((bracket.rank))" :class="{ active: isBracketExpanded[bracket.rank] }">
                         <h4>{{ bracket.rank }} [{{ bracket.lvlSpan }}]</h4>
                         <span class="bracket-controls" v-if="!isBracketExpanded[bracket.rank]">
-                            <p>Show</p>
                             <img src="/ArrowDown.svg" alt="Arrow point down" />
                         </span>
                         <span class="bracket-controls" v-else>
-                            <p>Hide</p>
                             <img src="/ArrowUp.svg" alt="Arrow point up" />
                         </span>
                     </button>
@@ -134,7 +132,7 @@ const retreatPercent = ref(50);
 const selectedStance = ref("balanced");
 const combatResult = useCombatResult();
 const { data: monsters, error } = await useAsyncData('monsters', () => $fetch('/api/monster/monsterCollection'));
-const { hero, initialise } = useHeroView();
+const { hero, initialise, heroAvatar } = useHeroView();
 const errorMsg = ref('');
 
 const leftHandEl = ref(null);
@@ -202,10 +200,13 @@ async function initiateFight() {
         }
     } else {
         try {
-            const payload = { monsterID: selectedMonster.value.id, stance: selectedStance.value, retreatValue: retreatPercent.value };
+            const avatar = heroAvatar.value;
+            const payload = { monsterID: selectedMonster.value.id, stance: selectedStance.value, retreatValue: retreatPercent.value, avatar };
             const result = await $fetch('/api/combat/fightMonster', { method: 'POST', body: payload })
             if (result) {
-                combatResult.combatLog.value = result;
+                combatResult.combatLog.value = result.log;
+                combatResult.avatar.value = result.avatar;
+                combatResult.heroLevel = result.heroLevel;
                 navigateTo('/combat');
             }
         } catch (err) {

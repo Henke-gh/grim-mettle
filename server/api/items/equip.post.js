@@ -1,7 +1,7 @@
 import { supabaseAdmin } from "~~/server/utils/supabaseAdmin";
 import { serverSupabaseClient } from "#supabase/server";
 import { getItemById } from "~~/utils/itemCatalog";
-import { boolean, z } from "zod";
+import { z } from "zod";
 
 const itemSchema = z.object({
   item_id: z.number(),
@@ -58,6 +58,29 @@ export default defineEventHandler(async (event) => {
       });
     }
 
+    /* Make additional main hand checks if user attempts to equip a shield. 
+    Needs to check if equipped weapon is a two handed weapon. */
+    let mainHandWeapon = null;
+
+    if (item_slot === "off_hand") {
+      /* Fetch Equipped items, need to check if a two-handed weapon should be unequipped if trying to equip an off_hand item */
+      const { data: mainhandItem } = await supabaseAdmin
+        .from("hero_equipment")
+        .select("main_hand")
+        .eq("hero_id", hero.id) //Used for identifying which item if exists multiple of the same item (ie 2 short swords).
+        .single();
+
+      if (mainhandItem.main_hand !== null) {
+        const { data: equippedMainHandItem } = await supabaseAdmin
+          .from("hero_inventory")
+          .select("item_id")
+          .eq("hero_id", hero.id)
+          .eq("id", mainhandItem.main_hand) //Used for identifying which item if exists multiple of the same item (ie 2 short swords).
+          .single();
+        mainHandWeapon = getItemById(equippedMainHandItem.item_id);
+      }
+    }
+
     // Get full item data
     const itemToEquip = getItemById(item_id);
     if (!itemToEquip) {
@@ -106,14 +129,43 @@ export default defineEventHandler(async (event) => {
     }
 
     //Equip item
-    const { error: errorEquipping } = await supabaseAdmin
-      .from("hero_equipment")
-      .update({ [item_slot]: inventory_id }) //inventory id is extracted from hero_equipment and matched to item_id
-      .eq("hero_id", hero.id);
-    if (errorEquipping) {
-      throw createError({ statusCode: 500, message: errorEquipping.message });
+    //If item to equip is a two-handed weapon unequip off-hand item.
+    if (itemToEquip.twoHanded) {
+      const { error: errorEquipping } = await supabaseAdmin
+        .from("hero_equipment")
+        .update({ [item_slot]: inventory_id, off_hand: null }) //inventory id is extracted from hero_equipment and matched to item_id
+        .eq("hero_id", hero.id);
+      if (errorEquipping) {
+        throw createError({ statusCode: 500, message: errorEquipping.message });
+      }
+      return { success: true, message: `${itemToEquip.name} equipped.` };
+
+      //Unequip two-handed item if item to equip is an off-hand item.
+    } else if (
+      itemToEquip.slot === "off_hand" &&
+      mainHandWeapon !== null &&
+      mainHandWeapon?.twoHanded === true
+    ) {
+      const { error: errorEquipping } = await supabaseAdmin
+        .from("hero_equipment")
+        .update({ [item_slot]: inventory_id, main_hand: null }) //inventory id is extracted from hero_equipment and matched to item_id
+        .eq("hero_id", hero.id);
+      if (errorEquipping) {
+        throw createError({ statusCode: 500, message: errorEquipping.message });
+      }
+      return { success: true, message: `${itemToEquip.name} equipped.` };
+
+      //Equip item
+    } else {
+      const { error: errorEquipping } = await supabaseAdmin
+        .from("hero_equipment")
+        .update({ [item_slot]: inventory_id }) //inventory id is extracted from hero_equipment and matched to item_id
+        .eq("hero_id", hero.id);
+      if (errorEquipping) {
+        throw createError({ statusCode: 500, message: errorEquipping.message });
+      }
+      return { success: true, message: `${itemToEquip.name} equipped.` };
     }
-    return { success: true, message: `${itemToEquip.name} equipped.` };
   } catch (err) {
     throw err;
   }

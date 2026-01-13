@@ -39,7 +39,7 @@
                                 :key="weapon.id">
                                 <p>{{ weapon.name }}</p>
                                 <div class="part">
-                                    <p>Cost: {{ weapon.goldCost }} gold</p>
+                                    <p>{{ weapon.goldCost }} gold</p>
                                     <button class="inspectViewBtn bold"
                                         @click="openModal(weapon, 'weapons')">View</button>
                                 </div>
@@ -67,7 +67,7 @@
                         <div class="item" v-for="shield in data.items.shields">
                             <p>{{ shield.name }}</p>
                             <div class="part">
-                                <p>Cost: {{ shield.goldCost }} gold</p>
+                                <p>{{ shield.goldCost }} gold</p>
                                 <button class="inspectViewBtn bold"
                                     @click="openModal(shield, shield.category)">View</button>
                             </div>
@@ -94,7 +94,7 @@
                         <div class="item" v-for="armour in data.items.armour">
                             <p>{{ armour.name }}</p>
                             <div class="part">
-                                <p>Cost: {{ armour.goldCost }} gold</p>
+                                <p>{{ armour.goldCost }} gold</p>
                                 <button class="inspectViewBtn bold"
                                     @click="openModal(armour, armour.category)">View</button>
                             </div>
@@ -122,7 +122,7 @@
                         <div class="item" v-for="trinket in data.items.trinkets">
                             <p>{{ trinket.name }}</p>
                             <div class="part">
-                                <p>Cost: {{ trinket.goldCost }} gold</p>
+                                <p>{{ trinket.goldCost }} gold</p>
                                 <button class="inspectViewBtn bold"
                                     @click="openModal(trinket, trinket.category)">View</button>
                             </div>
@@ -144,8 +144,8 @@
                     <p>{{ entry.item.name }}</p>
                     <div class="part">
                         <p>Sell: {{ getResellValue(entry.item.goldCost) }} gold</p>
-                        <button class="inspectViewBtn bold closeBtn" @click="sellItem(entry.inventory_id)"
-                            :disabled="sellingItem">Sell</button>
+                        <button class="inspectViewBtn bold closeBtn"
+                            @click="sellItem(entry.inventory_id, entry.item.name)" :disabled="sellingItem">Sell</button>
                     </div>
                 </div>
                 <p v-if="sellingItem">Selling item..</p>
@@ -166,7 +166,8 @@
                     <button class="closeByXBtn" @click="closeModal" aria-label="Close">&times;</button>
                 </header>
                 <section class="modalBody">
-                    <p><strong>Category:</strong> {{ capitalise(selectedItem.category) || '—' }}</p>
+                    <p><strong>Category:</strong> {{ capitalise(selectedItem.category) || '—' }} <span
+                            v-if="selectedItem.twoHanded">- Two Handed</span></p>
                     <p v-if="selectedItem.minDmg !== undefined"><strong>Damage:</strong> {{ selectedItem.minDmg }} - {{
                         selectedItem.maxDmg }}</p>
                     <p v-if="selectedItem.damageReduction !== undefined"><strong>Damage Reduction:</strong> {{
@@ -193,7 +194,7 @@
                 </section>
                 <div v-if="selectedItem.image.src" class="itemImgContainer">
                     <img :src="selectedItem.image.src" :alt="selectedItem.image.alt" class="itemImg"
-                        style="height: 3rem; width: auto;" />
+                        style="height: auto; width: 8rem;" />
                 </div>
                 <footer class="modalFooter">
                     <div class="modalFooterBtnContainer">
@@ -223,6 +224,7 @@ import { capitalise } from '~~/utils/general';
 import itemBag from "../assets/images/items.png";
 
 const { data } = await useFetch('/api/items/itemCatalog');
+const { fetchHero, hero } = useHero();
 
 /* === Item Display === */
 const weaponCategories = [
@@ -289,19 +291,35 @@ async function buyItem() {
     buyingItem.value = true;
     errorMessage.value = '';
     successMessage.value = '';
-    try {
-        const payload = { id: selectedItem.value.id, itemType: selectedItemType.value };
-        await $fetch('/api/hero/buyItem', { method: 'POST', body: payload })
-        successMessage.value = 'Purchase Succesful'
+    if (selectedItem.value.goldCost > hero.value.gold) {
+        errorMessage.value = "Not enough gold.";
+        buyingItem.value = false;
 
         setTimeout(() => {
-            closeModal()
-            window.location.reload();
-        }, 700)
-    } catch (err) {
-        errorMessage.value = (err?.data?.message || err?.message || 'Purchase Failed')
-    } finally {
-        buyingItem.value = false;
+            errorMessage.value = '';
+        }, 2500);
+    } else {
+        try {
+            const payload = { id: selectedItem.value.id, itemType: selectedItemType.value };
+            await $fetch('/api/hero/buyItem', { method: 'POST', body: payload })
+            successMessage.value = 'You bought a ' + selectedItem.value.name + '.';
+
+            await fetchInventory();
+            await fetchHero();
+
+            setTimeout(() => {
+                successMessage.value = '';
+                closeModal();
+            }, 750);
+        } catch (err) {
+            errorMessage.value = (err?.data?.message || err?.message || 'Purchase Failed');
+
+            setTimeout(() => {
+                errorMessage.value = '';
+            }, 2500);
+        } finally {
+            buyingItem.value = false;
+        }
     }
 }
 
@@ -332,8 +350,8 @@ function getResellValue(goldCost) {
 }
 
 //Add sell-API route
-async function sellItem(inventory_id) {
-    if (sellingItem.value) return
+async function sellItem(inventory_id, itemName) {
+    if (sellingItem.value) return;
     sellingItem.value = true;
     errorMessage.value = '';
     successSaleMessage.value = '';
@@ -341,14 +359,20 @@ async function sellItem(inventory_id) {
     try {
         const payload = { inventory_id };
         await $fetch('/api/hero/sellItem', { method: 'POST', body: payload })
-        successSaleMessage.value = 'Sale Succesful'
+        successSaleMessage.value = 'Sold ' + itemName + '.';
+
+        await fetchInventory();
+        await fetchHero();
 
         setTimeout(() => {
-            window.location.reload();
-        }, 700)
+            successSaleMessage.value = '';
+        }, 750);
 
     } catch (err) {
         errorMessage.value = (err?.data?.message || err?.message || 'Purchase Failed')
+        setTimeout(() => {
+            errorMessage.value = '';
+        }, 2000);
     } finally { sellingItem.value = false; }
 
 }
@@ -394,6 +418,8 @@ async function sellItem(inventory_id) {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
+    margin-left: 4px;
 }
 
 .part {

@@ -30,11 +30,12 @@ const handleClick = (event) => {
 <style scoped>
 .defaultButton {
     border: none;
+    border-radius: 5px;
     font-family: monospace;
     font-weight: 600;
     font-size: 1rem;
     padding: 0.5rem 0.8rem 0.5rem;
-    box-shadow: 3px 3px var(--warm-black);
+    box-shadow: 2px 2px 5px var(--warm-black);
     cursor: pointer;
 }
 
