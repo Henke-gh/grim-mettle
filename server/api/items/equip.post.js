@@ -43,6 +43,37 @@ export default defineEventHandler(async (event) => {
     if (heroError || !hero) {
       throw createError({ statusCode: 404, message: "Hero not found" });
     }
+
+    /* Fetch equipped trinkets to calculate strength bonus */
+    const { data: equippedTrinketsData } = await supabaseAdmin
+      .from("hero_equipment")
+      .select("trinket_1, trinket_2, trinket_3")
+      .eq("hero_id", hero.id)
+      .single();
+
+    let strengthBonus = 0;
+    if (equippedTrinketsData) {
+      const trinketIds = [
+        equippedTrinketsData.trinket_1,
+        equippedTrinketsData.trinket_2,
+        equippedTrinketsData.trinket_3,
+      ].filter((id) => id !== null);
+
+      for (const trinketInventoryId of trinketIds) {
+        const { data: trinketInventory } = await supabaseAdmin
+          .from("hero_inventory")
+          .select("item_id")
+          .eq("id", trinketInventoryId)
+          .single();
+
+        if (trinketInventory) {
+          const trinketItem = getItemById(trinketInventory.item_id);
+          if (trinketItem?.bonus?.strength) {
+            strengthBonus += trinketItem.bonus.strength;
+          }
+        }
+      }
+    }
     /* Fetch Inventory */
     const { data: inventoryItem } = await supabaseAdmin
       .from("hero_inventory")
@@ -86,8 +117,9 @@ export default defineEventHandler(async (event) => {
     if (!itemToEquip) {
       throw createError({ statusCode: 404, message: "Item not found" });
     }
-    //Check if item has a strength requirment and if the hero has enough strength to equip item
-    if (itemToEquip.strengthReq && hero.strength < itemToEquip.strengthReq) {
+    //Check if item has a strength requirment and if the hero has enough strength (including trinket bonuses) to equip item
+    const totalStrength = hero.strength + strengthBonus;
+    if (itemToEquip.strengthReq && totalStrength < itemToEquip.strengthReq) {
       throw createError({ statusCode: 400, message: "Not enough strength." });
     }
 
