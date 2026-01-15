@@ -165,11 +165,16 @@ export const useHeroView = () => {
   };
 
   //Check if hero has enough strength to equip selected item (applies to shields and weapons)
+  //Takes into account strength bonuses from equipped trinkets
   const canEquip = (item) => {
     if (!hero.value || !item) return false;
 
-    if (item.strengthReq && hero.value.strength < item.strengthReq) {
-      return false;
+    if (item.strengthReq) {
+      const strengthBonus = equipmentBonuses.value.strength || 0;
+      const totalStrength = hero.value.strength + strengthBonus;
+      if (totalStrength < item.strengthReq) {
+        return false;
+      }
     }
     return true;
   };
