@@ -1,10 +1,10 @@
 //combatlog entry helper, makes building a more structured combat log easier.
-function addLogEntry(type, data) {
+export function addLogEntry(type, data) {
   return { type, data };
 }
 
 //Set hero fatigue value
-function setHeroFatigue(heroSpeed) {
+export function setHeroFatigue(heroSpeed) {
   const fatigue = Math.floor(5 + heroSpeed * 0.4);
 
   return fatigue;
@@ -23,7 +23,7 @@ function determineInitiative(heroInit, monsterInit) {
 
 //Calculates hit damage, also needs to take monster/hero strength rating.
 //Max and min values are inclusive when randomised.
-function doDamage(weapon, strength) {
+export function doDamage(weapon, strength) {
   const minDmg = Math.ceil(weapon.minDmg);
   const maxDmg = Math.floor(weapon.maxDmg);
   const dmgBonus = Math.ceil(strength / 10);
@@ -34,7 +34,7 @@ function doDamage(weapon, strength) {
 }
 
 //Apply damage reduction from armour, return modified damage value
-function applyDamageReduction(damage, dmgRed) {
+export function applyDamageReduction(damage, dmgRed) {
   let finalDamage = damage - dmgRed;
   if (finalDamage < 0) {
     finalDamage = 0;
@@ -44,7 +44,7 @@ function applyDamageReduction(damage, dmgRed) {
 }
 
 //Give combatants a small chance for critical attack.
-function isCritical() {
+export function isCritical() {
   const rollCritical = Math.random() * 101;
 
   if (rollCritical > 95) {
@@ -54,7 +54,7 @@ function isCritical() {
   }
 }
 
-function isWeaponTwoHanded(weapon) {
+export function isWeaponTwoHanded(weapon) {
   if (weapon.twoHanded) {
     return true;
   } else {
@@ -63,7 +63,7 @@ function isWeaponTwoHanded(weapon) {
 }
 
 //Determine if attacker hits or if defender evades
-function makeAttack(attacker, defender, weapon) {
+export function makeAttack(attacker, defender, weapon) {
   const attackSkill = weapon.category;
   let skillDiff = attacker[attackSkill] - defender.evasion;
 
@@ -94,7 +94,7 @@ function makeAttack(attacker, defender, weapon) {
 }
 //Determine if defender blocks if a shield is present in the off hand.
 //Has to handle hero off-hand empty/ null!
-function attemptBlock(
+export function attemptBlock(
   attacker,
   defender,
   defenderShield,
@@ -162,7 +162,7 @@ function attemptBlock(
 }
 
 //Encapsulates half a turn: Attacker makes an attack and the defender responds.
-function combatAction(
+export function combatAction(
   attacker,
   attackerWeapon,
   defender,
