@@ -10,10 +10,14 @@
             <img src="/smallDivider.svg" alt="Two swords on a horizontal line" />
             <div class="links">
                 <NuxtLink to="/" style="text-decoration: none; color: var(--bone-white);">Start</NuxtLink>
+                <NuxtLink v-if="user" to="/hero" style="text-decoration: none; color: var(--bone-white);">Game
+                </NuxtLink>
                 <NuxtLink to="/hall-of-records" style="text-decoration: none; color: var(--bone-white);">Hall of
                     Records
                 </NuxtLink>
                 <NuxtLink to="/game-guide" style="text-decoration: none; color: var(--bone-white);">Game Guide
+                </NuxtLink>
+                <NuxtLink v-if="user" to="/profile" style="text-decoration: none; color: var(--bone-white);">Profile
                 </NuxtLink>
                 <div class="links separation">
                     <button class="menuButton" @click="logoutUser" v-if="user" style="cursor: pointer;">Log Out</button>

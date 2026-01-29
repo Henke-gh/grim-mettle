@@ -10,6 +10,7 @@
   --dark-green: #56756f;
   --yellow: #f5c938;
   --brown: #756e56;
+  --red: #744245;
 }
 
 .roboto-mono-400 {
@@ -154,7 +155,9 @@ section {
 /* === Bracket Expand Animation === */
 .expandBracket-enter-active,
 .expandBracket-leave-active {
-  transition: max-height 0.3s ease, opacity 0.3s ease;
+  transition:
+    max-height 0.3s ease,
+    opacity 0.3s ease;
   overflow: hidden;
 }
 
