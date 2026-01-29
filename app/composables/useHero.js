@@ -7,6 +7,36 @@ export const useHero = () => {
   const hero = useState("hero", () => null);
   const loading = useState("heroLoading", () => false);
   const error = useState("heroError", () => null);
+  const username = useState("username", () => null);
+  const userCreated = useState("userCreated", () => null);
+  const heroCreated = useState("heroCreated", () => null);
+
+  const fetchUsername = async () => {
+    if (!user.value) {
+      router.push("/");
+      return;
+    }
+    loading.value = true;
+    error.value = null;
+    try {
+      const { data, error: fetchError } = await supabase
+        .from("profiles")
+        .select("username, created_at")
+        .eq("id", user.value.sub)
+        .maybeSingle();
+      if (fetchError) throw fetchError;
+      if (!data) {
+        router.push("/register");
+        return;
+      }
+      username.value = data.username;
+      userCreated.value = data.created_at.slice(0, 10);
+    } catch (err) {
+      error.value = err.message;
+    } finally {
+      loading.value = false;
+    }
+  };
 
   const fetchHero = async () => {
     if (!user.value) {
@@ -30,6 +60,7 @@ export const useHero = () => {
       }
 
       hero.value = data;
+      heroCreated.value = hero.value.created_at.slice(0, 10);
     } catch (err) {
       error.value = err.message;
     } finally {
@@ -73,5 +104,9 @@ export const useHero = () => {
     canLevelUp,
     totalFights,
     winRatio,
+    fetchUsername,
+    username,
+    userCreated,
+    heroCreated,
   };
 };
