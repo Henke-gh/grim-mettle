@@ -12,8 +12,12 @@ export function setHeroFatigue(heroSpeed) {
 
 //Determine initiative (each round)
 function determineInitiative(heroInit, monsterInit) {
-  const heroInitiative = Math.floor(Math.random() * (heroInit - 0 + 1));
-  const monsterInitiative = Math.floor(Math.random() * (monsterInit - 0 + 1));
+  const heroBaseIni = Math.floor(heroInit / 2);
+  const monsterBaseIni = Math.floor(monsterInit / 2);
+  const heroInitiative =
+    heroBaseIni + Math.floor(Math.random() * (heroBaseIni - 0 + 1));
+  const monsterInitiative =
+    monsterBaseIni + Math.floor(Math.random() * (monsterBaseIni - 0 + 1));
   if (heroInitiative >= monsterInitiative) {
     return true;
   } else {
@@ -99,7 +103,7 @@ export function attemptBlock(
   defender,
   defenderShield,
   attackerWeapon,
-  defenderWeapon
+  defenderWeapon,
 ) {
   //No shield, no 2-handed weapon. Defender can't block.
   if (!defenderShield && !isWeaponTwoHanded(defenderWeapon)) {
@@ -168,7 +172,7 @@ export function combatAction(
   defender,
   defenderShield,
   defenderArmour,
-  defenderWeapon
+  defenderWeapon,
 ) {
   const damage = doDamage(attackerWeapon, attacker.strength);
   const attackHits = makeAttack(attacker, defender, attackerWeapon);
@@ -187,7 +191,7 @@ export function combatAction(
       defender,
       defenderShield,
       attackerWeapon,
-      defenderWeapon
+      defenderWeapon,
     );
     if (blocked) {
       if (isWeaponTwoHanded(defenderWeapon)) {
@@ -255,7 +259,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
       hero: hero.hero_name,
       monster: monster.name,
       monsterLevel: monster.level,
-    })
+    }),
   );
 
   while (heroHP > heroRetreatsAt && monsterHP > 0) {
@@ -275,14 +279,14 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
         addLogEntry("fatigue", {
           fighter: monster.name,
           fighterType: "monster",
-        })
+        }),
       );
       turn.actions.push(
         addLogEntry("defeat", {
           defeated: monster.name,
           defeatedType: "monster",
           victor: hero.hero_name,
-        })
+        }),
       );
       combatLog.push(addLogEntry("turn", turn));
       combatLog.push(
@@ -292,7 +296,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
           hero: hero.hero_name,
           monster: monster.name,
           rewards: { gold: rewards.gold, xp: rewards.xp },
-        })
+        }),
       );
       heroWon = true;
       break;
@@ -302,7 +306,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
         addLogEntry("fatigue", {
           fighter: hero.hero_name,
           fighterType: "hero",
-        })
+        }),
       );
       turn.actions.push(
         addLogEntry("defeat", {
@@ -310,7 +314,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
           defeatedType: "hero",
           victor: monster.name,
           slain: heroHP <= 0,
-        })
+        }),
       );
       combatLog.push(addLogEntry("turn", turn));
       combatLog.push(
@@ -319,7 +323,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
           turns: turnCounter,
           hero: hero.hero_name,
           monster: monster.name,
-        })
+        }),
       );
       heroWon = false;
       break;
@@ -327,14 +331,14 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
 
     const heroGoesFirst = determineInitiative(
       hero.initiative,
-      monster.initiative
+      monster.initiative,
     );
 
     turn.actions.push(
       addLogEntry("initiative", {
         fighter: heroGoesFirst ? hero.hero_name : monster.name,
         fighterType: heroGoesFirst ? hero.hero_name : monster.name,
-      })
+      }),
     );
 
     if (heroGoesFirst) {
@@ -345,7 +349,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
         monster,
         monster.shield,
         monster.armour,
-        monster.weapon
+        monster.weapon,
       );
 
       const monsterGotHit = heroAttack.attackHits;
@@ -364,7 +368,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
           damage: heroAttack.finalDamage,
           damageReduction: heroAttack.damageReduction,
           critical: heroAttack.criticalHit,
-        })
+        }),
       );
       if (heroAttack.criticalHit || heroAttack.attackHits) {
         monsterHP -= heroAttack.finalDamage;
@@ -379,7 +383,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
               defeated: monster.name,
               defeatedType: "monster",
               victor: hero.hero_name,
-            })
+            }),
           );
 
           combatLog.push(addLogEntry("turn", turn));
@@ -390,7 +394,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
               hero: hero.hero_name,
               monster: monster.name,
               rewards: { gold: rewards.gold, xp: rewards.xp },
-            })
+            }),
           );
           heroWon = true;
           break;
@@ -408,7 +412,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
           hero,
           heroEquipment.off_hand,
           heroEquipment.armour,
-          heroEquipment.main_hand
+          heroEquipment.main_hand,
         );
 
         turn.actions.push(
@@ -428,7 +432,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
             damage: monsterAttack.finalDamage,
             damageReduction: monsterAttack.damageReduction,
             critical: monsterAttack.criticalHit,
-          })
+          }),
         );
 
         if (monsterAttack.criticalHit || monsterAttack.attackHits) {
@@ -441,7 +445,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
                 defeatedType: "hero",
                 victor: monster.name,
                 slain: heroHP <= 0,
-              })
+              }),
             );
 
             combatLog.push(addLogEntry("turn", turn));
@@ -451,7 +455,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
                 turns: turnCounter,
                 hero: hero.hero_name,
                 monster: monster.name,
-              })
+              }),
             );
             heroWon = false;
             break;
@@ -466,7 +470,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
         hero,
         heroEquipment.off_hand,
         heroEquipment.armour,
-        heroEquipment.main_hand
+        heroEquipment.main_hand,
       );
       const heroGotHit = monsterAttack.attackHits;
 
@@ -487,7 +491,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
           damage: monsterAttack.finalDamage,
           damageReduction: monsterAttack.damageReduction,
           critical: monsterAttack.criticalHit,
-        })
+        }),
       );
 
       if (monsterAttack.criticalHit || monsterAttack.attackHits) {
@@ -500,7 +504,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
               defeatedType: "hero",
               victor: monster.name,
               slain: heroHP <= 0,
-            })
+            }),
           );
 
           combatLog.push(addLogEntry("turn", turn));
@@ -510,7 +514,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
               turns: turnCounter,
               hero: hero.hero_name,
               monster: monster.name,
-            })
+            }),
           );
           heroWon = false;
           break;
@@ -528,7 +532,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
           monster,
           monster.shield,
           monster.armour,
-          monster.weapon
+          monster.weapon,
         );
 
         turn.actions.push(
@@ -545,7 +549,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
             damage: heroAttack.finalDamage,
             damageReduction: heroAttack.damageReduction,
             critical: heroAttack.criticalHit,
-          })
+          }),
         );
 
         if (monsterAttack.criticalHit || heroAttack.attackHits) {
@@ -561,7 +565,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
                 defeated: monster.name,
                 defeatedType: "monster",
                 victor: hero.hero_name,
-              })
+              }),
             );
 
             combatLog.push(addLogEntry("turn", turn));
@@ -572,7 +576,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
                 hero: hero.hero_name,
                 monster: monster.name,
                 rewards: { gold: rewards.gold, xp: rewards.xp },
-              })
+              }),
             );
             heroWon = true;
             break;
