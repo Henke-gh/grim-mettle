@@ -349,7 +349,7 @@ export const monsterCatalog = [
     attack: 80,
     evasion: 0,
     block: 25,
-    initiative: 30,
+    initiative: 60,
     fatigue: 20,
     hp: 155,
     weapon: {
