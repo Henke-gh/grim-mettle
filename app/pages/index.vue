@@ -172,6 +172,8 @@ function toggleNews() {
     width: 95vw;
     max-width: 500px;
     height: auto;
+    border-radius: 0.5rem;
+    border: 4px double var(--dark-green);
 }
 
 .fitContent {
