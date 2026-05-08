@@ -3,6 +3,7 @@ import { ref } from "vue";
 import guard from "../assets/images/arenaGuard.png";
 import CustomHeader from "~/components/CustomHeader.vue";
 import CustomFooter from "~/components/CustomFooter.vue";
+import { latestNews, newsArchive } from "~/news";
 const user = useSupabaseUser();
 const showOldNews = ref(false);
 
@@ -32,17 +33,16 @@ function toggleNews() {
             <div class="swordlineContainer spacing"><img src="/divider.svg"
                     alt="A line of four swords, with a shield in the middle" /></div>
             <div class="news">
-                <p class="centerText">* <span class="bold">News:</span> Two-handed weapons are live. Invest in some
-                    initiative!
-                    <span class="italic">11/1-26</span> *
+                <p class="centerText">* <span class="bold">News:</span> {{ latestNews.message }}
+                    <span class="italic">{{ latestNews.date }}</span> *
                 </p>
                 <button v-on:click="toggleNews" v-if="!showOldNews" class="newsButton">More News</button>
                 <div class="olderNews" v-if="showOldNews">
-                    <p class="centerText">* <span class="bold">News:</span> Critical hits are now possible. Both the
-                        player
-                        and monsters might hit *significantly* harder than before.
-                        <span class="italic">19/12-25</span> *
+                    <p class="bold centerText">Older News</p>
+                    <p v-for="post in newsArchive" :key="post.date" class="centerText">* {{ post.message }}
+                        <span class="italic">{{ post.date }}</span> *
                     </p>
+                    <button v-on:click="showOldNews = false" class="newsButton">Hide</button>
                 </div>
             </div>
             <section class="loginWrapper">
@@ -186,5 +186,12 @@ function toggleNews() {
 
 .spacing {
     margin: 0.5rem;
+}
+
+.olderNews {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
 }
 </style>
