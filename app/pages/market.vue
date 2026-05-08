@@ -454,7 +454,7 @@ async function sellItem(inventory_id, itemName) {
 .modalContent {
     background: var(--bone-white);
     color: var(--dark-green);
-    width: min(90%, 640px);
+    width: min(90%, 440px);
     max-height: 90vh;
     overflow: auto;
     border-radius: 8px;
