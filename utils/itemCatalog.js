@@ -375,6 +375,23 @@ export const weapons = [
       "Decorated with silver leaves and ribbons, it looks almost ceremonial.",
     image: {},
   },
+  {
+    id: 23,
+    category: "daggers",
+    slot: "main_hand",
+    twoHanded: false,
+    name: "Bone-Carver",
+    minDmg: 8,
+    maxDmg: 16,
+    skillReq: { daggers: 95 },
+    strengthReq: 50,
+    weight: 1,
+    goldCost: 1200,
+    bonus: { evasion: 15 },
+    description:
+      "Made by goblin hands, for goblin use. Crude, heavy and efficient.",
+    image: {},
+  },
 ];
 
 export const shields = [
@@ -498,6 +515,18 @@ export const armour = [
     description: "Not much in the way of protection, but it looks real fancy.",
     image: {},
   },
+  {
+    id: 205,
+    category: "armour",
+    slot: "armour",
+    name: "Sothii Light Plate",
+    damageReduction: 5,
+    goldCost: 1800,
+    weight: 5,
+    bonus: { evasion: 5, block: 10 },
+    description: "Exceptional plate armour, close-fitting and light.",
+    image: {},
+  },
 ];
 
 export const trinkets = [
@@ -578,6 +607,19 @@ export const trinkets = [
       evasion: 10,
     },
     description: "Who in their right mind would carry this around?",
+    image: {},
+  },
+  {
+    id: 306,
+    category: "trinkets",
+    slot: "trinket",
+    name: "Wind's Breath",
+    goldCost: 2000,
+    bonus: {
+      speed: 20,
+    },
+    description:
+      "Looks like an empty glass vial to you. An expensive glass vial.",
     image: {},
   },
 ];

@@ -3,6 +3,8 @@ export function monstersByBracket(monsters) {
     { maxLvl: 4, lvlSpan: "1 - 4", rank: "Novice", monsters: [] },
     { maxLvl: 8, lvlSpan: "5 - 8", rank: "Gladiator", monsters: [] },
     { maxLvl: 16, lvlSpan: "9 - 16", rank: "Veteran", monsters: [] },
+    { maxLvl: 21, lvlSpan: "17 - 21", rank: "Master", monsters: [] },
+    { maxLvl: 30, lvlSpan: "22 - 30", rank: "Legend", monsters: [] },
   ];
 
   for (const monster of monsters) {
