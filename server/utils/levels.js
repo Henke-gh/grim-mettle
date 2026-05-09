@@ -23,7 +23,13 @@ const levelThresholds = {
   22: 7400,
   23: 8100,
   24: 8800,
-  25: 13000,
+  25: 9500,
+  26: 10500,
+  27: 11750,
+  28: 13100,
+  29: 15000,
+  30: 20000,
+  31: 25000,
 };
 
 export function getXpForNextLevel(currentLevel) {
