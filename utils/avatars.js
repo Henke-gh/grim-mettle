@@ -18,26 +18,50 @@ export const heroAvatars = [
 export const monsterAvatars = [
   {
     id: 1,
-    srcCard: "/_nuxt/assets/images/monsters/desertRat_card.png",
-    srcAvatar: "/_nuxt/assets/images/monsters/desertRat_avatar.png",
+    srcCard: new URL(
+      "../app/assets/images/monsters/desertRat_card.png",
+      import.meta.url,
+    ).href,
+    srcAvatar: new URL(
+      "@/assets/images/monsters/desertRat_avatar.png",
+      import.meta.url,
+    ).href,
     alt: "A Desert Rat",
   },
   {
     id: 2,
-    srcCard: "/_nuxt/assets/images/monsters/goblinMugger_card.png",
-    srcAvatar: "/_nuxt/assets/images/monsters/goblinMugger_avatar.png",
+    srcCard: new URL(
+      "~/assets/images/monsters/goblinMugger_card.png",
+      import.meta.url,
+    ).href,
+    srcAvatar: new URL(
+      "~/assets/images/monsters/goblinMugger_avatar.png",
+      import.meta.url,
+    ).href,
     alt: "A Goblin Mugger",
   },
   {
     id: 3,
-    srcCard: "/_nuxt/assets/images/monsters/bandit_card.png",
-    srcAvatar: "/_nuxt/assets/images/monsters/bandit_avatar.png",
+    srcCard: new URL(
+      "~/assets/images/monsters/bandit_card.png",
+      import.meta.url,
+    ).href,
+    srcAvatar: new URL(
+      "~/assets/images/monsters/bandit_avatar.png",
+      import.meta.url,
+    ).href,
     alt: "A dangerous Bandit",
   },
   {
     id: 9,
-    srcCard: "/_nuxt/assets/images/monsters/youngTroll_card.png",
-    srcAvatar: "/_nuxt/assets/images/monsters/youngTroll_avatar.png",
-    alt: "A dangerous Bandit",
+    srcCard: new URL(
+      "~/assets/images/monsters/youngTroll_card.png",
+      import.meta.url,
+    ).href,
+    srcAvatar: new URL(
+      "~/assets/images/monsters/youngTroll_avatar.png",
+      import.meta.url,
+    ).href,
+    alt: "A grinning troll",
   },
 ];
