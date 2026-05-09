@@ -42,7 +42,7 @@ export default defineEventHandler(async (event) => {
 
     //get monster based on submitted id.
     const monster = monsterCatalog.find(
-      (m) => m.id === combatSettings.monsterID
+      (m) => m.id === combatSettings.monsterID,
     );
 
     //get hero from heroes table.
@@ -166,7 +166,7 @@ export default defineEventHandler(async (event) => {
 
     //Set hp value at which the player hero will retreat/ give up the fight.
     const retreatValue = Math.ceil(
-      (combatSettings.retreatValue / 100) * hero.hp_max
+      (combatSettings.retreatValue / 100) * hero.hp_max,
     );
 
     //Final hp check
@@ -182,9 +182,9 @@ export default defineEventHandler(async (event) => {
     const combatResult = doCombat(hero, heroEquipment, retreatValue, monster);
 
     //Add intermediate hero HP-check before updating
-    //If hero HP is 0 or lower, the hero died in combat and gets DELETED! So dramatic..
+    //If hero HP is 0 or lower AND hero is level 5 or above, the hero died in combat and gets DELETED! So dramatic..
     //If dead, the heroes name, level, and xp is put in the graveyard table.
-    if (combatResult.heroHP <= 0) {
+    if (combatResult.heroHP <= 0 && hero.level > 4) {
       const { error: graveError } = await supabaseAdmin
         .from("graveyard")
         .insert({

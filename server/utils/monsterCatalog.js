@@ -72,7 +72,7 @@ export const monsterCatalog = [
     fatigue: 8,
     hp: 30,
     weapon: {
-      name: "Club",
+      name: "Big Knife",
       minDmg: 2,
       maxDmg: 6,
       skillReq: 0,

@@ -81,7 +81,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
     <div v-else-if="error" class="heroWrapper">
         <p>{{ error }}</p>
     </div>
-    <div v-if="hero" class="heroHead">
+    <div v-if="hero && !loading" class="heroHead">
         <h1>{{ hero.hero_name }} - Level: {{ hero.level }}</h1>
         <GameNav />
     </div>
