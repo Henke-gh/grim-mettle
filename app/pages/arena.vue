@@ -91,6 +91,8 @@
         <div v-if="showMonsterModal" class="monsterModalWrapper" @click.self="closeDetailedInfo">
             <div class="gradientBorder">
                 <section class="monsterDetails">
+                    <img v-if="selectedMonster.id === selectedMonsterImages.id" :src="selectedMonsterImages.srcCard"
+                        :alt="selectedMonsterImages.alt" class="monsterCardImg" />
                     <div class="swordlineContainer spacing"><img :src="swordLine" alt="A line of four swords" /></div>
                     <h3>[ {{ selectedMonster.name }} ] - level {{ selectedMonster.level }}</h3>
                     <p><span class="bold">Weapon:</span> {{ selectedMonster.weapon.name }}</p>
@@ -124,9 +126,11 @@ import { setDefaultMonsterBracket } from '~~/utils/heroUtils';
 import swordLine from "../assets/images/swordLine.svg"
 import leftSword from "../assets/images/swordIcon.png"
 import rightSword from "../assets/images/swordIconMirror.png"
+import { monsterAvatars } from '~~/utils/avatars';
 
 const showMonsterModal = ref(false);
 const selectedMonster = ref('');
+const selectedMonsterImages = ref({});
 const showCombatSettings = ref(false);
 const retreatPercent = ref(50);
 const selectedStance = ref("balanced");
@@ -165,6 +169,11 @@ if (error.value) {
 function showDetailedInfo(monster) {
     showMonsterModal.value = true;
     selectedMonster.value = monster;
+    selectedMonsterImages.value = getMonsterImages(monster.id);
+}
+
+function getMonsterImages(monsterID) {
+    return monsterAvatars.find((monster) => monster.id === monsterID) || {};
 }
 
 function closeDetailedInfo() {
@@ -394,6 +403,12 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     outline: none;
     padding: 1rem;
+}
+
+.monsterCardImg {
+    border: 2px dotted var(--yellow);
+    border-radius: 0.5rem;
+    background-color: var(--brown);
 }
 
 .monsterModalControls {

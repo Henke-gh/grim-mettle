@@ -14,3 +14,54 @@ export const heroAvatars = [
     alt: "Hero with gold earrings and purple/ redish hair.",
   },
 ];
+
+export const monsterAvatars = [
+  {
+    id: 1,
+    srcCard: new URL(
+      "../app/assets/images/monsters/desertRat_card.png",
+      import.meta.url,
+    ).href,
+    srcAvatar: new URL(
+      "@/assets/images/monsters/desertRat_avatar.png",
+      import.meta.url,
+    ).href,
+    alt: "A Desert Rat",
+  },
+  {
+    id: 2,
+    srcCard: new URL(
+      "~/assets/images/monsters/goblinMugger_card.png",
+      import.meta.url,
+    ).href,
+    srcAvatar: new URL(
+      "~/assets/images/monsters/goblinMugger_avatar.png",
+      import.meta.url,
+    ).href,
+    alt: "A Goblin Mugger",
+  },
+  {
+    id: 3,
+    srcCard: new URL(
+      "~/assets/images/monsters/bandit_card.png",
+      import.meta.url,
+    ).href,
+    srcAvatar: new URL(
+      "~/assets/images/monsters/bandit_avatar.png",
+      import.meta.url,
+    ).href,
+    alt: "A dangerous Bandit",
+  },
+  {
+    id: 9,
+    srcCard: new URL(
+      "~/assets/images/monsters/youngTroll_card.png",
+      import.meta.url,
+    ).href,
+    srcAvatar: new URL(
+      "~/assets/images/monsters/youngTroll_avatar.png",
+      import.meta.url,
+    ).href,
+    alt: "A grinning troll",
+  },
+];
