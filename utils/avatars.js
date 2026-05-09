@@ -14,3 +14,30 @@ export const heroAvatars = [
     alt: "Hero with gold earrings and purple/ redish hair.",
   },
 ];
+
+export const monsterAvatars = [
+  {
+    id: 1,
+    srcCard: "/_nuxt/assets/images/monsters/desertRat_card.png",
+    srcAvatar: "/_nuxt/assets/images/monsters/desertRat_avatar.png",
+    alt: "A Desert Rat",
+  },
+  {
+    id: 2,
+    srcCard: "/_nuxt/assets/images/monsters/goblinMugger_card.png",
+    srcAvatar: "/_nuxt/assets/images/monsters/goblinMugger_avatar.png",
+    alt: "A Goblin Mugger",
+  },
+  {
+    id: 3,
+    srcCard: "/_nuxt/assets/images/monsters/bandit_card.png",
+    srcAvatar: "/_nuxt/assets/images/monsters/bandit_avatar.png",
+    alt: "A dangerous Bandit",
+  },
+  {
+    id: 9,
+    srcCard: "/_nuxt/assets/images/monsters/youngTroll_card.png",
+    srcAvatar: "/_nuxt/assets/images/monsters/youngTroll_avatar.png",
+    alt: "A dangerous Bandit",
+  },
+];
