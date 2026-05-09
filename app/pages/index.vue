@@ -77,7 +77,7 @@ function toggleNews() {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    padding: 0rem 1rem;
+    padding: 0rem 0.5rem;
 }
 
 .introText p {
