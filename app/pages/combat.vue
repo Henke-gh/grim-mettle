@@ -14,7 +14,7 @@
             </div>
             <p class="versus-text custom-vs-txt italic">Versus..</p>
             <div class="contestant right">
-                <img :src="monsterAvatar" class="avatarImg monster-avatar" />
+                <img :src="monsterAvatar" class="avatarImg monster-avatar" alt="A skull and two crossed axes" />
                 <div class="contestant-info">
                     <p class="monster-name custom-vs-txt">[ {{ log[0].data.monster }} ]</p>
                     <p class="monster-name custom-vs-txt">Level: {{ log[0].data.monsterLevel }}</p>
