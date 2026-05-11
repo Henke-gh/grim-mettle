@@ -2,7 +2,7 @@
     <ClientOnly>
         <teleport to="#__nuxt">
             <footer>
-                <p>Henrik Andersen 2025 - Grim Mettle</p>
+                <p>Henrik Andersen 2026 - Grim Mettle</p>
             </footer>
         </teleport>
     </ClientOnly>
