@@ -17,6 +17,18 @@ export const heroAvatars = [
 
 export const monsterAvatars = [
   {
+    id: 0,
+    srcCard: new URL(
+      "../app/assets/images/monsters/monster_card.png",
+      import.meta.url,
+    ).href,
+    srcAvatar: new URL(
+      "@/assets/images/monsters/monster_avatar.png",
+      import.meta.url,
+    ).href,
+    alt: "A skull with two crosses axes",
+  },
+  {
     id: 1,
     srcCard: new URL(
       "../app/assets/images/monsters/desertRat_card.png",

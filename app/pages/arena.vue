@@ -46,9 +46,6 @@
                 <section class="combatSettings">
                     <h2>Make your preparations </h2>
                     <h3>{{ hero.hero_name }} vs {{ selectedMonster.name }}</h3>
-                    <p class="centerText"><span class="bold">NEW:</span> Critical hits are now enabled. Expect monsters
-                        to on occasion
-                        hit a lot harder!</p>
                     <div class="optionSelect">
                         <label for="stance">- Select fighting stance -</label>
                         <select v-model="selectedStance" id="stance" class="arenaInput">
@@ -91,8 +88,7 @@
         <div v-if="showMonsterModal" class="monsterModalWrapper" @click.self="closeDetailedInfo">
             <div class="gradientBorder">
                 <section class="monsterDetails">
-                    <img v-if="selectedMonster.id === selectedMonsterImages.id" :src="selectedMonsterImages.srcCard"
-                        :alt="selectedMonsterImages.alt" class="monsterCardImg" />
+                    <img :src="selectedMonsterImages.srcCard" :alt="selectedMonsterImages.alt" class="monsterCardImg" />
                     <div class="swordlineContainer spacing"><img :src="swordLine" alt="A line of four swords" /></div>
                     <h3>[ {{ selectedMonster.name }} ] - level {{ selectedMonster.level }}</h3>
                     <p><span class="bold">Weapon:</span> {{ selectedMonster.weapon.name }}</p>
@@ -173,7 +169,8 @@ function showDetailedInfo(monster) {
 }
 
 function getMonsterImages(monsterID) {
-    return monsterAvatars.find((monster) => monster.id === monsterID) || {};
+    const matchingMonster = monsterAvatars.find((monster) => monster.id === monsterID);
+    return matchingMonster || monsterAvatars[0];
 }
 
 function closeDetailedInfo() {
@@ -216,6 +213,7 @@ async function initiateFight() {
                 combatResult.combatLog.value = result.log;
                 combatResult.avatar.value = result.avatar;
                 combatResult.heroLevel = result.heroLevel;
+                combatResult.monsterImgData = selectedMonsterImages.value;
                 navigateTo('/combat');
             }
         } catch (err) {

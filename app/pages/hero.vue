@@ -86,23 +86,21 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
         <GameNav />
     </div>
     <div v-if="hero" class="heroWrapper">
-        <div class="gradientBorder">
-            <section class="overviewContainer">
-                <div class="part">
-                    <img :src="heroAvatar.src" :alt="heroAvatar.alt" class="heroPortrait" />
-                </div>
-                <div class="levelUp bold" v-if="canLevelUp">
-                    <p>You&apos;ve gained a level!</p>
-                    <DefaultButton theme="default" text="Level Up" routeTo="/level-up" />
-                </div>
-                <div class="part" v-if="!canLevelUp">
-                    <p>HP: {{ hero.hp_current }}/{{ hero.hp_max }}</p>
-                    <p>Grit: {{ hero.grit_current }}/{{ hero.grit_max }}</p>
-                    <p>XP: {{ hero.xp }}/{{ hero.xp_next_lvl }}</p>
-                    <p>Gold: {{ hero.gold }}</p>
-                </div>
-            </section>
-        </div>
+        <section class="overviewContainer">
+            <div class="part">
+                <img :src="heroAvatar.src" :alt="heroAvatar.alt" class="heroPortrait" />
+            </div>
+            <div class="levelUp bold" v-if="canLevelUp">
+                <p>You&apos;ve gained a level!</p>
+                <DefaultButton theme="default" text="Level Up" routeTo="/level-up" />
+            </div>
+            <div class="part" v-if="!canLevelUp">
+                <p>HP: {{ hero.hp_current }}/{{ hero.hp_max }}</p>
+                <p>Grit: {{ hero.grit_current }}/{{ hero.grit_max }}</p>
+                <p>XP: {{ hero.xp }}/{{ hero.xp_next_lvl }}</p>
+                <p>Gold: {{ hero.gold }}</p>
+            </div>
+        </section>
         <section class="itemContainer">
             <h3>Items <span class="italic" style="font-size: 0.75rem;">- Click an item to inspect it.</span></h3>
             <div class="part">
@@ -285,6 +283,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
     align-items: center;
     background-color: var(--bone-white);
     border-radius: 5px;
+    border: 4px double var(--brown);
     gap: 3rem;
 }
 

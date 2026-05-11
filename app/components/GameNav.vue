@@ -88,7 +88,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onEscape));
     padding: 1.5rem;
     padding-top: 1rem;
     gap: 0.5rem;
-    background-color: var(--brown);
+    background-color: rgba(var(--brown-rgb), 0.95);
     color: var(--bone-white);
     border-bottom-left-radius: 0.5rem;
     border-left: 3px double var(--bone-white);
@@ -110,7 +110,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onEscape));
 
 .menuButton {
     border: none;
-    background-color: var(--brown);
+    background-color: rgba(var(--brown-rgb), 0.0);
     color: var(--bone-white);
     text-align: left;
     font-family: monospace;

@@ -4,5 +4,6 @@ export const useCombatResult = defineStore("combatResult", {
     combatLog: [],
     avatar: {},
     heroLevel: "",
+    monsterImgData: {},
   }),
 });

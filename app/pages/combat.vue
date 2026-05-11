@@ -14,7 +14,7 @@
             </div>
             <p class="versus-text custom-vs-txt italic">Versus..</p>
             <div class="contestant right">
-                <img :src="monsterAvatar" class="avatarImg monster-avatar" />
+                <img :src="monsterPortrait.srcAvatar" class="avatarImg monster-avatar" :alt="monsterPortrait.alt" />
                 <div class="contestant-info">
                     <p class="monster-name custom-vs-txt">[ {{ log[0].data.monster }} ]</p>
                     <p class="monster-name custom-vs-txt">Level: {{ log[0].data.monsterLevel }}</p>
@@ -196,12 +196,12 @@ import gsap from "gsap";
 import death from "../assets/images/player_death_small.png"
 import victory from "../assets/images/victory_small.png"
 import defeatImg from "../assets/images/defeat_small.png"
-import monsterAvatar from "../assets/images/monster_Avatar.png"
 import { getAudience, delay } from "~~/utils/general";
 
 const combatResult = useCombatResult();
 const log = combatResult.combatLog.value;
 const heroPortrait = combatResult.avatar.value;
+const monsterPortrait = combatResult.monsterImgData;
 const heroLevel = combatResult.heroLevel;
 const audience = getAudience();
 const showLogs = ref(false);
