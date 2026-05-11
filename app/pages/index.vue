@@ -19,17 +19,6 @@ function toggleNews() {
             <div class="guardContainer">
                 <img :src="guard" alt="A hooded guard watching the gates of an arena" class="guardImg" />
             </div>
-            <article class="introText">
-                <p>Grim Mettle lets you create a hero and battle foes in arena combat. Level up and spend skill points
-                    to
-                    improve your skills or learn new ones.</p>
-                <p>On your journey you will equip your hero with all manner of items to further improve your character
-                    and
-                    prepare for
-                    the dangers that lie ahead.</p>
-            </article>
-        </section>
-        <section style="width: 100%;">
             <div class="swordlineContainer spacing"><img src="/divider.svg"
                     alt="A line of four swords, with a shield in the middle" /></div>
             <div class="news">
@@ -46,22 +35,38 @@ function toggleNews() {
                 </div>
             </div>
             <section class="loginWrapper">
-                <div class="loginContainer" v-if="!user">
-                    <p class="customP">Start playing</p>
-                    <DefaultButton text="Login" routeTo="/login" theme="default" class="" />
-                </div>
-                <div class="loginContainer" v-if="user">
-                    <p class="customP">Test your Mettle!</p>
-                    <DefaultButton text="To Game" routeTo="/hero" theme="default" class="" />
+                <div class="loginContainer">
+                    <img class="loginImg" src="/axeSword.png" alt="Illustration of a sword and an axe" />
+                    <div class="login-item" v-if="!user">
+                        <p class="customP">Start Playing</p>
+                        <DefaultButton text="Login" routeTo="/login" theme="default" class="" />
+                        <NuxtLink to="/register" style="color: var(--warm-black);">
+                            <p class="bold">Register new user</p>
+                        </NuxtLink>
+                    </div>
+                    <div class="login-item" v-else>
+                        <p class="customP">Test your Mettle!</p>
+                        <DefaultButton text="To Game" routeTo="/hero" theme="default" class="" />
+                    </div>
                 </div>
             </section>
-            <div class="swordlineContainer spacing"><img src="/divider.svg"
-                    alt="A line of four swords, with a shield in the middle" /></div>
-            <div class="ctaRegister" v-if="!user">
-                <p>Don't have an account? It's free and only takes a moment to set up.</p>
-                <DefaultButton text="Register new user" routeTo="/register" theme="light" type="button" />
-            </div>
+            <article class="introText">
+                <h2 class="centerText">Grim Mettle</h2>
+                <p>Grim Mettle lets you create a hero and battle foes in arena combat. Level up and spend skill points
+                    to
+                    improve your skills or learn new ones.</p>
+                <p>On your journey you will equip your hero with all manner of items to further improve your character
+                    and
+                    prepare for
+                    the dangers that lie ahead.</p>
+            </article>
         </section>
+        <div class="swordlineContainer spacing"><img src="/divider.svg"
+                alt="A line of four swords, with a shield in the middle" /></div>
+        <div class="ctaRegister" v-if="!user">
+            <p>Don't have an account? It's free and only takes a moment to set up.</p>
+            <DefaultButton text="Register new user" routeTo="/register" theme="light" type="button" />
+        </div>
     </div>
     <CustomFooter />
 </template>
@@ -78,6 +83,11 @@ function toggleNews() {
     flex-direction: column;
     gap: 0.5rem;
     padding: 0rem 0.5rem;
+}
+
+.introText {
+    padding: 0 0.5rem;
+    margin-top: 1rem;
 }
 
 .introText p {
@@ -110,17 +120,37 @@ function toggleNews() {
     justify-content: center;
     align-items: center;
     width: 100%;
-    padding: 1rem 2rem;
-    margin: 1rem 0;
+    padding: 0.5rem 1rem;
     gap: 2rem;
-    background-color: var(--bone-white);
-    border: 5px double var(--dark-green);
+    border: 2px dotted var(--dark-green);
+    border-radius: 0.5rem;
 }
 
 .loginContainer {
     display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    max-width: 480px;
+}
+
+.loginImg {
+    width: 6rem;
+    height: 6rem;
+    border-radius: 50%;
+    border: 4px double var(--dark-green);
+    background-color: var(--brown);
+}
+
+.login-item {
+    display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    justify-content: center;
+    align-items: start;
+    padding: 1rem;
+    gap: 1rem;
+    width: 100%;
 }
 
 .ctaRegister {
@@ -131,8 +161,7 @@ function toggleNews() {
     text-align: center;
     gap: 1rem;
     padding: 1rem;
-    padding-bottom: 1.5rem;
-    margin: 1rem 0;
+    margin: 1rem 0.5rem;
     color: var(--bone-white);
     border-radius: 5px;
     border: 5px double var(--bone-white);
@@ -158,7 +187,7 @@ function toggleNews() {
 
 .customP {
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
 }
 
 .guardContainer {
@@ -170,7 +199,7 @@ function toggleNews() {
 
 .guardImg {
     width: 95vw;
-    max-width: 500px;
+    max-width: 600px;
     height: auto;
     border-radius: 0.5rem;
     border: 4px double var(--dark-green);
