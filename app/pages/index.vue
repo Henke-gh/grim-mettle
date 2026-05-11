@@ -24,13 +24,12 @@ function toggleNews() {
                     <p class="centerText"><span class="bold">News:</span> {{ latestNews.message }}
                         <span class="italic"> - {{ latestNews.date }}</span>
                     </p>
-                    <button v-on:click="toggleNews" v-if="!showOldNews" class="newsButton">More News</button>
+                    <button v-on:click="toggleNews" v-if="!showOldNews" class="newsButton">+ More News</button>
                     <div class="olderNews" v-if="showOldNews">
-                        <p class="bold centerText">Older News</p>
                         <p v-for="post in newsArchive" :key="post.date" class="centerText">{{ post.message }}
                             <span class="italic"> - {{ post.date }}</span>
                         </p>
-                        <button v-on:click="showOldNews = false" class="newsButton">Hide</button>
+                        <button v-on:click="showOldNews = false" class="newsButton">- Hide</button>
                     </div>
                 </section>
                 <section class="loginWrapper">
@@ -111,7 +110,7 @@ function toggleNews() {
     width: fit-content;
     background: none;
     box-shadow: none;
-    border: 2px solid var(--dark-green);
+    border: none;
     border-radius: 5px;
     padding: 0.2rem 0.8rem;
     cursor: pointer;
@@ -152,7 +151,7 @@ function toggleNews() {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: start;
+    align-items: center;
     padding: 1rem;
     padding-right: 0;
     gap: 1rem;
