@@ -154,6 +154,7 @@ function toggleNews() {
     justify-content: center;
     align-items: start;
     padding: 1rem;
+    padding-right: 0;
     gap: 1rem;
     width: 100%;
 }
@@ -247,6 +248,7 @@ function toggleNews() {
         border: none;
         border-radius: 0;
         border-left: 2px dotted var(--dark-green);
+        padding-right: 0;
     }
 }
 </style>
