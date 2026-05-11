@@ -19,37 +19,37 @@ function toggleNews() {
             <div class="guardContainer">
                 <img :src="guard" alt="A hooded guard watching the gates of an arena" class="guardImg" />
             </div>
-            <div class="swordlineContainer spacing"><img src="/divider.svg"
-                    alt="A line of four swords, with a shield in the middle" /></div>
-            <div class="news">
-                <p class="centerText">* <span class="bold">News:</span> {{ latestNews.message }}
-                    <span class="italic">{{ latestNews.date }}</span> *
-                </p>
-                <button v-on:click="toggleNews" v-if="!showOldNews" class="newsButton">More News</button>
-                <div class="olderNews" v-if="showOldNews">
-                    <p class="bold centerText">Older News</p>
-                    <p v-for="post in newsArchive" :key="post.date" class="centerText">* {{ post.message }}
-                        <span class="italic">{{ post.date }}</span> *
+            <div class="layout-news-login">
+                <section class="news">
+                    <p class="centerText"><span class="bold">News:</span> {{ latestNews.message }}
+                        <span class="italic"> - {{ latestNews.date }}</span>
                     </p>
-                    <button v-on:click="showOldNews = false" class="newsButton">Hide</button>
-                </div>
+                    <button v-on:click="toggleNews" v-if="!showOldNews" class="newsButton">More News</button>
+                    <div class="olderNews" v-if="showOldNews">
+                        <p class="bold centerText">Older News</p>
+                        <p v-for="post in newsArchive" :key="post.date" class="centerText">{{ post.message }}
+                            <span class="italic"> - {{ post.date }}</span>
+                        </p>
+                        <button v-on:click="showOldNews = false" class="newsButton">Hide</button>
+                    </div>
+                </section>
+                <section class="loginWrapper">
+                    <div class="loginContainer">
+                        <img class="loginImg" src="/axeSword.png" alt="Illustration of a sword and an axe" />
+                        <div class="login-item" v-if="!user">
+                            <p class="customP">Start Playing</p>
+                            <DefaultButton text="Login" routeTo="/login" theme="default" class="" />
+                            <NuxtLink to="/register" style="color: var(--warm-black);">
+                                <p class="bold">Register new user</p>
+                            </NuxtLink>
+                        </div>
+                        <div class="login-item" v-else>
+                            <p class="customP">Test your Mettle!</p>
+                            <DefaultButton text="To Game" routeTo="/hero" theme="default" class="" />
+                        </div>
+                    </div>
+                </section>
             </div>
-            <section class="loginWrapper">
-                <div class="loginContainer">
-                    <img class="loginImg" src="/axeSword.png" alt="Illustration of a sword and an axe" />
-                    <div class="login-item" v-if="!user">
-                        <p class="customP">Start Playing</p>
-                        <DefaultButton text="Login" routeTo="/login" theme="default" class="" />
-                        <NuxtLink to="/register" style="color: var(--warm-black);">
-                            <p class="bold">Register new user</p>
-                        </NuxtLink>
-                    </div>
-                    <div class="login-item" v-else>
-                        <p class="customP">Test your Mettle!</p>
-                        <DefaultButton text="To Game" routeTo="/hero" theme="default" class="" />
-                    </div>
-                </div>
-            </section>
             <article class="introText">
                 <h2 class="centerText">Grim Mettle</h2>
                 <p>Grim Mettle lets you create a hero and battle foes in arena combat. Level up and spend skill points
@@ -83,6 +83,11 @@ function toggleNews() {
     flex-direction: column;
     gap: 0.5rem;
     padding: 0rem 0.5rem;
+}
+
+.layout-news-login {
+    display: flex;
+    flex-direction: column;
 }
 
 .introText {
@@ -163,7 +168,7 @@ function toggleNews() {
     padding: 1rem;
     margin: 1rem 0.5rem;
     color: var(--bone-white);
-    border-radius: 5px;
+    border-radius: 0.5rem;
     border: 5px double var(--bone-white);
 }
 
@@ -222,5 +227,26 @@ function toggleNews() {
     flex-direction: column;
     align-items: center;
     gap: 0.5rem;
+}
+
+@media screen and (min-width: 600px) {
+    .layout-news-login {
+        flex-direction: row;
+        align-items: flex-start;
+        padding: 0 1rem;
+        border-top: 2px dotted var(--dark-green);
+        margin-top: 1rem;
+    }
+
+    .news {
+        text-align: left;
+        max-width: 265px;
+    }
+
+    .loginWrapper {
+        border: none;
+        border-radius: 0;
+        border-left: 2px dotted var(--dark-green);
+    }
 }
 </style>
