@@ -282,12 +282,6 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
     padding: 0;
 }
 
-.bracket-controls {
-    display: flex;
-    flex-direction: row;
-    gap: 1rem;
-}
-
 .toggles-wrapper {
     display: flex;
     flex-direction: row;
