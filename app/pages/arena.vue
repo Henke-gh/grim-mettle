@@ -142,6 +142,8 @@ const isBracketExpanded = ref({
     Novice: false,
     Gladiator: false,
     Veteran: false,
+    Master: false,
+    Legend: false
 })
 
 function toggleBracket(bracketKey) {

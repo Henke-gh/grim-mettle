@@ -72,8 +72,12 @@ export function setDefaultMonsterBracket(heroLevel) {
     showBracket = "Novice";
   } else if (heroLevel <= 8) {
     showBracket = "Gladiator";
-  } else {
+  } else if (heroLevel <= 16) {
     showBracket = "Veteran";
+  } else if (heroLevel <= 21) {
+    showBracket = "Master";
+  } else {
+    showBracket = "Legend";
   }
 
   return showBracket;
