@@ -1,7 +1,7 @@
 <template>
     <HeroCard />
     <div class="arenaWrapper">
-        <h1 style="text-align: center; font-size: 1.2rem;">The challengers of your demise</h1>
+        <h1 style="text-align: center; font-size: 1.4rem;">The Arena Gauntlet</h1>
         <section class="monsterSelect" v-if="!showCombatSettings">
             <img src="../assets/images/goblin_fighter_sharp.png" class="goblinCombatant"
                 alt="A goblin fighter ready for battle." />
@@ -9,25 +9,23 @@
                 anticipation of the crowd.</p>
             <div class="swordlineContainer spacing"><img :src="swordLine" alt="A line of four swords" /></div>
             <section v-if="monsters" class="brackets-container">
-                <article v-for="bracket in monsterBrackets" :key="bracket.rank" class="bracket-container">
-                    <button class="categoryToggle roboto-mono-600 toggleBtnContent"
-                        @click="toggleBracket((bracket.rank))" :class="{ active: isBracketExpanded[bracket.rank] }">
-                        <h4>{{ bracket.rank }} [{{ bracket.lvlSpan }}]</h4>
-                        <span class="bracket-controls" v-if="!isBracketExpanded[bracket.rank]">
-                            <img src="/ArrowDown.svg" alt="Arrow point down" />
-                        </span>
-                        <span class="bracket-controls" v-else>
-                            <img src="/ArrowUp.svg" alt="Arrow point up" />
-                        </span>
-                    </button>
-                    <Transition name="expandBracket">
-                        <ul class="monsterList" v-if="isBracketExpanded[bracket.rank]">
-                            <li v-for="monster in bracket.monsters" :key="monster.id" class="listItem">
-                                <p>{{ monster.name }} - Level: {{ monster.level }}</p>
-                                <button class="inspectViewBtn bold" @click="showDetailedInfo(monster)">View</button>
-                            </li>
-                        </ul>
-                    </Transition>
+                <article class="toggles-wrapper">
+                    <div v-for="bracket in monsterBrackets" :key="bracket.rank" class="toggle-container">
+                        <button class="bracketToggle" @click="toggleBracket((bracket.rank))"
+                            :class="{ bracketToggleActive: isBracketExpanded[bracket.rank] }">
+                            <p class="roboto-mono-600">{{ bracket.rank }}</p>
+                            <p class="roboto-mono-600">[{{ bracket.lvlSpan }}]</p>
+                        </button>
+                    </div>
+                </article>
+                <article class="monsterDisplay">
+                    <h3 class="centerText">[ Arena Challengers ]</h3>
+                    <ul class="monsterList" v-if="monstersToDisplay">
+                        <li v-for="monster in monstersToDisplay" :key="monster.id" class="listItem">
+                            <p>{{ monster.name }} - Level: {{ monster.level }}</p>
+                            <button class="inspectViewBtn bold" @click="showDetailedInfo(monster)">View</button>
+                        </li>
+                    </ul>
                 </article>
             </section>
             <p v-else>Loading monsters..</p>
@@ -124,6 +122,7 @@ import leftSword from "../assets/images/swordIcon.png"
 import rightSword from "../assets/images/swordIconMirror.png"
 import { monsterAvatars } from '~~/utils/avatars';
 
+const monstersToDisplay = ref([]);
 const showMonsterModal = ref(false);
 const selectedMonster = ref('');
 const selectedMonsterImages = ref({});
@@ -147,6 +146,12 @@ const isBracketExpanded = ref({
 })
 
 function toggleBracket(bracketKey) {
+    Object.keys(isBracketExpanded.value).forEach(key => {
+        isBracketExpanded.value[key] = false;
+    });
+    //Find the correct monster array-bracket to display
+    const monsterBracket = monsterBrackets.value.find((monsterBracket) => monsterBracket.rank === bracketKey);
+    monstersToDisplay.value = monsterBracket.monsters;
     isBracketExpanded.value[bracketKey] = !isBracketExpanded.value[bracketKey];
 }
 
@@ -273,12 +278,56 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
     flex-direction: column;
     width: 100%;
     gap: 0.5rem;
+    padding: 0;
 }
 
 .bracket-controls {
     display: flex;
     flex-direction: row;
     gap: 1rem;
+}
+
+.toggles-wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    flex-basis: 33%;
+    justify-content: flex-start;
+    gap: 0.5rem;
+}
+
+.toggle-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 95px;
+    width: 95px;
+    border-radius: 0.2rem;
+    background-color: var(--brown);
+    box-shadow: 2px 2px 2px rgba(42, 42, 40, 0.399);
+}
+
+.bracketToggle {
+    height: 85px;
+    width: 85px;
+    border-radius: 0.2rem;
+    border: 2px solid var(--bone-white);
+    background-color: var(--dark-green);
+    color: var(--bone-white);
+    box-shadow: inset 3px 3px 0px rgba(42, 42, 40, 0.299);
+}
+
+.bracketToggleActive {
+    background-color: var(--yellow);
+    color: var(--warm-black);
+}
+
+.monsterDisplay {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 1rem;
 }
 
 .settingsWrapper {
@@ -423,6 +472,10 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
 @media only screen and (min-width: 650px) {
     .arenaWrapper {
         margin-top: 1rem;
+    }
+
+    .toggles-wrapper {
+        justify-content: center;
     }
 
     .goblinCombatant {
