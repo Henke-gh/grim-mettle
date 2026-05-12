@@ -129,12 +129,9 @@ export default defineEventHandler(async (event) => {
     //Check if any are empty, if all are occupied update new trinket into first slot, trinket_1.
     /* Also check if a particular trinket is already equipped, can only have one of a certain id/type at once. */
     if (itemToEquip.slot === "trinket") {
-      console.log("itemToEquipID:", itemToEquip.id);
-      console.log("equippedTrinketIDs:", equippedTrinketItemIDs);
       const trinketAlreadyEquipped = equippedTrinketItemIDs.find(
         (id) => id === itemToEquip.id,
       );
-      console.log("trinketAlreadyEquipped:", trinketAlreadyEquipped);
 
       if (trinketAlreadyEquipped) {
         return { success: false, message: "Cannot equip duplicate trinkets." };
