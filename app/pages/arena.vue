@@ -26,6 +26,7 @@
                             <button class="inspectViewBtn bold" @click="showDetailedInfo(monster)">View</button>
                         </li>
                     </ul>
+                    <p v-else>Select a monster bracket.</p>
                 </article>
             </section>
             <p v-else>Loading monsters..</p>
