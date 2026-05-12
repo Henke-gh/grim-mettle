@@ -52,6 +52,7 @@ export default defineEventHandler(async (event) => {
       .single();
 
     let strengthBonus = 0;
+    let equippedTrinketItemIDs = [];
     if (equippedTrinketsData) {
       const trinketIds = [
         equippedTrinketsData.trinket_1,
@@ -68,6 +69,7 @@ export default defineEventHandler(async (event) => {
 
         if (trinketInventory) {
           const trinketItem = getItemById(trinketInventory.item_id);
+          equippedTrinketItemIDs.push(trinketInventory.item_id);
           if (trinketItem?.bonus?.strength) {
             strengthBonus += trinketItem.bonus.strength;
           }
@@ -125,7 +127,19 @@ export default defineEventHandler(async (event) => {
 
     //Handle Trinkets, they can be equipped in one of 3 trinket equipment slots.
     //Check if any are empty, if all are occupied update new trinket into first slot, trinket_1.
+    /* Also check if a particular trinket is already equipped, can only have one of a certain id/type at once. */
     if (itemToEquip.slot === "trinket") {
+      console.log("itemToEquipID:", itemToEquip.id);
+      console.log("equippedTrinketIDs:", equippedTrinketItemIDs);
+      const trinketAlreadyEquipped = equippedTrinketItemIDs.find(
+        (id) => id === itemToEquip.id,
+      );
+      console.log("trinketAlreadyEquipped:", trinketAlreadyEquipped);
+
+      if (trinketAlreadyEquipped) {
+        return { success: false, message: "Cannot equip duplicate trinkets." };
+      }
+
       const { data: equippedTrinkets, error: trinketError } =
         await supabaseAdmin
           .from("hero_equipment")
@@ -142,13 +156,6 @@ export default defineEventHandler(async (event) => {
         throw createError({ statusCode: 400, message: "No hero equipment." });
       }
 
-      /* Also check if a particular trinket is already equipped, can only have one of a certain id/type at once. */
-      /*  const equippedTrinketIds = [
-        equippedTrinkets.trinket_1,
-        equippedTrinkets.trinket_2,
-        equippedTrinkets.trinket_3,
-      ].filter(boolean);
- */
       if (equippedTrinkets.trinket_1 === null) {
         item_slot = "trinket_1";
       } else if (equippedTrinkets.trinket_2 === null) {

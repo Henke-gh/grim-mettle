@@ -74,7 +74,7 @@ export const useHeroView = () => {
     };
 
     return Object.fromEntries(
-      Object.entries(allSkills).filter(([_, value]) => value > 0)
+      Object.entries(allSkills).filter(([_, value]) => value > 0),
     );
   });
 
@@ -193,6 +193,7 @@ export const useHeroView = () => {
       actionSuccess.value = response.message;
 
       await fetchEquipment();
+      return response;
     } catch (err) {
       actionError.value = err?.data?.message || "Failed to equipd item.";
     } finally {
