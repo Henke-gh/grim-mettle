@@ -26,7 +26,6 @@ const { hero,
     isEquipped,
     fetchHero,
     canLevelUp, totalFights, winRatio } = useHeroView();
-const equipmentError = ref('');
 const { checkAndTriggerRegen } = useRegenCheck();
 
 onMounted(async () => {
@@ -45,10 +44,7 @@ const unEquippedItems = computed(() => {
 });
 
 async function handleEquipItem(item_id, inventory_id, itemSlot) {
-    const response = equipItem(item_id, inventory_id, itemSlot);
-    if (!response.success) {
-        equipmentError.value = response.message;
-    }
+    await equipItem(item_id, inventory_id, itemSlot);
 }
 
 /* === Item Modal === */
@@ -141,8 +137,10 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
                     <button v-if="equippedItems?.armour?.name" @click="unequipItem('armour')" :disabled="actionLoading"
                         class="inspectViewBtn closeBtn bold">Unequip</button>
                 </div>
-                <h4>Trinkets:</h4>
-                <p v-if="equipmentError">{{ equipmentError }}</p>
+                <div class="headerWithError">
+                    <h4>Trinkets:</h4>
+                    <p v-if="actionError" class="errorMessage">{{ actionError }}</p>
+                </div>
                 <p v-if="equippedItems?.trinkets.length === 0">- none -</p>
                 <div class="equippedItem" v-for="(trinket, index) in equippedItems?.trinkets" :key="index">
                     <p @click="openModal(trinket.item, trinket.item.category)" style="cursor: pointer;">
@@ -320,6 +318,18 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
     align-items: center;
     width: 20rem;
     height: 1.7rem;
+}
+
+.headerWithError {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+}
+
+.errorMessage {
+    color: red;
+    font-style: italic;
+    font-size: 0.8rem;
 }
 
 .skillWrapper {

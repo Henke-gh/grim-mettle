@@ -190,14 +190,21 @@ export const useHeroView = () => {
         body: { item_slot, inventory_id, item_id },
       });
 
-      actionSuccess.value = response.message;
+      if (response?.success === false) {
+        actionError.value = response.message || "Failed to equip item.";
+      }
 
+      actionSuccess.value = response?.message || "Item equipped.";
       await fetchEquipment();
-      return response;
     } catch (err) {
-      actionError.value = err?.data?.message || "Failed to equipd item.";
+      actionError.value = err?.data?.message || "Failed to equip item.";
     } finally {
       actionLoading.value = false;
+      if (actionError.value) {
+        setTimeout(() => {
+          actionError.value = null;
+        }, 1500);
+      }
 
       //set timeout of success message, 3 seconds
       if (actionSuccess.value) {
