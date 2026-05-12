@@ -2,7 +2,7 @@
     <ClientOnly>
         <teleport to="#__nuxt">
             <footer>
-                <p>Henrik Andersen 2025 - Grim Mettle</p>
+                <p>Henrik Andersen 2026 - Grim Mettle</p>
             </footer>
         </teleport>
     </ClientOnly>
@@ -17,8 +17,8 @@ footer {
     padding-top: 1rem;
     padding-bottom: 1rem;
     width: 100%;
-    background-color: var(--dark-purple);
-    color: var(--yellow);
+    background-color: var(--brown);
+    color: var(--bone-white);
     text-align: center;
     border-top: 4px double var(--bone-white);
 }

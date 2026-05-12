@@ -451,6 +451,21 @@ export const shields = [
     description: "An engraved and polish metal disc. Why yes, it is large.",
     image: {},
   },
+  {
+    id: 104,
+    category: "shields",
+    slot: "off_hand",
+    name: "Kite Shield",
+    skillReq: { block: 65 },
+    strengthReq: 70,
+    blockValue: 7,
+    goldCost: 900,
+    weight: 5,
+    bonus: { block: 10, speed: -5 },
+    description:
+      "Quite unusual around these parts, but popular with foreign knights.",
+    image: {},
+  },
 ];
 
 export const armour = [
