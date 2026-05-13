@@ -331,7 +331,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
       combatLog.push(addLogEntry("turn", turn));
       combatLog.push(
         addLogEntry("combat_end", {
-          result: heroHP <= 0 ? "death" : "retreat",
+          result: heroHP <= 0 && hero.level > 4 ? "death" : "retreat",
           turns: turnCounter,
           hero: hero.hero_name,
           monster: monster.name,
@@ -463,7 +463,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
             combatLog.push(addLogEntry("turn", turn));
             combatLog.push(
               addLogEntry("combat_end", {
-                result: heroHP <= 0 ? "death" : "retreat",
+                result: heroHP <= 0 && hero.level > 4 ? "death" : "retreat",
                 turns: turnCounter,
                 hero: hero.hero_name,
                 monster: monster.name,
@@ -522,7 +522,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
           combatLog.push(addLogEntry("turn", turn));
           combatLog.push(
             addLogEntry("combat_end", {
-              result: heroHP <= 0 ? "death" : "retreat",
+              result: heroHP <= 0 && hero.level > 4 ? "death" : "retreat",
               turns: turnCounter,
               hero: hero.hero_name,
               monster: monster.name,
