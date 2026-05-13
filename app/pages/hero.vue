@@ -26,7 +26,6 @@ const { hero,
     isEquipped,
     fetchHero,
     canLevelUp, totalFights, winRatio } = useHeroView();
-
 const { checkAndTriggerRegen } = useRegenCheck();
 
 onMounted(async () => {
@@ -43,6 +42,10 @@ const unEquippedItems = computed(() => {
     const items = unref(inventoryWithItems) || [];
     return items.filter(e => !isEquipped(e.inventory_id))
 });
+
+async function handleEquipItem(item_id, inventory_id, itemSlot) {
+    await equipItem(item_id, inventory_id, itemSlot);
+}
 
 /* === Item Modal === */
 
@@ -134,7 +137,10 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
                     <button v-if="equippedItems?.armour?.name" @click="unequipItem('armour')" :disabled="actionLoading"
                         class="inspectViewBtn closeBtn bold">Unequip</button>
                 </div>
-                <h4>Trinkets:</h4>
+                <div class="headerWithError">
+                    <h4>Trinkets:</h4>
+                    <p v-if="actionError" class="errorMessage">{{ actionError }}</p>
+                </div>
                 <p v-if="equippedItems?.trinkets.length === 0">- none -</p>
                 <div class="equippedItem" v-for="(trinket, index) in equippedItems?.trinkets" :key="index">
                     <p @click="openModal(trinket.item, trinket.item.category)" style="cursor: pointer;">
@@ -153,7 +159,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
                 <div class="equippedItem" v-for="entry in unEquippedItems" :key="entry.inventory_id">
                     <p @click="openModal(entry.item, entry.item.category)" style="cursor: pointer;">
                         {{ entry.item.name }}</p>
-                    <button @click="equipItem(entry.item_id, entry.inventory_id, entry.item.slot)"
+                    <button @click="handleEquipItem(entry.item_id, entry.inventory_id, entry.item.slot)"
                         :disabled="actionLoading || !canEquip(entry.item)" class="inspectViewBtn bold"
                         :class="{ 'disabled': !canEquip(entry.item) }">
                         {{ canEquip(entry.item) ? 'Equip' : 'Requirements not met' }}
@@ -216,12 +222,12 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
                             selectedItem.damageReduction }}</p>
                         <p v-if="selectedItem.blockValue !== undefined"><strong>Block Value:</strong> {{
                             selectedItem.blockValue
-                            }}
+                        }}
                         </p>
                         <p v-if="selectedItem.weight"><strong>Weight:</strong> {{ selectedItem.weight ?? '—' }}</p>
                         <p v-if="selectedItem.strengthReq"><strong>Strength Req:</strong> {{ selectedItem.strengthReq ??
                             '—'
-                            }}</p>
+                        }}</p>
                         <p v-if="selectedItem.skillReq"><strong>Skill Req:</strong> <span
                                 v-for="value, key in selectedItem.skillReq" :key="key"> {{ capitalise(key) }}: {{ value
                                 }}</span></p>
@@ -312,6 +318,18 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
     align-items: center;
     width: 20rem;
     height: 1.7rem;
+}
+
+.headerWithError {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+}
+
+.errorMessage {
+    color: red;
+    font-style: italic;
+    font-size: 0.8rem;
 }
 
 .skillWrapper {

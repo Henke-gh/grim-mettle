@@ -70,8 +70,8 @@ export default defineEventHandler(async (event) => {
         `
     id, level, strength, speed, vitality,
     swords, axes, hammers, spears, daggers,
-    block, evasion, initiative
-    `
+    block, evasion, initiative, xp, xp_next_lvl
+    `,
       )
       .eq("user_id", user.id)
       .maybeSingle();
@@ -87,6 +87,13 @@ export default defineEventHandler(async (event) => {
       });
     }
 
+    if (hero.xp < hero.xp_next_lvl) {
+      throw createError({
+        statusCode: 400,
+        message: "Not enough XP to level up.",
+      });
+    }
+
     //Prepare the update, filter only updated stats
     const updates = {};
     for (const [key, value] of Object.entries(statUpdate.stats)) {
@@ -99,7 +106,7 @@ export default defineEventHandler(async (event) => {
     //Re-calculate max HP
     const maxHP = computeHeroHP(
       updates.strength ?? hero.strength,
-      updates.vitality ?? hero.vitality
+      updates.vitality ?? hero.vitality,
     );
 
     //get XP to next level
@@ -116,7 +123,8 @@ export default defineEventHandler(async (event) => {
     const { error: updateError } = await supabaseAdmin
       .from("heroes")
       .update(updates)
-      .eq("id", hero.id);
+      .eq("id", hero.id)
+      .eq("level", hero.level);
 
     if (updateError) {
       throw createError({ statusCode: 500, message: updateError.message });

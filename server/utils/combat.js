@@ -325,7 +325,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
           defeated: hero.hero_name,
           defeatedType: "hero",
           victor: monster.name,
-          slain: heroHP <= 0,
+          slain: heroHP <= 0 && hero.level > 4,
         }),
       );
       combatLog.push(addLogEntry("turn", turn));
@@ -456,7 +456,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
                 defeated: hero.hero_name,
                 defeatedType: "hero",
                 victor: monster.name,
-                slain: heroHP <= 0,
+                slain: heroHP <= 0 && hero.level > 4,
               }),
             );
 
@@ -515,7 +515,7 @@ export function doCombat(hero, heroEquipment, retreatValue, monster) {
               defeated: hero.hero_name,
               defeatedType: "hero",
               victor: monster.name,
-              slain: heroHP <= 0,
+              slain: heroHP <= 0 && hero.level > 4,
             }),
           );
 
