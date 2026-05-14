@@ -71,7 +71,7 @@ export const monsterAvatars = [
       import.meta.url,
     ).href,
     srcAvatar: new URL(
-      "~/assets/images/monsters/youngTroll_avatar.png",
+      "~/assets/images/monsters/youngtroll_avatar.png",
       import.meta.url,
     ).href,
     alt: "A grinning troll",
