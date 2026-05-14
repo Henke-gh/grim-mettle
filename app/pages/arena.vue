@@ -450,7 +450,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
 }
 
 .monsterCardImg {
-    border: 2px dotted var(--yellow);
+    border: 2px solid var(--yellow);
     border-radius: 0.5rem;
     background-color: var(--brown);
 }
