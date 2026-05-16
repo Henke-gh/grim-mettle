@@ -206,12 +206,10 @@ async function initiateFight() {
 
     if (hero.value.hp_current < desiredRetreatValue) {
         errorMsg.value = "You don't have enough HP. Recover a bit or adjust your retreat value."
-
-        if (hero.value.grit_current <= 0) {
-            errorMsg.value = "Not enough grit. Your hero is too tired to fight."
-
-            return;
-        }
+        return;
+    } else if (hero.value.grit_current <= 0) {
+        errorMsg.value = "Not enough grit. Your hero is too tired to fight."
+        return;
     } else {
         try {
             const avatar = heroAvatar.value;
