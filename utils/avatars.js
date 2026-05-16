@@ -65,15 +65,49 @@ export const monsterAvatars = [
     alt: "A dangerous Bandit",
   },
   {
+    id: 7,
+    srcCard: new URL(
+      "~/assets/images/monsters/legion_card.png",
+      import.meta.url,
+    ).href,
+    srcAvatar: new URL(
+      "~/assets/images/monsters/legion_avatar.png",
+      import.meta.url,
+    ).href,
+    alt: "A dangerous Bandit",
+  },
+  {
     id: 9,
     srcCard: new URL(
       "~/assets/images/monsters/youngTroll_card.png",
       import.meta.url,
     ).href,
     srcAvatar: new URL(
-      "~/assets/images/monsters/youngTroll_avatar.png",
+      "~/assets/images/monsters/youngtroll_avatar.png",
       import.meta.url,
     ).href,
     alt: "A grinning troll",
+  },
+  {
+    id: 10,
+    srcCard: new URL(
+      "~/assets/images/monsters/dervish_card.png",
+      import.meta.url,
+    ).href,
+    srcAvatar: new URL(
+      "~/assets/images/monsters/dervish_avatar.png",
+      import.meta.url,
+    ).href,
+    alt: "A desert dweller with a scimitar",
+  },
+  {
+    id: 14,
+    srcCard: new URL("~/assets/images/monsters/rhino_card.png", import.meta.url)
+      .href,
+    srcAvatar: new URL(
+      "~/assets/images/monsters/rhino_avatar.png",
+      import.meta.url,
+    ).href,
+    alt: "A prehistoric scaled rhino",
   },
 ];
