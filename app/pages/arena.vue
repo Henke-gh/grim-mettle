@@ -13,13 +13,13 @@
                     <div v-for="bracket in monsterBrackets" :key="bracket.rank" class="toggle-container">
                         <button class="bracketToggle" @click="toggleBracket((bracket.rank))"
                             :class="{ bracketToggleActive: isBracketExpanded[bracket.rank] }">
-                            <p class="roboto-mono-600">{{ bracket.rank }}</p>
-                            <p class="roboto-mono-600">[{{ bracket.lvlSpan }}]</p>
+                            <p class="roboto-mono-600">{{ bracket.key }}</p>
                         </button>
                     </div>
                 </article>
                 <article class="monsterDisplay">
                     <h3 class="centerText">[ Arena Challengers ]</h3>
+                    <h4 class="centerText">{{ currentMonsterBracket.rank }} | {{ currentMonsterBracket.lvlSpan }}</h4>
                     <ul class="monsterList" v-if="monstersToDisplay">
                         <li v-for="monster in monstersToDisplay" :key="monster.id" class="listItem">
                             <p>{{ monster.name }} - Level: {{ monster.level }}</p>
@@ -124,6 +124,7 @@ import rightSword from "../assets/images/swordIconMirror.png"
 import { monsterAvatars } from '~~/utils/avatars';
 
 const monstersToDisplay = ref([]);
+const currentMonsterBracket = ref({});
 const showMonsterModal = ref(false);
 const selectedMonster = ref('');
 const selectedMonsterImages = ref({});
@@ -152,6 +153,7 @@ function toggleBracket(bracketKey) {
     });
     //Find the correct monster array-bracket to display
     const monsterBracket = monsterBrackets.value.find((monsterBracket) => monsterBracket.rank === bracketKey);
+    currentMonsterBracket.value = monsterBracket;
     monstersToDisplay.value = monsterBracket.monsters;
     isBracketExpanded.value[bracketKey] = !isBracketExpanded.value[bracketKey];
 }
@@ -283,9 +285,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
 .toggles-wrapper {
     display: flex;
     flex-direction: row;
-    flex-wrap: wrap;
-    flex-basis: 33%;
-    justify-content: flex-start;
+    justify-content: center;
     gap: 0.5rem;
 }
 
@@ -294,17 +294,17 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 95px;
-    width: 95px;
-    border-radius: 0.2rem;
+    height: 45px;
+    width: 45px;
+    border-radius: 50%;
     background-color: var(--brown);
     box-shadow: 2px 2px 2px rgba(42, 42, 40, 0.399);
 }
 
 .bracketToggle {
-    height: 85px;
-    width: 85px;
-    border-radius: 0.2rem;
+    height: 35px;
+    width: 35px;
+    border-radius: 50%;
     border: 2px solid var(--bone-white);
     background-color: var(--dark-green);
     color: var(--bone-white);
